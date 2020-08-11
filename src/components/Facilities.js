@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import FacilityClient from "../clients/FacilityClient";
 import { Link } from "react-router-dom";
 
-const FacilitiesList = () => {
+const Facilities = () => {
 
         const [facilities, setFacilities] = useState([]);
         const [currentFacility, setCurrentFacility] = useState(null);
@@ -28,16 +28,17 @@ const FacilitiesList = () => {
             setSearchName(searchName);
         };
 
+/*
         const refreshList = () => {
             retrieveFacilities();
             setCurrentFacility(null);
             setCurrentIndex(-1);
         };
+*/
 
         const retrieveFacilities = () => {
             FacilityClient.all()
                 .then(response => {
-                    console.log("all() response: ", response.data);
                     setFacilities(response.data);
                 })
                 .catch(e => {
@@ -57,7 +58,7 @@ const FacilitiesList = () => {
                     <div className="input-group md-3">
                         <input
                             className="form-control"
-                            onChange={findByName}
+                            onChange={onChangeSearchName}
                             placeholder="Search by name"
                             type="text"
                             value={searchName}
@@ -76,7 +77,9 @@ const FacilitiesList = () => {
 
                 <div className="col-md-6">
 
+                    <br />
                     <h4>Facilities List</h4>
+                    <br />
 
                     <ul className="list-group">
                         {facilities && facilities.map((facility, index) => (
@@ -85,7 +88,7 @@ const FacilitiesList = () => {
                                     "list-group-item " + (index === currentIndex ? "active" : "")
                                 }
                                 key={index}
-                                onClick={setActiveFacility(facility, index)}
+                                onClick={() => setActiveFacility(facility,index)}
                             >
                                 {facility.name}
                             </li>
@@ -99,7 +102,11 @@ const FacilitiesList = () => {
                     {currentFacility ? (
 
                         <div>
+
+                            <br />
                             <h4>Facility</h4>
+                            <br />
+
                             <div>
                                 <label><strong>Name:</strong></label>{" "}
                                 {currentFacility.name}
@@ -157,4 +164,4 @@ const FacilitiesList = () => {
 
 };
 
-export default FacilitiesList;
+export default Facilities;
