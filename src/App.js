@@ -4,9 +4,10 @@ import "bootstrap/dist/css/bootstrap.min.css";
 // import logo from './logo.svg';
 import './App.css';
 
-import AddFacility from "./components/AddFacility";
-import Facility from "./components/Facility";
-import Facilities from "./components/Facilities";
+import AddFacility from "./original/AddFacility";
+import Facility from "./original/Facility";
+import Facilities from "./original/Facilities";
+import FacilitiesView from "./views/FacilitiesView";
 
 function App() {
   return (
@@ -18,8 +19,8 @@ function App() {
             </a>
             <div className="navbar-nav mr-auto">
               <li className="nav-item">
-                <Link to={"/facilities"} className="nav-link">
-                  Facilities
+                <Link to={"/oldfacilities"} className="nav-link">
+                  Old Facilities
                 </Link>
               </li>
               <li className="nav-item">
@@ -27,14 +28,20 @@ function App() {
                   Add Facility
                 </Link>
               </li>
+              <li className="nav-item">
+                <Link to={"/facilities"} className="nav-link">
+                  New Facilities
+                </Link>
+              </li>
             </div>
           </nav>
 
           <div className="container mt-3">
             <Switch>
-              <Route exact path={["/", "/facilities"]} component={Facilities} />
+              <Route exact path="/oldfacilities" component={Facilities} />
               <Route exact path="/facilities/add" component={AddFacility} />
               <Route path="/facilities/:facilityId" component={Facility} />
+              <Route exact path={["/", "/facilities"]} component={FacilitiesView} />
             </Switch>
           </div>
         </div>

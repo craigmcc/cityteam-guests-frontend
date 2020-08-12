@@ -52,6 +52,7 @@ const Facilities = () => {
         };
 
         return (
+
             <div className="list row">
 
                 <div className="col-md-8">
