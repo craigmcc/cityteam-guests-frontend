@@ -14,9 +14,10 @@ function App() {
       <Router>
         <div>
           <nav className="navbar navbar-expand navbar-dark bg-dark">
-            <a href="/tutorials" className="navbar-brand">
-              CityTeam
-            </a>
+            {/*<a href="http://cityteam.org">*/}
+              <img src="CityTeamWhite.png" alt="CityTeam Logo"
+                   width="160" height="66"/>
+            {/*</a>*/}
             <div className="navbar-nav mr-auto">
               <li className="nav-item">
                 <Link to={"/oldfacilities"} className="nav-link">

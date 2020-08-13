@@ -14,10 +14,20 @@ export const Button = (props) => {
     );
 }
 
+export const AddButton = (props) => {
+    return (
+        <Button
+            className="btn btn-primary btn-sm ml-1 mr-1"
+            label={props.label ? props.label : "Add"}
+            onClick={props.onClick}
+        />
+    );
+}
+
 export const CancelButton = (props) => {
     return (
         <Button
-            className="btn btn-secondary ml-1 mr-1"
+            className="btn btn-secondary btn-sm ml-1 mr-1"
             label={props.label ? props.label : "Cancel"}
             onClick={props.onClick}
         />
@@ -38,7 +48,7 @@ export const RemoveButton = (props) => {
     // Initial example used "badge badge-danger mr-2"
     return (
         <Button
-            className="btn btn-danger ml-1 mr-1"
+            className="btn btn-danger btn-sm ml-1 mr-1"
             label={props.label ? props.label : "Remove"}
             onClick={props.onClick}
         />
@@ -48,7 +58,7 @@ export const RemoveButton = (props) => {
 export const SaveButton = (props) => {
     return (
         <Button
-            className="btn btn-primary ml-1 mr-1"
+            className="btn btn-primary btn-sm ml-1 mr-1"
             label={props.label ? props.label : "Save"}
             onClick={props.onClick}
         />
