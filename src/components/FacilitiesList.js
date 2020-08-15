@@ -1,5 +1,7 @@
 import React from "react";
 
+// TODO - OBSOLETE - use generic List instead
+
 // props.index Zero-relative index of selected item, or -1 for none
 // props.items List of items to be represented as rows in the list.
 // props.onSelect Handle (index) for item being selected

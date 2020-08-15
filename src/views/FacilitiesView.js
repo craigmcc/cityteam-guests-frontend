@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { AddButton } from "../components/buttons";
 import FacilityClient from "../clients/FacilityClient";
-import FacilitiesList from "../components/FacilitiesList"
+import List from "../components/List";
 import SearchBar from "../components/SearchBar";
 // import { Link } from "react-router-dom";
 
@@ -114,7 +114,9 @@ const FacilitiesView = () => {
                     <AddButton onClick={onAdd}/>
                     <p/>
 
-                    <FacilitiesList
+                    <List
+                        fields={["name", "state", "zipCode"]}
+                        headers={["Name", "State", "Zip Code"]}
                         index={index}
                         items={items}
                         onSelect={onSelectItem}
