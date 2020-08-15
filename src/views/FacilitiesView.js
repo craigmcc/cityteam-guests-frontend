@@ -24,12 +24,12 @@ const FacilitiesView = () => {
     const onSearchChange = event => {
         console.log("FacilitiesView.onSearchChange(" + event.target.value + ")");
         setSearchText(event.target.value);
-        retrieveItems();
+        retrieveItems(event.target.value);
     }
 
     const onSearchClick = () => {
         console.log("FacilitiesView.onSearchClick()");
-        retrieveItems();
+        retrieveItems(searchText);
     }
 
     const onSelectItem = (newIndex) => {
@@ -60,17 +60,17 @@ const FacilitiesView = () => {
         setIndex(-1);
     }
 
-    const retrieveItems = () => {
-        if (searchText === "") {
+    const retrieveItems = (newSearchText) => {
+        if (newSearchText === "") {
             retrieveAllItems();
         } else {
-            retrieveMatchingItems();
+            retrieveMatchingItems(newSearchText);
         }
     }
 
-    const retrieveMatchingItems = () => {
-        console.log("FacilitiesView.retrieveMatchingItems(" + searchText + ")");
-        FacilityClient.findByName(searchText)
+    const retrieveMatchingItems = (newSearchText) => {
+        console.log("FacilitiesView.retrieveMatchingItems(" + newSearchText + ")");
+        FacilityClient.findByName(newSearchText)
             .then(response => {
                 console.log("FacilitiesView.retrieveMatchingItems: Found " +
                     JSON.stringify(response.data, ["id", "name"]));
