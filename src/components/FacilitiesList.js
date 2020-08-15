@@ -1,35 +1,13 @@
-import React, { useState } from "react";
+import React from "react";
 
-// props.items List of items to be represented as rows in the list (REQUIRED)
-// props.onClick Optionally handle (item, index) for item being selected,
-//   or (null, -1) for item being unselected [Not forwarded]
+// props.index Zero-relative index of selected item, or -1 for none
+// props.items List of items to be represented as rows in the list.
+// props.onSelect Handle (index) for item being selected
 const FacilitiesList = (props) => {
 
-    const forwardClick = props.onClick;
-    const items = props.items;
-
-    const [currentItem, setCurrentItem] = useState(null);
-    const [currentIndex, setCurrentIndex] = useState(-1);
-
-    const onClick = (item, index) => {
-        if (currentIndex === index) {
-            console.log("FacilitiesList.onClick(name=" + item.name +
-                ", index=" + index + ", off");
-            setCurrentItem(null);
-            setCurrentIndex(-1);
-        } else {
-            console.log("FacilitiesList.onClick(name=" + item.name +
-                ", index=" + index + ", on");
-            setCurrentItem(item);
-            setCurrentIndex(index);
-        }
-        if (forwardClick) {
-            console.log("FacilitiesList.onClick.forward(name=" +
-                (currentItem ? currentItem.name : "<none>") +
-                ", index=" + currentIndex + ")");
-            forwardClick(currentItem, currentIndex);
-        }
-    }
+    console.log("FacilitiesList index=" + props.index);
+    console.log("FacilitiesList items=" +
+        JSON.stringify(props.items, ["id", "name"]));
 
     return (
 
@@ -43,12 +21,12 @@ const FacilitiesList = (props) => {
             </thead>
 
             <tbody>
-            {items.map((item, index) => (
+            {props.items.map((item, index) => (
                 <tr
                     className={"table-" +
-                        (index === currentIndex ? "primary" : "default")}
+                        (index === props.index ? "primary" : "default")}
                     key={index}
-                    onClick={() => onClick(item, index)}
+                    onClick={() => props.onSelect(index)}
                 >
                     <td>{item.name}</td>
                     <td>{item.state}</td>

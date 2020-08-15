@@ -7,13 +7,12 @@ import SearchBar from "../components/SearchBar";
 
 const FacilitiesView = () => {
 
-    const [currentFacility, setCurrentFacility] = useState(null);
-    const [currentIndex, setCurrentIndex] = useState(-1);
-    const [facilities, setFacilities] = useState([]);
-    const [searchName, setSearchName] = useState("");
+    const [index, setIndex] = useState(-1);
+    const [items, setItems] = useState([]);
+    const [searchText, setSearchText] = useState("");
 
     useEffect(() => {
-        retrieveAllFacilities();
+        retrieveAllItems();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -22,70 +21,66 @@ const FacilitiesView = () => {
         // TODO - set up for an add form, move focus
     }
 
-    const recordSearchChange = searchName => {
-        console.log("FacilitiesView.recordSearchChange(" + searchName + ")");
-        setSearchName(searchName);
-        retrieveFacilities();
+    const onSearchChange = event => {
+        console.log("FacilitiesView.onSearchChange(" + event.target.value + ")");
+        setSearchText(event.target.value);
+        retrieveItems();
     }
 
-    const recordSearchClick = searchName => {
-        console.log("FacilitiesView.recordSearchClick(" + searchName + ")");
-        setSearchName(searchName);
-        retrieveFacilities();
+    const onSearchClick = () => {
+        console.log("FacilitiesView.onSearchClick()");
+        retrieveItems();
     }
 
-    const retrieveAllFacilities = () => {
-        console.log("FacilitiesView.retrieveAllFacilities()");
+    const onSelectItem = (newIndex) => {
+        if (newIndex === index) {
+            console.log("FacilitiesView.onSelectItem(-1)");
+            setIndex(-1);
+            // TODO - erase form
+        } else {
+            console.log("FacilitiesView.onSelectItem(" + newIndex + ")");
+            setIndex(newIndex);
+            console.log("  items[" + newIndex + "] = " +
+                items[newIndex].name);
+            // TODO - render form for newIndex (index won't be updated yet)
+        }
+    }
+
+    const retrieveAllItems = () => {
+        console.log("FacilitiesView.retrieveAllItems()");
         FacilityClient.all()
             .then(response => {
-                console.log("FacilitiesView.retrieveAllFacilities: Found " +
+                console.log("FacilitiesView.retrieveAllItems: Found " +
                     JSON.stringify(response.data, ["id", "name"]));
-                setFacilities(response.data);
-                console.log("FacilitiesView.retrieveAllFacilities: Saved " +
-                    JSON.stringify(facilities, ["id", "name"]));
+                setItems(response.data);
             })
             .catch(e => {
                 console.log(e);
             });
+        setIndex(-1);
     }
 
-    const retrieveFacilities = () => {
-        if (searchName === "") {
-            retrieveAllFacilities();
+    const retrieveItems = () => {
+        if (searchText === "") {
+            retrieveAllItems();
         } else {
-            retrieveMatchingFacilities();
+            retrieveMatchingItems();
         }
     }
 
-    const retrieveMatchingFacilities = () => {
-        console.log("FacilitiesView.retrieveMatchingFacilities(" + searchName + ")");
-        FacilityClient.findByName(searchName)
+    const retrieveMatchingItems = () => {
+        console.log("FacilitiesView.retrieveMatchingItems(" + searchText + ")");
+        FacilityClient.findByName(searchText)
             .then(response => {
-                console.log("FacilitiesView.retrieveMatchingFacilities: Found " +
+                console.log("FacilitiesView.retrieveMatchingItems: Found " +
                     JSON.stringify(response.data, ["id", "name"]));
-                setFacilities(response.data);
-                console.log("FacilitiesView.retrieveMatchingFacilities: Saved " +
-                    JSON.stringify(response.data, ["id", "name"]));
+                setItems(response.data);
             })
             .catch(e => {
                 console.log(e);
             });
+        setIndex(-1);
     }
-
-    const setActiveFacility = (facility, index) => {
-        if (currentIndex === index) {
-            console.log("FacilitiesView.setActiveFacility(<none>, " +
-                index + ")");
-            setCurrentFacility(null);
-            setCurrentIndex(-1);
-        } else {
-            console.log("FacilitiesView.setActiveFacility(" +
-                (facility ? facility.name : "<???>") +
-                ", " + index + ")");
-            setCurrentFacility(facility);
-            setCurrentIndex(index);
-        }
-    };
 
     return (
 
@@ -97,11 +92,12 @@ const FacilitiesView = () => {
                 </div>
                 <div className="col-lg">
                     <SearchBar
-                        onChange={recordSearchChange}
-                        onClick={recordSearchClick}
+                        onChange={onSearchChange}
+                        onClick={onSearchClick}
                         placeholder="Search by name ..."
+                        value={searchText}
                         withClear
- //                       withSearch
+                        withSearch
                     />
                 </div>
                 <p/>
@@ -119,8 +115,9 @@ const FacilitiesView = () => {
                     <p/>
 
                     <FacilitiesList
-                        items={facilities}
-                        onClick={setActiveFacility}
+                        index={index}
+                        items={items}
+                        onSelect={onSelectItem}
                     />
 
                 </div>
