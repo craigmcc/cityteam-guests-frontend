@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { AddButton } from "../components/buttons";
 import FacilityClient from "../clients/FacilityClient";
+import FacilityForm from "../forms/FacilityForm";
 import List from "../components/List";
 import SearchBar from "../components/SearchBar";
+import {Formik} from "formik";
 // import { Link } from "react-router-dom";
 
 const FacilitiesView = () => {
@@ -87,7 +89,7 @@ const FacilitiesView = () => {
         <div className={"container"}>
 
             <div className="row">
-                <div className="col-sm-2">
+                <div className="col-lg-2">
                     <h4>Facilities</h4>
                 </div>
                 <div className="col-lg">
@@ -109,7 +111,7 @@ const FacilitiesView = () => {
 
             <div className="row">
 
-                <div className="col">
+                <div className="col-4">
 
                     <AddButton onClick={onAdd}/>
                     <p/>
@@ -124,8 +126,20 @@ const FacilitiesView = () => {
 
                 </div>
 
-                <div className="col">
-                    Column 2 (Form)
+                <div className="col-8">
+
+                    <h4>Facility Details</h4>
+
+                    { (index >= 0) ? (
+                        <FacilityForm
+                            initialValues={items[index]}
+                        />
+                    ) : (
+                        <div>
+                            <br/>
+                            <p>Please click on a Facility ...</p>
+                        </div>
+                    )}
                 </div>
 
             </div>
