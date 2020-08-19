@@ -38,12 +38,11 @@ const FacilitiesView = () => {
         if (newIndex === index) {
             console.log("FacilitiesView.onSelectItem(-1)");
             setIndex(-1);
-            // TODO - erase form
         } else {
             console.log("FacilitiesView.onSelectItem(" + newIndex + ")");
-            setIndex(newIndex);
             console.log("  items[" + newIndex + "] = " +
                 items[newIndex].name);
+            setIndex(newIndex);
             // TODO - render form for newIndex (index won't be updated yet)
         }
     }

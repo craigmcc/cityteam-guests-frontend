@@ -2,12 +2,16 @@ import React /* , { useEffect, useState } */ from "react";
 
 // For all of the specific button types, you can optionally override
 // the default label by passing "label" prop.
+
+// props.className CSS styles for this button [btn]
+// props.onClick Handler for click events [none]
+// props.type Button type [button]
 export const Button = (props) => {
     return (
         <button
             className={props.className ? props.className : "btn"}
             onClick={props.onClick}
-            type="button"
+            type={props.type ? props.type : "button"}
         >
             {props.label ? props.label : "Label Me!"}
         </button>
@@ -61,6 +65,7 @@ export const SaveButton = (props) => {
             className="btn btn-primary btn-sm ml-1 mr-1"
             label={props.label ? props.label : "Save"}
             onClick={props.onClick}
+            type="submit"
         />
     );
 }
