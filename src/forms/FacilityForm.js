@@ -1,25 +1,27 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { CancelButton, SaveButton } from "../components/buttons";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import { TextField, toEmptyStrings, toNullValues } from "./fields";
+import * as Yup from "yup";
 
 // initialValues Object containing initial values to display, or null to
 //   request a blank form returned by internal initialValues() function
-// NOPE? onCancel Handler () called if Cancel button is clicked
 // NOPE? onSave Handler (object) with entered form values if Save button is clicked
 const FacilityForm = (props) => {
-
-    console.log("Incoming: " + JSON.stringify(props.initialValues, null, 2));
 
     const [initialValues, setInitialValues] =
         useState(convertInitialValues(props.initialValues));
 
-    console.log("Outgoing: " + JSON.stringify(initialValues, null, 2));
+    useEffect(() => {
+        setInitialValues(convertInitialValues(props.initialValues));
+    }, [props.initialValues])
 
     return (
 
         <Formik
+            enableReinitialize
             initialValues={initialValues}
+            key={JSON.stringify(initialValues)}
             onSubmit={(values, { setSubmitting }) => {
                 setTimeout(() => {
                     alert("Submitting: " +
@@ -27,6 +29,7 @@ const FacilityForm = (props) => {
                     setSubmitting(false);
                 }, 400);
             }}
+            validationSchema={validationSchema}
         >
 
             <Form className="form">
@@ -81,8 +84,8 @@ const FacilityForm = (props) => {
 
                 <div className="row">
                     <div className="col-2"></div>
-                    <SaveButton type="submit"/>
-                    <CancelButton onClick={props.onCancel} />
+                    <SaveButton/>
+                    <CancelButton/>
                 </div>
 
             </Form>
@@ -111,6 +114,20 @@ const emptyInitialValues = () => {
         state: "",
         zipCode: ""
     }
+}
+
+const validationSchema = () => {
+    return Yup.object().shape({
+        name: Yup.string()
+            .required(),
+        address1: Yup.string(),
+        address2: Yup.string(),
+        city: Yup.string(),
+        state: Yup.string(),    // TODO - special validation
+        zipCode: Yup.string(),  // TODO - special validation
+        email: Yup.string()
+            .email("Invalid email address format")
+    })
 }
 
 export default FacilityForm;

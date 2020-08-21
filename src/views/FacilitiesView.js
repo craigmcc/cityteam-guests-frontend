@@ -4,7 +4,6 @@ import FacilityClient from "../clients/FacilityClient";
 import FacilityForm from "../forms/FacilityForm";
 import List from "../components/List";
 import SearchBar from "../components/SearchBar";
-import {Formik} from "formik";
 // import { Link } from "react-router-dom";
 
 const FacilitiesView = () => {

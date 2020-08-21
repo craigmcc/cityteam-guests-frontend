@@ -1,5 +1,5 @@
 import React from "react";
-import { ErrorMessage, Field, useField } from "formik";
+import { ErrorMessage, Field } from "formik";
 
 // props.errorClassName CSS styles for error message [alert alert-danger] // TODO - need "col"?
 // props.fieldClassName CSS styles for the field column [col-10]

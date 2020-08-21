@@ -34,6 +34,7 @@ export const CancelButton = (props) => {
             className="btn btn-secondary btn-sm ml-1 mr-1"
             label={props.label ? props.label : "Cancel"}
             onClick={props.onClick}
+            type="reset"
         />
     );
 }
