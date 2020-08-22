@@ -42,7 +42,6 @@ const FacilitiesView = () => {
             console.log("  items[" + newIndex + "] = " +
                 items[newIndex].name);
             setIndex(newIndex);
-            // TODO - render form for newIndex (index won't be updated yet)
         }
     }
 

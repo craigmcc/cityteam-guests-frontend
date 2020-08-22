@@ -4,7 +4,7 @@ export default axios.create({
     baseURL: baseURL(),
     headers: {
         "Content-Type" : "application/json"
-    }
+    },
 });
 
 function baseURL() {

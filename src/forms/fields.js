@@ -1,7 +1,7 @@
 import React from "react";
 import { ErrorMessage, Field } from "formik";
 
-// props.errorClassName CSS styles for error message [alert alert-danger] // TODO - need "col"?
+// props.errorClassName CSS styles for error message [alert alert-danger]
 // props.fieldClassName CSS styles for the field column [col-10]
 // props.label Textual label for this field
 // props.labelClassName CSS styles for label column [col-2]
@@ -28,10 +28,11 @@ export const TextField = (props) => {
                     type={type}
                 />
             </div>
-            <div className="row">
+            <div className="row mt-1">
                 <div className={labelClassName}></div>
                 <ErrorMessage
                     className={errorClassName}
+                    component="div"
                     name={props.name}
                 />
             </div>

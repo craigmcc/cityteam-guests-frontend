@@ -27,7 +27,6 @@ const update = (facilityId, facility) => {
 // Model Specific Endpoints
 
 const findByName = name => {
-    console.log("FacilityClient.findByName(" + name + ")");
     return http.get(FACILITIES_BASE + `/name/${name}`);
 }
 
