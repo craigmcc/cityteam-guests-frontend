@@ -3,6 +3,47 @@ import { ErrorMessage, Field } from "formik";
 
 // props.autoFocus Set automatic focus to this field on render [not set]
 // props.errorClassName CSS styles for error message [alert alert-danger]
+// props.fieldClassName CSS styles for the field column [col-1]
+// props.label Textual label for this field
+// props.labelClassName CSS styles for label column [col-2]
+// props.name Field name in the containing object
+export const CheckboxField = (props) => {
+
+    let errorClassName = props.errorClassName ? props.errorClassName : "alert alert-danger";
+    let fieldClassName = props.fieldClassName ? props.fieldClassName : "col-1";
+    let labelClassName = props.labelClassName ? props.labelClassName : "col-2";
+
+    return (
+        <div className="form-group">
+            <div className="row">
+                <label
+                    className={labelClassName + " form-check-label"}
+                    htmlFor={props.name}
+                >
+                    {props.label}
+                </label>
+                <Field
+                    autoFocus={props.autoFocus ? props.autoFocus : null}
+                    className={fieldClassName}
+                    id={props.name}
+                    name={props.name}
+                    type="checkbox"
+                />
+            </div>
+            <div className="row mt-1">
+                <div className={labelClassName}></div>
+                <ErrorMessage
+                    className={errorClassName}
+                    component="div"
+                    name={props.name}
+                />
+            </div>
+        </div>
+    );
+}
+
+// props.autoFocus Set automatic focus to this field on render [not set]
+// props.errorClassName CSS styles for error message [alert alert-danger]
 // props.fieldClassName CSS styles for the field column [col-10]
 // props.label Textual label for this field
 // props.labelClassName CSS styles for label column [col-2]

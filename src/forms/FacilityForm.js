@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { TextField, toEmptyStrings, toNullValues } from "./fields";
+import { CheckboxField, TextField, toEmptyStrings, toNullValues } from "./fields";
 import FacilityClient from "../clients/FacilityClient";
 import {CancelButton, RemoveButton, SaveButton} from "../components/buttons";
 import { ErrorMessage, Field, Form, Formik } from "formik";
@@ -133,6 +133,7 @@ const FacilityForm = (props) => {
                 </div>
 
                 <TextField autoFocus label="Name:" name="name"/>
+                <CheckboxField label="Active?" name="active"/>
                 <TextField label="Address:" name="address1"/>
                 <TextField label="" name="address2"/>
 
@@ -236,6 +237,7 @@ const convertInitialValues = (initialValues) => {
 let emptyInitialValues = () => {
     return {
         id: -1,
+        active: true,
         address1: "",
         address2: "",
         city: "",

@@ -26,6 +26,10 @@ const update = (facilityId, facility) => {
 
 // Model Specific Endpoints
 
+const findByActive = () => {
+    return http.get(FACILITIES_BASE + "/active");
+}
+
 const findByName = name => {
     return http.get(FACILITIES_BASE + `/name/${name}`);
 }
