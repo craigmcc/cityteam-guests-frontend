@@ -8,6 +8,7 @@ import SearchBar from "../components/SearchBar";
 
 const FacilitiesView = () => {
 
+    const [adding, setAdding] = useState(null);
     const [index, setIndex] = useState(-1);
     const [items, setItems] = useState([]);
     const [searchText, setSearchText] = useState("");
@@ -19,7 +20,7 @@ const FacilitiesView = () => {
 
     const onAdd = () => {
         console.log("FacilitiesView.onAdd()");
-        // TODO - set up for an add form, move focus
+        setAdding("true");
     }
 
     const onRemove = () => {
@@ -28,6 +29,8 @@ const FacilitiesView = () => {
     }
 
     const onSave = () => {
+        console.log("FacilitiesView.onSave()");
+        setAdding(null);
         retrieveItems(searchText);
     }
 
@@ -52,6 +55,7 @@ const FacilitiesView = () => {
                 items[newIndex].name);
             setIndex(newIndex);
         }
+        setAdding(null);
     }
 
     const retrieveAllItems = () => {
@@ -134,9 +138,9 @@ const FacilitiesView = () => {
 
                 <div className="col-8">
 
-                    { (index >= 0) ? (
+                    { (adding || (index >= 0)) ? (
                         <FacilityForm
-                            initialValues={items[index]}
+                            initialValues={(adding ? null : items[index])}
                             onRemove={onRemove}
                             onSave={onSave}
                         />

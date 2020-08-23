@@ -11,6 +11,8 @@ import * as Yup from "yup";
 // onSave Handler for successful save (insert or update)
 const FacilityForm = (props) => {
 
+    const [adding] =
+        useState((props.initialValues ? false : true));
     const [initialValues, setInitialValues] =
         useState(convertInitialValues(props.initialValues));
     const [messageText, setMessageText] =
@@ -130,7 +132,7 @@ const FacilityForm = (props) => {
                     </div>
                 </div>
 
-                <TextField label="Name:" name="name"/>
+                <TextField autoFocus label="Name:" name="name"/>
                 <TextField label="Address:" name="address1"/>
                 <TextField label="" name="address2"/>
 
@@ -200,7 +202,9 @@ const FacilityForm = (props) => {
                         <CancelButton/>
                     </div>
                     <div className="col-2 float-right">
-                        <RemoveButton onClick={handleRemove}/>
+                        <RemoveButton
+                            disabled={adding}
+                            onClick={handleRemove}/>
                     </div>
                 </div>
 

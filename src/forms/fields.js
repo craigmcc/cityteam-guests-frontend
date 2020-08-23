@@ -1,6 +1,7 @@
 import React from "react";
 import { ErrorMessage, Field } from "formik";
 
+// props.autoFocus Set automatic focus to this field on render [not set]
 // props.errorClassName CSS styles for error message [alert alert-danger]
 // props.fieldClassName CSS styles for the field column [col-10]
 // props.label Textual label for this field
@@ -22,6 +23,7 @@ export const TextField = (props) => {
                     {props.label}
                 </label>
                 <Field
+                    autoFocus={props.autoFocus ? props.autoFocus : null}
                     className={fieldClassName}
                     id={props.name}
                     name={props.name}
