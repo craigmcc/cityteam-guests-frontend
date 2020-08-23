@@ -1,21 +1,86 @@
 import React, { useEffect, useState } from "react";
 import { TextField, toEmptyStrings, toNullValues } from "./fields";
 import FacilityClient from "../clients/FacilityClient";
-import { CancelButton, SaveButton } from "../components/buttons";
+import {CancelButton, RemoveButton, SaveButton} from "../components/buttons";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import * as Yup from "yup";
 
 // initialValues Object containing initial values to display, or null to
 //   request a blank form returned by internal initialValues() function
-// NOPE? onSave Handler (object) with entered form values if Save button is clicked
+// onRemove Handler for successful remove
+// onSave Handler for successful save (insert or update)
 const FacilityForm = (props) => {
 
     const [initialValues, setInitialValues] =
         useState(convertInitialValues(props.initialValues));
+    const [messageText, setMessageText] =
+        useState(null);
+    const [messageType, setMessageType] =
+        useState("info");
+    const onRemove = props.onRemove
+    const onSave = props.onSave
 
     useEffect(() => {
         setInitialValues(convertInitialValues(props.initialValues));
+        setMessageText(null);
+        setMessageType("info");
     }, [props.initialValues])
+
+    let handleRemove = () => {
+        console.log("FacilityForm.handleRemove(id=" + initialValues.id + ")");
+        // TODO - confirm dialog?
+        setMessageText("Removing ...");
+        setMessageType("info");
+        FacilityClient.remove(initialValues.id)
+            .then(response => {
+                setMessageText("Remove complete");
+                if (onRemove) {
+                    onRemove();
+                }
+            })
+            .catch(error => {
+                setMessageText("Remove error: " +
+                    JSON.stringify(error, null, 2));
+                setMessageType("danger");
+            })
+    }
+
+    let handleSubmit = (values, actions) => {
+        actions.setSubmitting(true);
+        let data = toNullValues(values);
+//                alert("Submitting: " + JSON.stringify(data, null, 2));
+        setMessageType("info");
+        if (data.id > 0) {
+            setMessageText("Updating ...");
+            FacilityClient.update(data.id, data)
+                .then(response => {
+                    setMessageText("Update complete");
+                    if (onSave) {
+                        onSave();
+                    }
+                })
+                .catch(error => {
+                    setMessageText("Update error: " +
+                        JSON.stringify(error, null, 2));
+                    setMessageType("danger");
+                })
+        } else {
+            setMessageText("Inserting ...", "info");
+            FacilityClient.insert(data)
+                .then(response => {
+                    setMessageText("Insert complete");
+                    if (onSave) {
+                        onSave();
+                    }
+                })
+                .catch(error => {
+                    setMessageText("Insert error: " +
+                        JSON.stringify(error, null, 2));
+                    setMessageType("danger");
+                })
+        }
+        actions.setSubmitting(false);
+    }
 
     let validationSchema = () => {
         return Yup.object().shape({
@@ -48,19 +113,22 @@ const FacilityForm = (props) => {
         <Formik
             enableReinitialize
             initialValues={initialValues}
-            key={JSON.stringify(initialValues)}
-            onSubmit={(values, { setSubmitting }) => {
-                setTimeout(() => {
-                    alert("Submitting: " +
-                        JSON.stringify(toNullValues(values), null, 2));
-                    setSubmitting(false);
-                }, 400);
+            key={JSON.stringify(initialValues.id)}
+            onSubmit={(values, actions) => {
+                handleSubmit(values, actions);
             }}
             validateOnChange={false}
             validationSchema={validationSchema}
         >
 
             <Form className="form">
+
+                <div className="form-row mb-1">
+                    <div className="col-2"></div>
+                    <div className="col-10">
+                        <h4>Facility Details</h4>
+                    </div>
+                </div>
 
                 <TextField label="Name:" name="name"/>
                 <TextField label="Address:" name="address1"/>
@@ -71,14 +139,14 @@ const FacilityForm = (props) => {
                     <div className="row form-group">
                         <label className="col-2" htmlFor="city">City:</label>
                         <Field
-                            className="col-4"
+                            className="col-5"
                             id="city"
                             name="city"
                             type="text"
                         />
                         <label className="col-1" htmlFor="state">St:</label>
                         <Field
-                            className="col-2"
+                            className="col-1"
                             id="state"
                             name="state"
                             type="text"
@@ -127,9 +195,25 @@ const FacilityForm = (props) => {
 
                 <div className="row">
                     <div className="col-2"></div>
-                    <SaveButton/>
-                    <CancelButton/>
+                    <div className="col-8">
+                        <SaveButton/>
+                        <CancelButton/>
+                    </div>
+                    <div className="col-2 float-right">
+                        <RemoveButton onClick={handleRemove}/>
+                    </div>
                 </div>
+
+                { (messageText) ? (
+                    <div className="row mt-1">
+                        <div className="col-2"></div>
+                        <div className={"alert alert-" + messageType}>
+                            {messageText}
+                        </div>
+                    </div>
+                ) : (
+                    <div/>
+                )}
 
             </Form>
 
@@ -160,7 +244,7 @@ let emptyInitialValues = () => {
 }
 
 let stateAbbreviations =
-    [ "AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "DC",
+      [ "AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "DC",
         "FL", "GA", "HI", "ID", "IL", "IN", "IA", "KS", "KY",
         "LA", "ME", "MD", "MA", "MI", "MN", "MS", "MO", "MT",
         "NE", "NV", "NH", "NJ", "NM", "NY", "NC", "ND", "OH",
@@ -191,7 +275,9 @@ let validateUniqueName = (value, id) => {
                 // Exists, but OK if it is this item
                 resolve(id === response.data.id);
             })
-            .catch((response) => {
+            .catch((error) => {
+//                console.log("Uniqueness status: ", error.response.status);
+//                console.log("Uniqueness body:   " + error.response.data);
                 // Does not exist, so definitely unique
                 resolve(true);
             })

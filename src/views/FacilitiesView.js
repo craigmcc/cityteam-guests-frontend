@@ -22,6 +22,15 @@ const FacilitiesView = () => {
         // TODO - set up for an add form, move focus
     }
 
+    const onRemove = () => {
+        console.log("FacilitiesView.onRemove(index=" + index + ")");
+        retrieveItems(searchText);
+    }
+
+    const onSave = () => {
+        retrieveItems(searchText);
+    }
+
     const onSearchChange = event => {
         console.log("FacilitiesView.onSearchChange(" + event.target.value + ")");
         setSearchText(event.target.value);
@@ -125,15 +134,14 @@ const FacilitiesView = () => {
 
                 <div className="col-8">
 
-                    <h4>Facility Details</h4>
-
                     { (index >= 0) ? (
                         <FacilityForm
                             initialValues={items[index]}
+                            onRemove={onRemove}
+                            onSave={onSave}
                         />
                     ) : (
                         <div>
-                            <br/>
                             <p>Please click on a Facility ...</p>
                         </div>
                     )}
