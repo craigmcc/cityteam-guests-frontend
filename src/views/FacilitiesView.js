@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from "react";
+
 import { AddButton } from "../components/buttons";
 import FacilityClient from "../clients/FacilityClient";
 import FacilityForm from "../forms/FacilityForm";
+import FacilitySelector from "../components/FacilitySelector";
 import List from "../components/List";
 import SearchBar from "../components/SearchBar";
+
 // import { Link } from "react-router-dom";
 
 const FacilitiesView = () => {
@@ -59,11 +62,10 @@ const FacilitiesView = () => {
     }
 
     const retrieveAllItems = () => {
-        console.log("FacilitiesView.retrieveAllItems()");
         FacilityClient.all()
             .then(response => {
-                console.log("FacilitiesView.retrieveAllItems: Found " +
-                    JSON.stringify(response.data, ["id", "name"]));
+                console.log("FacilitiesView.retrieveAllItems(" +
+                    JSON.stringify(response.data, ["id", "name"]) + ")");
                 setItems(response.data);
             })
             .catch(e => {
@@ -81,11 +83,10 @@ const FacilitiesView = () => {
     }
 
     const retrieveMatchingItems = (newSearchText) => {
-        console.log("FacilitiesView.retrieveMatchingItems(" + newSearchText + ")");
         FacilityClient.findByName(newSearchText)
             .then(response => {
-                console.log("FacilitiesView.retrieveMatchingItems: Found " +
-                    JSON.stringify(response.data, ["id", "name"]));
+                console.log("FacilitiesView.retrieveMatchingItems(" +
+                    JSON.stringify(response.data, ["id", "name"]) + ")");
                 setItems(response.data);
             })
             .catch(e => {
@@ -133,6 +134,8 @@ const FacilitiesView = () => {
                         items={items}
                         onSelect={onSelectItem}
                     />
+
+                    <FacilitySelector/>
 
                 </div>
 

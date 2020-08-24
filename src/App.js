@@ -7,6 +7,7 @@ import './App.css';
 import AddFacility from "./original/AddFacility";
 import Facility from "./original/Facility";
 import Facilities from "./original/Facilities";
+import { FacilityContextProvider } from "./contexts/FacilityContext";
 import FacilitiesView from "./views/FacilitiesView";
 
 function App() {
@@ -37,43 +38,20 @@ function App() {
             </div>
           </nav>
 
-          <div className="container mt-3">
-            <Switch>
-              <Route exact path="/oldfacilities" component={Facilities} />
-              <Route exact path="/facilities/add" component={AddFacility} />
-              <Route path="/facilities/:facilityId" component={Facility} />
-              <Route exact path={["/", "/facilities"]} component={FacilitiesView} />
-            </Switch>
-          </div>
+
+          <FacilityContextProvider>
+            <div className="container mt-3">
+              <Switch>
+                <Route exact path="/oldfacilities" component={Facilities} />
+                <Route exact path="/facilities/add" component={AddFacility} />
+                <Route path="/facilities/:facilityId" component={Facility} />
+                <Route exact path={["/", "/facilities"]} component={FacilitiesView} />
+              </Switch>
+            </div>
+          </FacilityContextProvider>
         </div>
       </Router>
   );
 }
-
-
-/*
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
-*/
-
-
 
 export default App;

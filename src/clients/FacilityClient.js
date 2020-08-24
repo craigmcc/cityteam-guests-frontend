@@ -88,6 +88,7 @@ export default {
     update,
 
     // Specific
+    findByActive,
     findByName,
     findByNameExact,
     findGuestsByFacilityId,
