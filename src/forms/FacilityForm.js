@@ -1,26 +1,28 @@
 import React, { useEffect, useState } from "react";
-import { CheckboxField, TextField, toEmptyStrings, toNullValues } from "./fields";
-import FacilityClient from "../clients/FacilityClient";
-import {CancelButton, RemoveButton, SaveButton} from "../components/buttons";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import * as Yup from "yup";
 
+import { CancelButton, RemoveButton, SaveButton }
+    from "../components/buttons";
+import { CheckboxField, TextField, toEmptyStrings, toNullValues }
+    from "../components/fields";
+
+import FacilityClient from "../clients/FacilityClient";
+
+// handleRemove Handle (facility) for successful remove
+// handleSave Handle (facility) for successful insert or update
 // initialValues Object containing initial values to display, or null to
 //   request a blank form returned by internal initialValues() function
-// onRemove Handler for successful remove
-// onSave Handler for successful save (insert or update)
 const FacilityForm = (props) => {
 
     const [adding] =
-        useState((props.initialValues ? false : true));
+        useState(!props.initialValues);
     const [initialValues, setInitialValues] =
         useState(convertInitialValues(props.initialValues));
     const [messageText, setMessageText] =
         useState(null);
     const [messageType, setMessageType] =
         useState("info");
-    const onRemove = props.onRemove
-    const onSave = props.onSave
 
     useEffect(() => {
         setInitialValues(convertInitialValues(props.initialValues));
@@ -36,8 +38,8 @@ const FacilityForm = (props) => {
         FacilityClient.remove(initialValues.id)
             .then(response => {
                 setMessageText("Remove complete");
-                if (onRemove) {
-                    onRemove();
+                if (props.handleRemove) {
+                    props.handleRemove(response.data);
                 }
             })
             .catch(error => {
@@ -47,7 +49,7 @@ const FacilityForm = (props) => {
             })
     }
 
-    let handleSubmit = (values, actions) => {
+    let handleSave = (values, actions) => {
         actions.setSubmitting(true);
         let data = toNullValues(values);
 //                alert("Submitting: " + JSON.stringify(data, null, 2));
@@ -57,8 +59,8 @@ const FacilityForm = (props) => {
             FacilityClient.update(data.id, data)
                 .then(response => {
                     setMessageText("Update complete");
-                    if (onSave) {
-                        onSave();
+                    if (props.handleSave) {
+                        props.handleSave(response.data);
                     }
                 })
                 .catch(error => {
@@ -67,12 +69,12 @@ const FacilityForm = (props) => {
                     setMessageType("danger");
                 })
         } else {
-            setMessageText("Inserting ...", "info");
+            setMessageText("Inserting ...");
             FacilityClient.insert(data)
                 .then(response => {
                     setMessageText("Insert complete");
-                    if (onSave) {
-                        onSave();
+                    if (props.handleSave) {
+                        props.handleSave(response.data);
                     }
                 })
                 .catch(error => {
@@ -115,9 +117,9 @@ const FacilityForm = (props) => {
         <Formik
             enableReinitialize
             initialValues={initialValues}
-            key={JSON.stringify(initialValues.id)}
+            // key={JSON.stringify(initialValues.id)}
             onSubmit={(values, actions) => {
-                handleSubmit(values, actions);
+                handleSave(values, actions);
             }}
             validateOnChange={false}
             validationSchema={validationSchema}
@@ -126,7 +128,7 @@ const FacilityForm = (props) => {
             <Form className="form">
 
                 <div className="form-row mb-1">
-                    <div className="col-2"></div>
+                    <div className="col-2"/>
                     <div className="col-10">
                         <h4>Facility Details</h4>
                     </div>
@@ -166,7 +168,7 @@ const FacilityForm = (props) => {
                 </div>
 
                 <div className="row">
-                    <div className="col-2"></div>
+                    <div className="col-2"/>
                     <div className="col-10">
                         <ErrorMessage
                             className="col alert alert-danger"
@@ -175,7 +177,7 @@ const FacilityForm = (props) => {
                     </div>
                 </div>
                 <div className="row">
-                    <div className="col-2"></div>
+                    <div className="col-2"/>
                     <div className="col-10">
                         <ErrorMessage
                             className="col alert alert-danger"
@@ -184,7 +186,7 @@ const FacilityForm = (props) => {
                     </div>
                 </div>
                 <div className="row">
-                    <div className="col-2"></div>
+                    <div className="col-2"/>
                     <div className="col-10">
                         <ErrorMessage
                             className="col alert alert-danger"
@@ -197,7 +199,7 @@ const FacilityForm = (props) => {
                 <TextField label="Phone:" name="phone"/>
 
                 <div className="row">
-                    <div className="col-2"></div>
+                    <div className="col-2"/>
                     <div className="col-8">
                         <SaveButton/>
                         <CancelButton/>
@@ -211,7 +213,7 @@ const FacilityForm = (props) => {
 
                 { (messageText) ? (
                     <div className="row mt-1">
-                        <div className="col-2"></div>
+                        <div className="col-2"/>
                         <div className={"alert alert-" + messageType}>
                             {messageText}
                         </div>
@@ -281,7 +283,7 @@ let validateUniqueName = (value, id) => {
                 // Exists, but OK if it is this item
                 resolve(id === response.data.id);
             })
-            .catch((error) => {
+            .catch(() => {
 //                console.log("Uniqueness status: ", error.response.status);
 //                console.log("Uniqueness body:   " + error.response.data);
                 // Does not exist, so definitely unique

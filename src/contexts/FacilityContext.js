@@ -6,9 +6,12 @@ import FacilityClient from "../clients/FacilityClient";
 // available (active) facilities and the currently selected one (if any):
 //   facilities - Array of available active facilities [ [] ]
 //   selectedFacility - Currently selected facility, or none indicator
-//     [ { id: 0 } ]
+//     [ { id: -1, name: "UNSELECTED" } ]
 
-export const FacilityContext = createContext();
+export const FacilityContext = createContext({
+    facilities : [],
+    selectedFacility: { id: -1, name: "UNSELECTED" }
+});
 
 // Helper functions to establish initial state
 export const FacilityContextProvider = (props) => {
@@ -36,25 +39,8 @@ export const FacilityContextProvider = (props) => {
 //                JSON.stringify(result.data, null, 2));
             setSelectedFacility(result.data);
 
-/*
-            try {
-                let badResults = await FacilityClient.findByNameExact("Bad");
-                console.log("FacilityContext.findByNameExact(Bad) results: " +
-                    JSON.stringify(badResults, null, 2));
-            } catch (error) {
-                console.log("FacilityContext.findByNameExact(Bad) error: " +
-                    JSON.stringify(error, null, 2));
-                if (error instanceof BadRequest) {
-                    console.log("FacilityContext.findByNameExact(Bad) was a BadRequest");
-                } else {
-                    console.log("FacilityContext.findByNameExact(Bad) was NOT a BadRequest");
-                }
-            }
-*/
-
         }
 
-//        console.log("FacilityContext: useEffect(begin)");
         fetchData();
 
     }, []);
@@ -81,5 +67,3 @@ export const FacilityContextProvider = (props) => {
     );
 
 }
-
-export default FacilityContext;

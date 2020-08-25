@@ -2,10 +2,10 @@ import React from "react";
 
 // props.fields Array of Strings containing field names
 //   to extract from items for each row
+// props.handleSelect Handle (index) for item being selected
 // props.headers Array of Strings for column headers
 // props.index Zero-relative index of selected item, or -1 for none
 // props.items Array of items to be represented as rows in the list.
-// props.onSelect Handle (index) for item being selected
 const List = (props) => {
 
 //    console.log("List index=" + props.index);
@@ -33,7 +33,7 @@ const List = (props) => {
                     className={"table-" +
                     (index === props.index ? "primary" : "default")}
                     key={index}
-                    onClick={() => props.onSelect(index)}
+                    onClick={() => props.handleSelect(index)}
                 >
                     {props.fields.map((field, index2) => (
                         <td

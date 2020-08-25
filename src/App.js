@@ -8,7 +8,8 @@ import AddFacility from "./original/AddFacility";
 import Facility from "./original/Facility";
 import Facilities from "./original/Facilities";
 import { FacilityContextProvider } from "./contexts/FacilityContext";
-import FacilitiesView from "./views/FacilitiesView";
+import FacilityView from "./views/FacilityView";
+import TemplateView from "./views/TemplateView";
 
 function App() {
   return (
@@ -35,6 +36,11 @@ function App() {
                   New Facilities
                 </Link>
               </li>
+              <li className="nav-item">
+                <Link to={"/templates"} className="nav-link">
+                  New Templates
+                </Link>
+              </li>
             </div>
           </nav>
 
@@ -45,7 +51,8 @@ function App() {
                 <Route exact path="/oldfacilities" component={Facilities} />
                 <Route exact path="/facilities/add" component={AddFacility} />
                 <Route path="/facilities/:facilityId" component={Facility} />
-                <Route exact path={["/", "/facilities"]} component={FacilitiesView} />
+                <Route exact path={["/", "/facilities"]} component={FacilityView} />
+                <Route exact path={["/", "/templates"]} component={TemplateView} />
               </Switch>
             </div>
           </FacilityContextProvider>

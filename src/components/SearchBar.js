@@ -1,4 +1,5 @@
 import React from "react";
+
 import { ClearButton, SearchButton } from "./buttons";
 
 // props.onChange - Handle (event) for search text changed -

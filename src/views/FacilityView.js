@@ -1,15 +1,14 @@
 import React, { useEffect, useState } from "react";
 
 import { AddButton } from "../components/buttons";
-import FacilityClient from "../clients/FacilityClient";
-import FacilityForm from "../forms/FacilityForm";
 import FacilitySelector from "../components/FacilitySelector";
 import List from "../components/List";
 import SearchBar from "../components/SearchBar";
 
-// import { Link } from "react-router-dom";
+import FacilityClient from "../clients/FacilityClient";
+import FacilityForm from "../forms/FacilityForm";
 
-const FacilitiesView = () => {
+const FacilityView = () => {
 
     const [adding, setAdding] = useState(null);
     const [index, setIndex] = useState(-1);
@@ -21,50 +20,51 @@ const FacilitiesView = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    const onAdd = () => {
-        console.log("FacilitiesView.onAdd()");
-        setAdding("true");
-    }
-
-    const onRemove = () => {
-        console.log("FacilitiesView.onRemove(index=" + index + ")");
+    const handleRemove = (facility) => {
+        console.log("FacilityView.handleRemove(" +
+            JSON.stringify(facility) + ")");
         retrieveItems(searchText);
     }
 
-    const onSave = () => {
-        console.log("FacilitiesView.onSave()");
+    const handleSave = (facility) => {
+        console.log("FacilityView.handleSave(" +
+            JSON.stringify(facility) + ")");
         setAdding(null);
         retrieveItems(searchText);
     }
 
-    const onSearchChange = event => {
-        console.log("FacilitiesView.onSearchChange(" + event.target.value + ")");
-        setSearchText(event.target.value);
-        retrieveItems(event.target.value);
-    }
-
-    const onSearchClick = () => {
-        console.log("FacilitiesView.onSearchClick()");
-        retrieveItems(searchText);
-    }
-
-    const onSelectItem = (newIndex) => {
+    const handleSelectedItem = (newIndex) => {
         if (newIndex === index) {
-            console.log("FacilitiesView.onSelectItem(-1)");
+            console.log("FacilityView.handleSelectedItem(-1)");
             setIndex(-1);
         } else {
-            console.log("FacilitiesView.onSelectItem(" + newIndex + ")");
-            console.log("  items[" + newIndex + "] = " +
-                items[newIndex].name);
+            console.log("FacilityView.handleSelectedItem(" + newIndex +
+                ", " + JSON.stringify(items[newIndex]) + ")");
             setIndex(newIndex);
         }
         setAdding(null);
     }
 
+    const onAdd = () => {
+        console.log("FacilityView.onAdd()");
+        setAdding("true");
+    }
+
+    const onSearchChange = event => {
+        console.log("FacilityView.onSearchChange(" + event.target.value + ")");
+        setSearchText(event.target.value);
+        retrieveItems(event.target.value);
+    }
+
+    const onSearchClick = () => {
+        console.log("FacilityView.onSearchClick()");
+        retrieveItems(searchText);
+    }
+
     const retrieveAllItems = () => {
         FacilityClient.all()
             .then(response => {
-                console.log("FacilitiesView.retrieveAllItems(" +
+                console.log("FacilityView.retrieveAllItems(" +
                     JSON.stringify(response.data, ["id", "name"]) + ")");
                 setItems(response.data);
             })
@@ -85,7 +85,7 @@ const FacilitiesView = () => {
     const retrieveMatchingItems = (newSearchText) => {
         FacilityClient.findByName(newSearchText)
             .then(response => {
-                console.log("FacilitiesView.retrieveMatchingItems(" +
+                console.log("FacilityView.retrieveMatchingItems(" +
                     JSON.stringify(response.data, ["id", "name"]) + ")");
                 setItems(response.data);
             })
@@ -129,10 +129,10 @@ const FacilitiesView = () => {
 
                     <List
                         fields={["name", "state", "zipCode"]}
+                        handleSelect={handleSelectedItem}
                         headers={["Name", "State", "Zip Code"]}
                         index={index}
                         items={items}
-                        onSelect={onSelectItem}
                     />
 
                     <FacilitySelector/>
@@ -144,8 +144,8 @@ const FacilitiesView = () => {
                     { (adding || (index >= 0)) ? (
                         <FacilityForm
                             initialValues={(adding ? null : items[index])}
-                            onRemove={onRemove}
-                            onSave={onSave}
+                            handleRemove={handleRemove}
+                            handleSave={handleSave}
                         />
                     ) : (
                         <div>
@@ -162,4 +162,4 @@ const FacilitiesView = () => {
 
 };
 
-export default FacilitiesView;
+export default FacilityView;

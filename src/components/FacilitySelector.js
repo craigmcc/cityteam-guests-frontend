@@ -2,19 +2,21 @@ import React, { useContext } from "react";
 
 import { FacilityContext } from "../contexts/FacilityContext";
 
-export const FacilitySelector = () => {
+// props.handleSelect Handle (facility) that was just selected [No handler]
+export const FacilitySelector = (props) => {
 
     const facilityContext = useContext(FacilityContext);
-//    console.log("FacilitySelector.facilityContext = " +
-//        JSON.stringify(facilityContext, null, 2));
 
     const onChange = (event) => {
         let newId = Number(event.target.value);
         for (let facility of facilityContext.facilities) {
             if (facility.id === newId) {
                 console.log("FacilitySelector.onChange(" +
-                    JSON.stringify(facility, ["id", "name"]) + ")");
+                    JSON.stringify(facility) + ")");
                 facilityContext.setSelectedFacility(facility);
+                if (props.handleSelect) {
+                    props.handleSelect(facility);
+                }
                 break;
             }
         }
