@@ -99,11 +99,11 @@ const FacilityView = () => {
 
         <div className={"container"}>
 
-            <div className="row">
-                <div className="col-lg-2">
+            <div className="row mt-2 mb-2">
+                <div className="col-4">
                     <h4>Facilities</h4>
                 </div>
-                <div className="col-lg">
+                <div className="col-8">
                     <SearchBar
                         onChange={onSearchChange}
                         onClick={onSearchClick}
@@ -117,16 +117,10 @@ const FacilityView = () => {
             </div>
 
             <div className="row">
-                <p/>
-            </div>
-
-            <div className="row">
 
                 <div className="col-4">
-
                     <AddButton onClick={onAdd}/>
                     <p/>
-
                     <List
                         fields={["name", "state", "zipCode"]}
                         handleSelect={handleSelectedItem}
@@ -134,13 +128,10 @@ const FacilityView = () => {
                         index={index}
                         items={items}
                     />
-
                     <FacilitySelector/>
-
                 </div>
 
                 <div className="col-8">
-
                     { (adding || (index >= 0)) ? (
                         <FacilityForm
                             initialValues={(adding ? null : items[index])}
@@ -149,7 +140,7 @@ const FacilityView = () => {
                         />
                     ) : (
                         <div>
-                            <p>Please click on a Facility ...</p>
+                            <p>Please click on a Facility or press Add ...</p>
                         </div>
                     )}
                 </div>

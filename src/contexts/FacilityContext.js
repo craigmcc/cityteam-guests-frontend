@@ -1,4 +1,4 @@
-import React, { createContext, useEffect, useState } from "react";
+import React, { createContext, useLayoutEffect, useState } from "react";
 
 import FacilityClient from "../clients/FacilityClient";
 
@@ -21,29 +21,41 @@ export const FacilityContextProvider = (props) => {
             { id: -3, name: "Third" },
             { id: -4, name: "Fourth" }
         ]);
+    const [firstTime, setFirstTime] = useState(true);
     const [selectedFacility, setSelectedFacility] =
         useState({ id: -4, name: "Fourth" });
 
+    const fetchInitialFacilities = () => {
+        FacilityClient.findByActive()
+            .then(response => {
+                console.log("FacilityContext.fetchInitialFacilities(" +
+                    JSON.stringify(response.data, ["id", "name"]) + ")");
+                setFacilities(response.data);
+            })
+    }
+
+    const fetchInitialSelectedFacility = (name) => {
+        FacilityClient.findByNameExact(name)
+            .then(response => {
+                console.log("FacilityContext.fetchInitialSelectedFacility(" +
+                    JSON.stringify(response.data, ["id", "name"]) + ")");
+                setSelectedFacility(response.data);
+            })
+    }
+
     // useEffect call to retrieve initial values
-    useEffect(() => {
+    useLayoutEffect(() => {
 
-        async function fetchData() {
-
-            let results = await FacilityClient.findByActive();
-//            console.log("FacilityContext.findByActive() results: " +
-//                JSON.stringify(results.data, null, 2));
-            setFacilities(results.data);
-
-            let result = await FacilityClient.findByNameExact("Portland");
-//            console.log("FacilityContext.findByNameExact(Portland) results: " +
-//                JSON.stringify(result.data, null, 2));
-            setSelectedFacility(result.data);
-
+        function fetchData() {
+            if (firstTime) {
+                setFirstTime(false);
+                fetchInitialFacilities();
+                fetchInitialSelectedFacility("Portland");
+            }
         }
 
         fetchData();
-
-    }, []);
+    }, [firstTime]);
 
     // Can define methods to be included in context as well
     const deassignSelectedFacility = () => {

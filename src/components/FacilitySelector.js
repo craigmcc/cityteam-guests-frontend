@@ -1,11 +1,16 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 
 import { FacilityContext } from "../contexts/FacilityContext";
 
 // props.handleSelect Handle (facility) that was just selected [No handler]
+// props.labelClassName CSS styles for label [default for text]
 export const FacilitySelector = (props) => {
 
     const facilityContext = useContext(FacilityContext);
+    const [labelClassName] =
+        useState(props.labelClassName
+            ? "mr-3 " + props.labelClassName
+            : "mr-3");
 
     const onChange = (event) => {
         let newId = Number(event.target.value);
@@ -29,7 +34,7 @@ export const FacilitySelector = (props) => {
                 <div className="row form-group">
 
                     <label
-                        className="mr-3"
+                        className={labelClassName}
                         htmlFor="currentFacility"
                     >
                         Current Facility:
