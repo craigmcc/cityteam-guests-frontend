@@ -1,22 +1,18 @@
-import React, {useContext, useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 
 import { AddButton } from "../components/buttons";
-import FacilitySelector from "../components/FacilitySelector";
 import List from "../components/List";
 
 import FacilityClient from "../clients/FacilityClient";
-import { FacilityContext } from "../contexts/FacilityContext";
 import TemplateForm from "../forms/TemplateForm";
 
-const TemplateView = () => {
-
-    const facilityContext = useContext(FacilityContext);
+// props.selectedFacility The selected facility for which to display templates
+const TemplateView = (props) => {
 
     const [adding, setAdding] = useState(null);
     const [index, setIndex] = useState(-1);
     const [items, setItems] = useState([]);
-    const [selectedFacility, setSelectedFacility] =
-        useState(facilityContext.selectedFacility);
+    const [selectedFacility] = useState(props.selectedFacility);
 
     useEffect(() => {
         console.log("TemplateView.useEffect(" +
@@ -36,13 +32,6 @@ const TemplateView = () => {
             JSON.stringify(template, ["id", "name"]) + ")");
         setAdding(null);
         retrieveAllItems(selectedFacility);
-    }
-
-    const handleSelectedFacility = (newSelectedFacility) => {
-        console.log("TemplateView.handleSelectedFacility(" +
-            JSON.stringify(newSelectedFacility, ["id", "name"]) + ")");
-        setSelectedFacility(newSelectedFacility);
-        retrieveAllItems(newSelectedFacility);
     }
 
     const handleSelectedItem = (newIndex) => {
@@ -85,15 +74,9 @@ const TemplateView = () => {
         <div className={"container"}>
 
             <div className="row mt-2 mb-2">
-                <div className="col-4">
-                    <h4>Templates</h4>
+                <div className="col-12">
+                    <h4>Templates for {selectedFacility.name}</h4>
                 </div>
-                <div className="col-8">
-                    <FacilitySelector
-                        handleSelect={handleSelectedFacility}
-                    />
-                </div>
-                <p/>
             </div>
 
             <div className="row">

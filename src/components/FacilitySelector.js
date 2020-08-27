@@ -17,7 +17,7 @@ export const FacilitySelector = (props) => {
         for (let facility of facilityContext.facilities) {
             if (facility.id === newId) {
                 console.log("FacilitySelector.onChange(" +
-                    JSON.stringify(facility) + ")");
+                    JSON.stringify(facility, ["id", "name"]) + ")");
                 facilityContext.setSelectedFacility(facility);
                 if (props.handleSelect) {
                     props.handleSelect(facility);

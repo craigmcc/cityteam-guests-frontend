@@ -1,14 +1,25 @@
-import React from 'react';
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import React, { useContext, useState } from 'react';
+import { BrowserRouter as Router, Switch, Route, NavLink } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 // import logo from './logo.svg';
 import './App.css';
 
-import { FacilityContextProvider } from "./contexts/FacilityContext";
+import {FacilityContext, FacilityContextProvider} from "./contexts/FacilityContext";
 import FacilityView from "./views/FacilityView";
 import TemplateView from "./views/TemplateView";
+import FacilitySelector from "./components/FacilitySelector";
 
 function App() {
+
+  const facilityContext = useContext(FacilityContext);
+  const [selectedFacility, setSelectedFacility] = useState(
+      facilityContext.selectedFacility
+  )
+  const handleSelectedFacility = (newSelectedFacility) => {
+    console.log("App.handleSelectedFacility(" +
+      JSON.stringify(newSelectedFacility, ["id", "name"]));
+    setSelectedFacility(newSelectedFacility);
+  }
 
   return (
 
@@ -19,36 +30,58 @@ function App() {
           <div>
 
             <nav className="navbar navbar-expand navbar-dark bg-dark">
+
               {/*<a href="http://cityteam.org">*/}
               <img src="./CityTeamWhite.png" alt="CityTeam Logo"
                    width="160" height="66" className="navbar-brand"/>
               {/*</a>*/}
+
               <div className="navbar-nav mr-auto">
                 <li className="nav-item">
-                  <Link to={"/facilities"} className="nav-link">
+                  <NavLink
+                      activeClassName="active"
+                      className="nav-link"
+                      to={"/facilities"}
+                  >
                     Facilities
-                  </Link>
+                  </NavLink>
                 </li>
                 <li className="nav-item">
-                  <Link to={"/templates"} className="nav-link">
+                  <NavLink
+                      activeClassName="active"
+                      className="nav-link"
+                      to={"/templates"}
+                  >
                     Templates
-                  </Link>
+                  </NavLink>
                 </li>
               </div>
+
+              <div className="navbar-nav mr-2">
+                <FacilitySelector
+                  handleSelect={handleSelectedFacility}
+                  labelClassName="text-secondary"/>
+              </div>
+
             </nav>
 
             <div className="container mt-3">
               <Switch>
                 <Route
-                    component={FacilityView}
                     exact
                     path={["/", "/facilities"]}
-                />
+                >
+                  <FacilityView
+                  />
+                </Route>
                 <Route
-                    component={TemplateView}
-                    exact
-                    path={["/templates"]}
-                />
+                  exact
+                  path="/templates"
+                >
+                  <TemplateView
+                      selectedFacility={selectedFacility}
+                  />
+                </Route>
               </Switch>
             </div>
 

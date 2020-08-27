@@ -18,48 +18,37 @@ export const FacilityContextProvider = (props) => {
 
     const [facilities, setFacilities] =
         useState([
-            { id: -3, name: "Third" },
-            { id: -4, name: "Fourth" }
+            { id: -1, name: "Unknown" }
         ]);
-    const [firstTime, setFirstTime] = useState(true);
     const [selectedFacility, setSelectedFacility] =
-        useState({ id: -4, name: "Fourth" });
+        useState({ id: -1, name: "Unknown" });
 
-    const fetchInitialFacilities = () => {
-        FacilityClient.findByActive()
-            .then(response => {
-                console.log("FacilityContext.fetchInitialFacilities(" +
-                    JSON.stringify(response.data, ["id", "name"]) + ")");
-                setFacilities(response.data);
-            })
-    }
-
-    const fetchInitialSelectedFacility = (name) => {
-        FacilityClient.findByNameExact(name)
-            .then(response => {
-                console.log("FacilityContext.fetchInitialSelectedFacility(" +
-                    JSON.stringify(response.data, ["id", "name"]) + ")");
-                setSelectedFacility(response.data);
-            })
-    }
-
-    // useEffect call to retrieve initial values
+    // useEffect call to retrieve initial values and set selected
     useLayoutEffect(() => {
 
-        function fetchData() {
-            if (firstTime) {
-                setFirstTime(false);
-                fetchInitialFacilities();
-                fetchInitialSelectedFacility("Portland");
-            }
+        function fetchData(name) {
+            FacilityClient.findByActive()
+                .then(response => {
+                    console.log("FacilityContext.fetchData.available(" +
+                        JSON.stringify(response.data, ["id", "name"]) + ")");
+                    setFacilities(response.data);
+                    for (let facility of response.data) {
+                        if (name === facility.name) {
+                            console.log("FacilityContext.fetchData.selected(" +
+                                JSON.stringify(facility, ["id", "name"]) + ")");
+                            setSelectedFacility(facility);
+                        }
+                    }
+                })
         }
 
-        fetchData();
-    }, [firstTime]);
+        fetchData("Portland");
+
+    }, []);
 
     // Can define methods to be included in context as well
     const deassignSelectedFacility = () => {
-        setSelectedFacility({ id: 0, name: "DESELECTED" });
+        setSelectedFacility({ id: -1, name: "DESELECTED" });
     }
 
     // Create the context object
