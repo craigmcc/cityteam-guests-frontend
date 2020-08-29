@@ -1,25 +1,16 @@
-import React, { useContext, useState } from 'react';
-import { BrowserRouter as Router, Switch, Route, NavLink } from "react-router-dom";
+import React from 'react';
+import { BrowserRouter as Router, NavLink, Switch, Route }
+  from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 // import logo from './logo.svg';
 import './App.css';
 
-import {FacilityContext, FacilityContextProvider} from "./contexts/FacilityContext";
+import FacilitySelector from "./components/FacilitySelector";
+import { FacilityContextProvider } from "./contexts/FacilityContext";
 import FacilityView from "./views/FacilityView";
 import TemplateView from "./views/TemplateView";
-import FacilitySelector from "./components/FacilitySelector";
 
 function App() {
-
-  const facilityContext = useContext(FacilityContext);
-  const [selectedFacility, setSelectedFacility] = useState(
-      facilityContext.selectedFacility
-  )
-  const handleSelectedFacility = (newSelectedFacility) => {
-    console.log("App.handleSelectedFacility(" +
-      JSON.stringify(newSelectedFacility, ["id", "name"]));
-    setSelectedFacility(newSelectedFacility);
-  }
 
   return (
 
@@ -58,29 +49,18 @@ function App() {
               </div>
 
               <div className="navbar-nav mr-2">
-                <FacilitySelector
-                  handleSelect={handleSelectedFacility}
-                  labelClassName="text-secondary"/>
+                <FacilitySelector labelClassName="text-secondary"/>
               </div>
 
             </nav>
 
             <div className="container mt-3">
               <Switch>
-                <Route
-                    exact
-                    path={["/", "/facilities"]}
-                >
-                  <FacilityView
-                  />
+                <Route exact path={["/", "/facilities"]}>
+                  <FacilityView/>
                 </Route>
-                <Route
-                  exact
-                  path="/templates"
-                >
-                  <TemplateView
-                      selectedFacility={selectedFacility}
-                  />
+                <Route exact path="/templates">
+                  <TemplateView/>
                 </Route>
               </Switch>
             </div>

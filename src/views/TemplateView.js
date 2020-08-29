@@ -1,25 +1,30 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 import { AddButton } from "../components/buttons";
 import List from "../components/List";
 
 import FacilityClient from "../clients/FacilityClient";
+import { FacilityContext } from "../contexts/FacilityContext";
 import TemplateForm from "../forms/TemplateForm";
 
 // props.selectedFacility The selected facility for which to display templates
-const TemplateView = (props) => {
+const TemplateView = () => {
+
+    const facilityContext = useContext(FacilityContext);
 
     const [adding, setAdding] = useState(null);
     const [index, setIndex] = useState(-1);
     const [items, setItems] = useState([]);
-    const [selectedFacility] = useState(props.selectedFacility);
+    const [selectedFacility, setSelectedFacility] =
+        useState(facilityContext.selectedFacility);
 
     useEffect(() => {
         console.log("TemplateView.useEffect(" +
-            JSON.stringify(selectedFacility, ["id", "name"]) + ")");
-        retrieveAllItems(selectedFacility);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+            JSON.stringify(facilityContext.selectedFacility,
+                ["id", "name"]) + ")");
+        retrieveAllItems(facilityContext.selectedFacility);
+        setSelectedFacility(facilityContext.selectedFacility);
+    }, [facilityContext.selectedFacility]);
 
     const handleRemove = (template) => {
         console.log("TemplateView.handleRemove(" +

@@ -17,7 +17,6 @@ const FacilityView = () => {
 
     useEffect(() => {
         retrieveAllItems();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const handleRemove = (facility) => {
