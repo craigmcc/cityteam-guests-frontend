@@ -4,9 +4,9 @@ import FacilityClient from "../clients/FacilityClient";
 import { AddButton } from "../components/buttons";
 import List from "../components/List";
 import { FacilityContext } from "../contexts/FacilityContext";
-import TemplateForm from "../forms/TemplateForm";
+import GuestForm from "../forms/GuestForm";
 
-const TemplateView = () => {
+const GuestView = () => {
 
     const facilityContext = useContext(FacilityContext);
 
@@ -15,57 +15,58 @@ const TemplateView = () => {
     const [items, setItems] = useState([]);
 
     useEffect(() => {
-        console.log("TemplateView.useEffect(" +
+        console.log("GuestView.useEffect(" +
             JSON.stringify(facilityContext.selectedFacility,
-                ["id", "name"]) + ")");
+                ["id", "firstName", "lastName"]) + ")");
         retrieveAllItems(facilityContext.selectedFacility);
     }, [facilityContext.selectedFacility]);
 
-    const handleInsert = (template) => {
-        console.log("TemplateView.handleInsert(" +
-            JSON.stringify(template, ["id", "name"]) + ")");
+
+    const handleInsert = (guest) => {
+        console.log("GuestView.handleInsert(" +
+            JSON.stringify(guest, ["id", "firstName", "lastName"]) + ")");
         setAdding(null);
         retrieveAllItems(facilityContext.selectedFacility);
     }
 
-    const handleRemove = (template) => {
-        console.log("TemplateView.handleRemove(" +
-            JSON.stringify(template, ["id", "name"]) + ")");
+    const handleRemove = (guest) => {
+        console.log("GuestView.handleRemove(" +
+            JSON.stringify(guest, ["id", "name", "lastName"]) + ")");
         retrieveAllItems(facilityContext.selectedFacility);
     }
 
     const handleSelectedItem = (newIndex) => {
         if (newIndex === index) {
-            console.log("TemplateView.handleSelectedItem(-1)");
+            console.log("GuestView.handleSelectedItem(-1)");
             setIndex(-1);
         } else {
-            console.log("TemplateView.handleSelectedItem(" + newIndex + ", " +
-                JSON.stringify(items[newIndex], ["id", "name"]) + ")");
+            console.log("GuestView.handleSelectedItem(" + newIndex + ", " +
+                JSON.stringify(items[newIndex], ["id", "firstName", "lastName"]) + ")");
             setIndex(newIndex);
         }
         setAdding(null);
     }
 
-    const handleUpdate = (template) => {
-        console.log("TemplateView.handleUpdate(" +
-            JSON.stringify(template, ["id", "name"]) + ")");
+    const handleUpdate = (guest) => {
+        console.log("GuestView.handleUpdate(" +
+            JSON.stringify(guest, ["id", "firstName", "lastName"]) + ")");
         retrieveAllItems(facilityContext.selectedFacility);
     }
 
     const onAdd = () => {
-        console.log("TemplateView.onAdd()");
+        console.log("GuestView.onAdd()");
         setAdding("true");
     }
 
     const retrieveAllItems = (newSelectedFacility) => {
 
-        console.log("TemplateView.retrieveAllItems for(" +
+        console.log("GuestView.retrieveAllItems for(" +
             JSON.stringify(newSelectedFacility, ["id", "name"]) + ")");
-        FacilityClient.findTemplatesByFacilityId(newSelectedFacility.id)
+        FacilityClient.findGuestsByFacilityId(newSelectedFacility.id)
             .then(response => {
-                console.log("TemplateView.retrieveAllItems got(" +
+                console.log("GuestView.retrieveAllItems got(" +
                     JSON.stringify(response.data,
-                        ["id", "name"]) + ")");
+                        ["id", "firstName", "lastName"]) + ")");
                 setItems(response.data);
             })
             .catch(e => {
@@ -81,27 +82,26 @@ const TemplateView = () => {
 
             <div className="row mt-2 mb-2">
                 <div className="col-12">
-                    <h4>Templates for {facilityContext.selectedFacility.name}</h4>
+                    <h4>Guests for {facilityContext.selectedFacility.name}</h4>
                 </div>
             </div>
 
             <div className="row">
-
-                <div className="col-4">
+                <div className="col-5">
                     <AddButton onClick={onAdd}/>
                     <p/>
                     <List
-                        fields={["name", "allMats"]}
+                        fields={["firstName", "lastName"]}
                         handleSelect={handleSelectedItem}
-                        headers={["Name", "All Mats"]}
+                        headers={["First Name", "Last Name"]}
                         index={index}
                         items={items}
                     />
                 </div>
 
-                <div className="col-8">
+                <div className="col-7">
                     { (adding || (index >= 0)) ? (
-                        <TemplateForm
+                        <GuestForm
                             initialValues={(adding ? null : items[index])}
                             handleInsert={handleInsert}
                             handleRemove={handleRemove}
@@ -109,7 +109,7 @@ const TemplateView = () => {
                         />
                     ) : (
                         <div>
-                            <p>Please click on a Template or press Add ...</p>
+                            <p>Please click on a Guest or press Add ...</p>
                         </div>
                     )}
                 </div>
@@ -122,4 +122,4 @@ const TemplateView = () => {
 
 }
 
-export default TemplateView;
+export default GuestView;

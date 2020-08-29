@@ -1,4 +1,4 @@
-import React, { createContext, useLayoutEffect, useState } from "react";
+import React, { createContext, useEffect, useState } from "react";
 
 import FacilityClient from "../clients/FacilityClient";
 
@@ -24,7 +24,7 @@ export const FacilityContextProvider = (props) => {
         useState({ id: -1, name: "Unknown" });
 
     // useEffect call to retrieve initial values and set selected
-    useLayoutEffect(() => {
+    useEffect(() => {
 
         function fetchData(name) {
             FacilityClient.findByActive()

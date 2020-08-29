@@ -9,9 +9,12 @@ import { ErrorMessage, Field } from "formik";
 // props.name Field name in the containing object
 export const CheckboxField = (props) => {
 
-    let errorClassName = props.errorClassName ? props.errorClassName : "alert alert-danger";
-    let fieldClassName = props.fieldClassName ? props.fieldClassName : "col-1";
-    let labelClassName = props.labelClassName ? props.labelClassName : "col-2";
+    let errorClassName =
+        props.errorClassName ? props.errorClassName : "alert alert-danger";
+    let fieldClassName =
+        props.fieldClassName ? props.fieldClassName : "col-1";
+    let labelClassName =
+        props.labelClassName ? props.labelClassName : "col-2";
 
     return (
         <div className="form-group">
@@ -52,9 +55,12 @@ export const CheckboxField = (props) => {
 export const TextField = (props) => {
 
 //    const [field, meta] = useField(props);
-    let errorClassName = props.errorClassName ? props.errorClassName : "alert alert-danger";
-    let fieldClassName = props.fieldClassName ? props.fieldClassName : "col-10";
-    let labelClassName = props.labelClassName ? props.labelClassName : "col-2";
+    let errorClassName =
+        props.errorClassName ? props.errorClassName : "alert alert-danger";
+    let fieldClassName =
+        props.fieldClassName ? props.fieldClassName : "col-10";
+    let labelClassName =
+        props.labelClassName ? props.labelClassName : "col-2";
     let type = props.type ? props.type : "text";
 
     return (

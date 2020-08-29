@@ -2,22 +2,20 @@ import React, { useContext, useEffect, useState } from "react";
 import { Form, Formik } from "formik";
 import * as Yup from "yup";
 
+import FacilityClient from "../clients/FacilityClient";
+import GuestClient from "../clients/GuestClient";
 import { TextField, toEmptyStrings, toNullValues }
     from "../components/fields";
 import { CancelButton, RemoveButton, SaveButton }
     from "../components/buttons";
-
-import FacilityClient from "../clients/FacilityClient";
-import TemplateClient from "../clients/TemplateClient";
 import { FacilityContext } from "../contexts/FacilityContext";
-import MatsList from "../util/mats.list";
 
-// props.handleInsert Handle (template) for successful insert
-// props.handleRemove Handle (template) for successful remove
-// props.handleUpdate Handle (template) for successful update
+// props.handleInsert Handle (guest) for successful insert
+// props.handleRemove Handle (guest) for successful remove
+// props.handleUpdate Handle (guest) for successful insert or update
 // props.initialValues Object containing initial values to display, or null to
 //   request a blank form returned by internal initialValues() function
-const TemplateForm = (props) => {
+const GuestForm = (props) => {
 
     const facilityContext = useContext(FacilityContext);
 
@@ -36,14 +34,14 @@ const TemplateForm = (props) => {
         setMessageType("info");
     }, [props.initialValues])
 
-    let handleInsert = (template) => {
-        let data = toNullValues(template);
+    let handleInsert = (guest) => {
+        let data = toNullValues(guest);
         data.facilityId = facilityContext.selectedFacility.id;
         setMessageText("Inserting ...");
         setMessageType("info");
-        console.log("TemplateForm.handleInsert(" +
-            JSON.stringify(data, ["id", "name"]) + ")");
-        TemplateClient.insert(data)
+        console.log("GuestForm.handleInsert(" +
+            JSON.stringify(data, ["id", "firstName", "lastName"]) + ")");
+        GuestClient.insert(data)
             .then(response => {
                 setMessageText("Insert complete");
                 if (props.handleInsert) {
@@ -58,12 +56,13 @@ const TemplateForm = (props) => {
     }
 
     let handleRemove = () => {
-        console.log("TemplateForm.handleRemove(" +
-            JSON.stringify(initialValues, ["id", "name"]) + ")");
+        console.log("GuestForm.handleRemove(" +
+            JSON.stringify(initialValues,
+                ["id", "firstName", "lastName"]) + ")");
         // TODO - confirm dialog?
         setMessageText("Removing ...");
         setMessageType("info");
-        TemplateClient.remove(initialValues.id)
+        GuestClient.remove(initialValues.id)
             .then((response) => {
                 setMessageText("Remove complete");
                 if (props.handleRemove) {
@@ -92,9 +91,9 @@ const TemplateForm = (props) => {
         data.facilityId = facilityContext.selectedFacility.id;
         setMessageText("Updating ...");
         setMessageType("info");
-        console.log("TemplateForm.handleUpdate(" +
-            JSON.stringify(data, ["id", "name"]) + ")");
-        TemplateClient.update(data.id, data)
+        console.log("GuestForm.handleUpdate(" +
+            JSON.stringify(data, ["id", "firstName", "lastName"]) + ")");
+        GuestClient.update(data.id, data)
             .then(response => {
                 setMessageText("Update complete");
                 if (props.handleUpdate) {
@@ -110,38 +109,20 @@ const TemplateForm = (props) => {
 
     let validationSchema = () => {
         return Yup.object().shape({
-            name: Yup.string()
-                .required("Name is required")
+            firstName: Yup.string()
+                .required("First Name is required"),
+            lastName: Yup.string()
+                .required("Last Name is required")
                 .test("unique-name",
                     "That name is already in use within this facility",
-                    (value) => validateUniqueName(value,
-                        facilityContext.selectedFacility.id,
-                        initialValues.id)),
-            comments: Yup.string(),
-            allMats: Yup.string()
-                .required("All Mats list is required")
-                .test("valid-all-mats",
-                    "Invalid All Mats list format",
-                    (value) => validateMatsList(value)),
-            handicapMats: Yup.string()
-                .test("valid-handicap-mats",
-                    "Invalid Handicap Mats list format",
-                    (value) => validateMatsList(value))
-                .test("handicap-mats-subset",
-                    "Handicap Mats must be a subset of All Mats",
                     function (value) {
-                        return validateMatsSubset(value, this.parent.allMats);
+                        return validateUniqueName(value,
+                            this.parent.firstName,
+                            facilityContext.selectedFacility.id,
+                            initialValues.id)
                     }),
-            socketMats: Yup.string()
-                .test("valid-socket-mats",
-                    "Invalid Socket Mats list format",
-                    (value) => validateMatsList(value))
-                .test("socket-mats-subset",
-                    "Socket Mats must be a subset of All Mats",
-                    function (value) {
-                        return validateMatsSubset(value, this.parent.allMats);
-                    }),
-        })
+            comments: Yup.string()
+        });
     }
 
     return (
@@ -149,7 +130,6 @@ const TemplateForm = (props) => {
         <Formik
             enableReinitialize
             initialValues={initialValues}
-            // key={JSON.stringify(initialValues.id)}
             onSubmit={(values, actions) => {
                 handleSubmit(values, actions);
             }}
@@ -160,21 +140,32 @@ const TemplateForm = (props) => {
             <Form className="form">
 
                 <div className="form-row mb-1">
-                    <div className="col-2"/>
-                    <div className="col-10">
-                        <h4>Template Details</h4>
+                    <div className="col-3"/>
+                    <div className="col-9">
+                        <h4>Guest Details</h4>
                     </div>
                 </div>
 
-                <TextField autoFocus label="Name:" name="name"/>
-                <TextField label="Comments:" name="comments"/>
-                <TextField label="All Mats:" name="allMats"/>
-                <TextField label="Handicap Mats:" name="handicapMats"/>
-                <TextField label="Socket Mats:" name="socketMats"/>
+                <TextField
+                    autoFocus
+                    fieldClassName="col-9"
+                    label="First Name:"
+                    labelClassName="col-3"
+                    name="firstName"/>
+                <TextField
+                    fieldClassName="col-9"
+                    label="Last Name:"
+                    labelClassName="col-3"
+                    name="lastName"/>
+                <TextField
+                    fieldClassName="col-9"
+                    label="Comments:"
+                    labelClassName="col-3"
+                    name="comments"/>
 
                 <div className="row">
-                    <div className="col-2"/>
-                    <div className="col-8">
+                    <div className="col-3"/>
+                    <div className="col-7">
                         <SaveButton/>
                         <CancelButton/>
                     </div>
@@ -200,7 +191,7 @@ const TemplateForm = (props) => {
 
         </Formik>
 
-    );
+    )
 
 }
 
@@ -213,65 +204,18 @@ let convertInitialValues = (initialValues) => {
 let emptyInitialValues = () => {
     return {
         id: -1,
-        allMats: "",
         comments: "",
         facilityId: -1,
-        handicapMats: "",
-        name: "",
-        socketMats: ""
+        firstName: "",
+        lastName: "",
     }
 }
 
-let validateMatsList = (value) => {
-    if (!value || (value.length === 0)) {
-        return true;
-    }
-    try {
-        new MatsList(value);
-        return true;
-    } catch (error) {
-        return false;
-    }
-}
-
-let validateMatsSubset = (value, allMats) => {
-    console.log("TemplateForm.validateMatsSubset(" + value +
-        ", " + allMats + ")");
-    // value is not required (use required() ahead of this
-    // in the chain if it is)
-    if (!value || (value.length === 0)) {
-        console.log("  this value is blank, so true");
-        return true;
-    }
-    // allMats must already have a value
-    if (!allMats || (allMats.length === 0)) {
-        console.log("  allMats is blank, so false");
-        return false;
-    }
-    let allMatsObject;
-    try {
-        allMatsObject = new MatsList(allMats);
-    } catch {
-        console.log("  allMats is not valid, so false");
-        // allMats is not valid, so we cannot be a subset
-        return false;
-    }
-    let thisMatsObject;
-    try {
-        thisMatsObject = new MatsList(value);
-        let result = thisMatsObject.isSubsetOf(allMatsObject);
-        console.log("  both are valid, result is " + result);
-        return result;
-    } catch {
-        console.log("  this value is not valid, so false")
-        // This value is not valid, so we cannot be a subset
-        return false;
-    }
-}
-
-let validateUniqueName = (value, facilityId, id) => {
+let validateUniqueName = (value, firstName, facilityId, id) => {
+    console.log("GuestForm.validateUniqueName(lastName=" + value +
+        ", firstName=" + firstName + ", facilityId=" + facilityId + ", id=" + id + ")");
     return new Promise((resolve) => {
-        FacilityClient.findTemplatesByNameExact(facilityId, value)
+        FacilityClient.findGuestsByNameExact(facilityId, firstName, value)
             .then(response => {
                 // Exists but OK if it is this item
                 resolve(id === response.data.id);
@@ -283,4 +227,4 @@ let validateUniqueName = (value, facilityId, id) => {
     })
 }
 
-export default TemplateForm;
+export default GuestForm;
