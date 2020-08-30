@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 import { AddButton } from "../components/buttons";
-import FacilitySelector from "../components/FacilitySelector";
+import { FacilityContext } from "../contexts/FacilityContext";
 import List from "../components/List";
 import SearchBar from "../components/SearchBar";
 
@@ -9,6 +9,8 @@ import FacilityClient from "../clients/FacilityClient";
 import FacilityForm from "../forms/FacilityForm";
 
 const FacilityView = () => {
+
+    const facilityContext = useContext(FacilityContext);
 
     const [adding, setAdding] = useState(null);
     const [index, setIndex] = useState(-1);
@@ -19,17 +21,19 @@ const FacilityView = () => {
         retrieveAllItems();
     }, []);
 
-    const handleRemove = (facility) => {
-        console.log("FacilityView.handleRemove(" +
-            JSON.stringify(facility) + ")");
-        retrieveItems(searchText);
-    }
-
-    const handleSave = (facility) => {
-        console.log("FacilityView.handleSave(" +
-            JSON.stringify(facility) + ")");
+    const handleInsert = (facility) => {
+        console.log("FacilityContext.handleInsert(" +
+            JSON.stringify(facility, ["id", "name"]) + ")");
         setAdding(null);
         retrieveItems(searchText);
+        facilityContext.refreshFacilities();
+    }
+
+    const handleRemove = (facility) => {
+        console.log("FacilityView.handleRemove(" +
+            JSON.stringify(facility, ["id", "name"]) + ")");
+        retrieveItems(searchText);
+        facilityContext.refreshFacilities();
     }
 
     const handleSelectedItem = (newIndex) => {
@@ -42,6 +46,14 @@ const FacilityView = () => {
             setIndex(newIndex);
         }
         setAdding(null);
+    }
+
+    const handleUpdate = (facility) => {
+        console.log("FacilityView.handleUpdate(" +
+            JSON.stringify(facility, ["id", "name"]) + ")");
+        setAdding(null);
+        retrieveItems(searchText);
+        facilityContext.refreshFacilities();
     }
 
     const onAdd = () => {
@@ -127,15 +139,15 @@ const FacilityView = () => {
                         index={index}
                         items={items}
                     />
-                    <FacilitySelector/>
                 </div>
 
                 <div className="col-8">
                     { (adding || (index >= 0)) ? (
                         <FacilityForm
-                            initialValues={(adding ? null : items[index])}
+                            handleInsert={handleInsert}
                             handleRemove={handleRemove}
-                            handleSave={handleSave}
+                            handleUpdate={handleUpdate}
+                            initialValues={(adding ? null : items[index])}
                         />
                     ) : (
                         <div>

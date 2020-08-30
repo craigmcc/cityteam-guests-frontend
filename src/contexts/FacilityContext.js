@@ -51,13 +51,30 @@ export const FacilityContextProvider = (props) => {
         setSelectedFacility({ id: -1, name: "DESELECTED" });
     }
 
+    const refreshFacilities = () => {
+        FacilityClient.findByActive()
+            .then(response => {
+                console.log("FacilityContext.refreshFacilities(" +
+                    JSON.stringify(response.data, ["id", "name"]) + ")");
+                setFacilities(response.data);
+                for (let facility of response.data) {
+                    if (selectedFacility.name === facility.name) {
+                        console.log("FacilityContext.refreshSelectedFacility(" +
+                            JSON.stringify(facility, ["id", "name"]) + ")");
+                        setSelectedFacility(facility);
+                    }
+                }
+            })
+    }
+
     // Create the context object
     const facilityContext = {
         // Data values and corresponding setters
         facilities, setFacilities,
         selectedFacility, setSelectedFacility,
         // Exported functions
-        deassignSelectedFacility
+        deassignSelectedFacility,
+        refreshFacilities
     };
 
     // Return it, rendering children inside

@@ -15,9 +15,6 @@ const TemplateView = () => {
     const [items, setItems] = useState([]);
 
     useEffect(() => {
-        console.log("TemplateView.useEffect(" +
-            JSON.stringify(facilityContext.selectedFacility,
-                ["id", "name"]) + ")");
         retrieveAllItems(facilityContext.selectedFacility);
     }, [facilityContext.selectedFacility]);
 

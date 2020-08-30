@@ -9,8 +9,9 @@ import { CheckboxField, TextField, toEmptyStrings, toNullValues }
 
 import FacilityClient from "../clients/FacilityClient";
 
+// handleInsert Handle (facility) for successful insert
 // handleRemove Handle (facility) for successful remove
-// handleSave Handle (facility) for successful insert or update
+// handleUpdate Handle (facility) for successful update
 // initialValues Object containing initial values to display, or null to
 //   request a blank form returned by internal initialValues() function
 const FacilityForm = (props) => {
@@ -29,6 +30,26 @@ const FacilityForm = (props) => {
         setMessageText(null);
         setMessageType("info");
     }, [props.initialValues])
+
+    let handleInsert = (facility) => {
+        let data = toNullValues(facility);
+        setMessageText("Inserting ...");
+        setMessageType("info");
+        console.log("FacilityForm.handleInsert(" +
+            JSON.stringify(data, ["id", "name"]) + ")");
+        FacilityClient.insert(data)
+            .then(response => {
+                setMessageText("Insert complete");
+                if (props.handleInsert) {
+                    props.handleInsert(response.data);
+                }
+            })
+            .catch(error => {
+                setMessageText("Insert error: " +
+                    JSON.stringify(error, null, 2));
+                setMessageType("danger");
+            })
+    }
 
     let handleRemove = () => {
         console.log("FacilityForm.handleRemove(id=" + initialValues.id + ")");
@@ -49,41 +70,34 @@ const FacilityForm = (props) => {
             })
     }
 
-    let handleSave = (values, actions) => {
+    let handleSubmit = (values, actions) => {
         actions.setSubmitting(true);
-        let data = toNullValues(values);
-//                alert("Submitting: " + JSON.stringify(data, null, 2));
-        setMessageType("info");
-        if (data.id > 0) {
-            setMessageText("Updating ...");
-            FacilityClient.update(data.id, data)
-                .then(response => {
-                    setMessageText("Update complete");
-                    if (props.handleSave) {
-                        props.handleSave(response.data);
-                    }
-                })
-                .catch(error => {
-                    setMessageText("Update error: " +
-                        JSON.stringify(error, null, 2));
-                    setMessageType("danger");
-                })
+        if (values.id > 0) {
+            handleUpdate(values);
         } else {
-            setMessageText("Inserting ...");
-            FacilityClient.insert(data)
-                .then(response => {
-                    setMessageText("Insert complete");
-                    if (props.handleSave) {
-                        props.handleSave(response.data);
-                    }
-                })
-                .catch(error => {
-                    setMessageText("Insert error: " +
-                        JSON.stringify(error, null, 2));
-                    setMessageType("danger");
-                })
+            handleInsert(values);
         }
         actions.setSubmitting(false);
+    }
+
+    let handleUpdate = (facility) => {
+        let data = toNullValues(facility);
+        setMessageText("Updating ...");
+        setMessageType("info");
+        console.log("FacilityForm.handleUpdate(" +
+            JSON.stringify(data, ["id", "name"]) + ")");
+        FacilityClient.update(data.id, data)
+            .then(response => {
+                setMessageText("Update complete");
+                if (props.handleUpdate) {
+                    props.handleUpdate(response.data);
+                }
+            })
+            .catch(error => {
+                setMessageText("Update error: " +
+                    JSON.stringify(error, null, 2));
+                setMessageType("danger");
+            })
     }
 
     let validationSchema = () => {
@@ -119,7 +133,7 @@ const FacilityForm = (props) => {
             initialValues={initialValues}
             // key={JSON.stringify(initialValues.id)}
             onSubmit={(values, actions) => {
-                handleSave(values, actions);
+                handleSubmit(values, actions);
             }}
             validateOnChange={false}
             validationSchema={validationSchema}

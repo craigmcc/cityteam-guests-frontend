@@ -15,9 +15,6 @@ const GuestView = () => {
     const [items, setItems] = useState([]);
 
     useEffect(() => {
-        console.log("GuestView.useEffect(" +
-            JSON.stringify(facilityContext.selectedFacility,
-                ["id", "firstName", "lastName"]) + ")");
         retrieveAllItems(facilityContext.selectedFacility);
     }, [facilityContext.selectedFacility]);
 
