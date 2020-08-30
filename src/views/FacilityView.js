@@ -61,7 +61,7 @@ const FacilityView = () => {
         setAdding("true");
     }
 
-    const onSearchChange = event => {
+    const onSearchChange = (event) => {
         console.log("FacilityView.onSearchChange(" + event.target.value + ")");
         setSearchText(event.target.value);
         retrieveItems(event.target.value);

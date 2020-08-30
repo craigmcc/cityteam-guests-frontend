@@ -15,20 +15,20 @@ const TemplateView = () => {
     const [items, setItems] = useState([]);
 
     useEffect(() => {
-        retrieveAllItems(facilityContext.selectedFacility);
+        retrieveAllItems();
     }, [facilityContext.selectedFacility]);
 
     const handleInsert = (template) => {
         console.log("TemplateView.handleInsert(" +
             JSON.stringify(template, ["id", "name"]) + ")");
         setAdding(null);
-        retrieveAllItems(facilityContext.selectedFacility);
+        retrieveAllItems();
     }
 
     const handleRemove = (template) => {
         console.log("TemplateView.handleRemove(" +
             JSON.stringify(template, ["id", "name"]) + ")");
-        retrieveAllItems(facilityContext.selectedFacility);
+        retrieveAllItems();
     }
 
     const handleSelectedItem = (newIndex) => {
@@ -46,7 +46,7 @@ const TemplateView = () => {
     const handleUpdate = (template) => {
         console.log("TemplateView.handleUpdate(" +
             JSON.stringify(template, ["id", "name"]) + ")");
-        retrieveAllItems(facilityContext.selectedFacility);
+        retrieveAllItems();
     }
 
     const onAdd = () => {
@@ -54,11 +54,13 @@ const TemplateView = () => {
         setAdding("true");
     }
 
-    const retrieveAllItems = (newSelectedFacility) => {
+    const retrieveAllItems = () => {
 
         console.log("TemplateView.retrieveAllItems for(" +
-            JSON.stringify(newSelectedFacility, ["id", "name"]) + ")");
-        FacilityClient.findTemplatesByFacilityId(newSelectedFacility.id)
+            JSON.stringify(facilityContext.selectedFacility,
+                ["id", "name"]) + ")");
+        FacilityClient.findTemplatesByFacilityId
+                (facilityContext.selectedFacility.id)
             .then(response => {
                 console.log("TemplateView.retrieveAllItems got(" +
                     JSON.stringify(response.data,

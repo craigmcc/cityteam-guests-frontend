@@ -3,6 +3,7 @@ import React, { useContext, useEffect, useState } from "react";
 import FacilityClient from "../clients/FacilityClient";
 import { AddButton } from "../components/buttons";
 import List from "../components/List";
+import SearchBar from "../components/SearchBar";
 import { FacilityContext } from "../contexts/FacilityContext";
 import GuestForm from "../forms/GuestForm";
 
@@ -13,9 +14,10 @@ const GuestView = () => {
     const [adding, setAdding] = useState(null);
     const [index, setIndex] = useState(-1);
     const [items, setItems] = useState([]);
+    const [searchText, setSearchText] = useState("");
 
     useEffect(() => {
-        retrieveAllItems(facilityContext.selectedFacility);
+        retrieveAllItems();
     }, [facilityContext.selectedFacility]);
 
 
@@ -23,13 +25,13 @@ const GuestView = () => {
         console.log("GuestView.handleInsert(" +
             JSON.stringify(guest, ["id", "firstName", "lastName"]) + ")");
         setAdding(null);
-        retrieveAllItems(facilityContext.selectedFacility);
+        retrieveItems(searchText);
     }
 
     const handleRemove = (guest) => {
         console.log("GuestView.handleRemove(" +
             JSON.stringify(guest, ["id", "name", "lastName"]) + ")");
-        retrieveAllItems(facilityContext.selectedFacility);
+        retrieveItems(searchText);
     }
 
     const handleSelectedItem = (newIndex) => {
@@ -47,7 +49,7 @@ const GuestView = () => {
     const handleUpdate = (guest) => {
         console.log("GuestView.handleUpdate(" +
             JSON.stringify(guest, ["id", "firstName", "lastName"]) + ")");
-        retrieveAllItems(facilityContext.selectedFacility);
+        retrieveItems(searchText);
     }
 
     const onAdd = () => {
@@ -55,22 +57,50 @@ const GuestView = () => {
         setAdding("true");
     }
 
-    const retrieveAllItems = (newSelectedFacility) => {
+    const onSearchChange = (event) => {
+        console.log("GuestView.onSearchChange(" +
+            event.target.value + ")");
+        setSearchText(event.target.value);
+        retrieveItems(event.target.value);
+    }
 
-        console.log("GuestView.retrieveAllItems for(" +
-            JSON.stringify(newSelectedFacility, ["id", "name"]) + ")");
-        FacilityClient.findGuestsByFacilityId(newSelectedFacility.id)
+    const onSearchClick = () => {
+        console.log("GuestView.onSearchClick(" +
+            searchText + ")");
+        retrieveItems(searchText);
+    }
+
+    const retrieveAllItems = () => {
+        alert("retrieveAllItems is not allowed");
+        setItems([]);
+        setIndex(-1);
+    }
+
+    const retrieveItems = (newSearchText) => {
+        if (newSearchText === "") {
+            retrieveAllItems();
+        } else {
+            retrieveMatchingItems(newSearchText);
+        }
+    }
+
+    const retrieveMatchingItems = (newSearchText) => {
+        console.log("GuestView.retrieveItems for(" +
+            JSON.stringify(facilityContext.selectedFacility,
+                ["id", "name"]) + ", " + newSearchText + ")");
+        FacilityClient.findGuestsByName
+                (facilityContext.selectedFacility.id, newSearchText)
             .then(response => {
-                console.log("GuestView.retrieveAllItems got(" +
+                console.log("GuestView.retrieveItems got(" +
                     JSON.stringify(response.data,
-                        ["id", "firstName", "lastName"]) + ")");
+                        ["id", "firstName", "lastName"]) +
+                        ", " + newSearchText + ")");
                 setItems(response.data);
             })
             .catch(e => {
                 console.log(e);
             });
         setIndex(-1);
-
     }
 
     return (
@@ -78,8 +108,19 @@ const GuestView = () => {
         <div className="container">
 
             <div className="row mt-2 mb-2">
-                <div className="col-12">
+                <div className="col-4">
                     <h4>Guests for {facilityContext.selectedFacility.name}</h4>
+                </div>
+                <div className="col-8">
+                    <SearchBar
+                        label="Filter"
+                        onChange={onSearchChange}
+                        onClick={onSearchClick}
+                        placeholder="Enter all or part of either name ..."
+                        value={searchText}
+                        withClear
+                        withSearch
+                    />
                 </div>
             </div>
 

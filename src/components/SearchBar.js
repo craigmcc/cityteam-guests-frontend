@@ -2,6 +2,7 @@ import React from "react";
 
 import { ClearButton, SearchButton } from "./buttons";
 
+// props.label - Optional label for search button [Search]
 // props.onChange - Handle (event) for search text changed -
 //   event.target.value contains the updated value.
 // props.onClick - Handle () for click on search button (or enter key) -
@@ -36,10 +37,15 @@ const SearchBar = (props) => {
             />
             <div className="input-group-append">
                 {props.withClear ? (
-                    <ClearButton onClick={onClear}/>
+                    <ClearButton
+                        onClick={onClear}
+                    />
                 ) : ( <span /> ) }
                 {props.withSearch ? (
-                    <SearchButton onClick={props.onClick}/>
+                    <SearchButton
+                        label={props.label ? props.label : "Search"}
+                        onClick={props.onClick}
+                    />
                 ) : ( <span /> ) }
             </div>
         </div>
