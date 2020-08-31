@@ -16,6 +16,7 @@ const TemplateView = () => {
 
     useEffect(() => {
         retrieveAllItems();
+        // eslint-disable-next-line
     }, [facilityContext.selectedFacility]);
 
     const handleInsert = (template) => {

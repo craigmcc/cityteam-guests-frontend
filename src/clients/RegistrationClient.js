@@ -1,0 +1,50 @@
+import http from "../http-common";
+
+let REGISTRATIONS_BASE = "/registrations";
+
+// Standard CRUD Endpoints
+
+const all = () => {
+    return http.get(REGISTRATIONS_BASE);
+}
+
+const find = registrationId => {
+    return http.get(REGISTRATIONS_BASE + `/${registrationId}`);
+}
+
+const insert = registration => {
+    return http.post(REGISTRATIONS_BASE, registration);
+}
+
+const remove = registrationId => {
+    return http.delete(REGISTRATIONS_BASE + `/${registrationId}`);
+}
+
+const update = (registrationId, registration) => {
+    return http.put(REGISTRATIONS_BASE + `/${registrationId}`, registration);
+}
+
+// Model Specific Endpoints
+
+const assign = (registrationId, assign) => {
+    return http.post(REGISTRATIONS_BASE + `/${registrationId}/assign`, assign);
+}
+
+const deassign = (registrationId) => {
+    return http.post(REGISTRATIONS_BASE + `/${registrationId}`);
+}
+
+export default {
+
+    // Standard
+    all,
+    find,
+    insert,
+    remove,
+    update,
+
+    // Specific
+    assign,
+    deassign,
+
+}

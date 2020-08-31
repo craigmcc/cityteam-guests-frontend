@@ -1,11 +1,10 @@
 import React, { useContext, useEffect, useState } from "react";
 
+import FacilityClient from "../clients/FacilityClient";
 import { AddButton } from "../components/buttons";
-import { FacilityContext } from "../contexts/FacilityContext";
 import List from "../components/List";
 import SearchBar from "../components/SearchBar";
-
-import FacilityClient from "../clients/FacilityClient";
+import { FacilityContext } from "../contexts/FacilityContext";
 import FacilityForm from "../forms/FacilityForm";
 
 const FacilityView = () => {

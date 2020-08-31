@@ -9,6 +9,7 @@ import FacilitySelector from "./components/FacilitySelector";
 import { FacilityContextProvider } from "./contexts/FacilityContext";
 import FacilityView from "./views/FacilityView";
 import GuestView from "./views/GuestView";
+import RegistrationView from "./views/RegistrationView";
 import TemplateView from "./views/TemplateView";
 
 function App() {
@@ -51,6 +52,15 @@ function App() {
                   <NavLink
                       activeClassName="active"
                       className="nav-link"
+                      to={"/registrations"}
+                  >
+                    Registrations
+                  </NavLink>
+                </li>
+                <li className="nav-item">
+                  <NavLink
+                      activeClassName="active"
+                      className="nav-link"
                       to={"/templates"}
                   >
                     Templates
@@ -71,6 +81,9 @@ function App() {
                 </Route>
                 <Route exact path="/guests">
                   <GuestView/>
+                </Route>
+                <Route exact path="/registrations">
+                  <RegistrationView/>
                 </Route>
                 <Route exact path="/templates">
                   <TemplateView/>
