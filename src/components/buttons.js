@@ -1,4 +1,4 @@
-import React /* , { useEffect, useState } */ from "react";
+import React from "react";
 
 // props.className CSS styles for this button [btn]
 // props.disabled Set if button should be disabled [not set]
@@ -87,4 +87,4 @@ export const SearchButton = (props) => {
     );
 }
 
-export default Button;
+// export default Button;

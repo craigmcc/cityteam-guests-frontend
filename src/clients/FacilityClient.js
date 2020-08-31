@@ -42,9 +42,9 @@ const findGuestsByFacilityId = facilityId => {
     return http.get(FACILITIES_BASE + `/${facilityId}/guests`);
 }
 
-const findGuestsByName = (facilityId, name) => {
+const findGuestsByName = (facilityId, name, offset, limit) => {
     return http.get(FACILITIES_BASE +
-        `/${facilityId}/guests/name/${name}`);
+        `/${facilityId}/guests/name/${name}?offset=${offset}&limit=${limit}`);
 }
 
 const findGuestsByNameExact = (facilityId, firstName, lastName) => {

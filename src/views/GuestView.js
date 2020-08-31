@@ -6,32 +6,34 @@ import List from "../components/List";
 import SearchBar from "../components/SearchBar";
 import { FacilityContext } from "../contexts/FacilityContext";
 import GuestForm from "../forms/GuestForm";
+import Pagination from "../components/Pagination";
 
 const GuestView = () => {
 
     const facilityContext = useContext(FacilityContext);
 
     const [adding, setAdding] = useState(null);
+    const [currentPage, setCurrentPage] = useState(1);
     const [index, setIndex] = useState(-1);
     const [items, setItems] = useState([]);
+    const [pageSize] = useState(10);
     const [searchText, setSearchText] = useState("");
 
     useEffect(() => {
         retrieveAllItems();
     }, [facilityContext.selectedFacility]);
 
-
     const handleInsert = (guest) => {
         console.log("GuestView.handleInsert(" +
             JSON.stringify(guest, ["id", "firstName", "lastName"]) + ")");
         setAdding(null);
-        retrieveItems(searchText);
+        retrieveItems(searchText, currentPage);
     }
 
     const handleRemove = (guest) => {
         console.log("GuestView.handleRemove(" +
             JSON.stringify(guest, ["id", "name", "lastName"]) + ")");
-        retrieveItems(searchText);
+        retrieveItems(searchText, currentPage);
     }
 
     const handleSelectedItem = (newIndex) => {
@@ -49,7 +51,7 @@ const GuestView = () => {
     const handleUpdate = (guest) => {
         console.log("GuestView.handleUpdate(" +
             JSON.stringify(guest, ["id", "firstName", "lastName"]) + ")");
-        retrieveItems(searchText);
+        retrieveItems(searchText, currentPage);
     }
 
     const onAdd = () => {
@@ -57,39 +59,54 @@ const GuestView = () => {
         setAdding("true");
     }
 
+    const onPageNext = () => {
+        let newCurrentPage = currentPage + 1;
+        setCurrentPage(newCurrentPage);
+        retrieveItems(searchText, newCurrentPage );
+    }
+
+    const onPagePrevious = () => {
+        let newCurrentPage = currentPage - 1;
+        setCurrentPage(newCurrentPage);
+        retrieveItems(searchText, newCurrentPage );
+    }
+
     const onSearchChange = (event) => {
         console.log("GuestView.onSearchChange(" +
             event.target.value + ")");
+        setCurrentPage(1);
         setSearchText(event.target.value);
-        retrieveItems(event.target.value);
+        retrieveItems(event.target.value, currentPage);
     }
 
     const onSearchClick = () => {
         console.log("GuestView.onSearchClick(" +
             searchText + ")");
-        retrieveItems(searchText);
+        retrieveItems(searchText, currentPage);
     }
 
     const retrieveAllItems = () => {
-        alert("retrieveAllItems is not allowed");
+        setCurrentPage(1);
         setItems([]);
         setIndex(-1);
     }
 
-    const retrieveItems = (newSearchText) => {
+    const retrieveItems = (newSearchText, newCurrentPage) => {
         if (newSearchText === "") {
             retrieveAllItems();
         } else {
-            retrieveMatchingItems(newSearchText);
+            retrieveMatchingItems(newSearchText, newCurrentPage);
         }
     }
 
-    const retrieveMatchingItems = (newSearchText) => {
+    const retrieveMatchingItems = (newSearchText, newCurrentPage) => {
         console.log("GuestView.retrieveItems for(" +
             JSON.stringify(facilityContext.selectedFacility,
-                ["id", "name"]) + ", " + newSearchText + ")");
+                ["id", "name"]) + ", " + newSearchText + ", " +
+                newCurrentPage + ")");
         FacilityClient.findGuestsByName
-                (facilityContext.selectedFacility.id, newSearchText)
+                (facilityContext.selectedFacility.id, newSearchText,
+                    (pageSize * (newCurrentPage - 1)), pageSize)
             .then(response => {
                 console.log("GuestView.retrieveItems got(" +
                     JSON.stringify(response.data,
@@ -119,22 +136,35 @@ const GuestView = () => {
                         placeholder="Enter all or part of either name ..."
                         value={searchText}
                         withClear
-                        withSearch
                     />
                 </div>
             </div>
 
             <div className="row">
                 <div className="col-5">
-                    <AddButton onClick={onAdd}/>
-                    <p/>
-                    <List
-                        fields={["firstName", "lastName"]}
-                        handleSelect={handleSelectedItem}
-                        headers={["First Name", "Last Name"]}
-                        index={index}
-                        items={items}
-                    />
+                    <div className="row mb-1">
+                        <div className="col float-left">
+                            <AddButton onClick={onAdd}/>
+                        </div>
+                        <div className="col float-right">
+                            <Pagination
+                                currentPage={currentPage}
+                                lastPage={(items.length === 0) ||
+                                    (items.length < pageSize)}
+                                onNext={onPageNext}
+                                onPrevious={onPagePrevious}
+                            />
+                        </div>
+                    </div>
+                    <div className="row">
+                        <List
+                            fields={["firstName", "lastName"]}
+                            handleSelect={handleSelectedItem}
+                            headers={["First Name", "Last Name"]}
+                            index={index}
+                            items={items}
+                        />
+                    </div>
                 </div>
 
                 <div className="col-7">
