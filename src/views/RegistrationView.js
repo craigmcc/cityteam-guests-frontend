@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 
 import FacilityClient from "../clients/FacilityClient";
+import { withFlattenedObjects } from "../components/fields";
 import List from "../components/List";
 import RegistrationDateSelector from "../components/RegistrationDateSelector";
 import { FacilityContext } from "../contexts/FacilityContext";
@@ -33,9 +34,19 @@ const RegistrationView = () => {
         )
             .then(response => {
                 console.log("RegistrationView.retrieveAllItems(" +
-                    JSON.stringify(response.data, ["id", "matNumber"]) + ")");
+                    JSON.stringify(response.data, ["id", "matNumber", "guest"]) + ")");
                 setIndex(-1);
-                setItems(response.data);
+/*
+                console.log("  RAI incoming =  " +
+                    JSON.stringify(response.data, null, 2));
+*/
+                let flattenedItems =
+                    withFlattenedObjects(response.data, "guest");
+/*
+                console.log("  RAI outoging = " +
+                    JSON.stringify(flattenedItems, null, 2));
+*/
+                setItems(flattenedItems);
             })
             .catch(e => {
                 console.log(e);
@@ -61,8 +72,8 @@ const RegistrationView = () => {
             <div className="row">
                 <div className="col-5">
                     <List
-                        fields={["matNumber", "features", "guestId"]}
-                        headers={["Mat", "Features", "Guest Id"]}
+                        fields={["matNumber", "features", "guest.firstName", "guest.lastName", "guest.comments"]}
+                        headers={["Mat", "Features", "First Name", "Last Name", "Guest Comments"]}
                         index={index}
                         items={items}
                     />
