@@ -18,7 +18,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "PUBLIC_URL=. react-scripts build",
+    "build": "PUBLIC_URL=http://wildfly.hopto.org:8080/guests-frontend react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
