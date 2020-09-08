@@ -235,24 +235,19 @@ let validateMatsList = (value) => {
 }
 
 let validateMatsSubset = (value, allMats) => {
-    console.log("TemplateForm.validateMatsSubset(" + value +
-        ", " + allMats + ")");
     // value is not required (use required() ahead of this
     // in the chain if it is)
     if (!value || (value.length === 0)) {
-        console.log("  this value is blank, so true");
         return true;
     }
     // allMats must already have a value
     if (!allMats || (allMats.length === 0)) {
-        console.log("  allMats is blank, so false");
         return false;
     }
     let allMatsObject;
     try {
         allMatsObject = new MatsList(allMats);
     } catch {
-        console.log("  allMats is not valid, so false");
         // allMats is not valid, so we cannot be a subset
         return false;
     }
@@ -260,10 +255,8 @@ let validateMatsSubset = (value, allMats) => {
     try {
         thisMatsObject = new MatsList(value);
         let result = thisMatsObject.isSubsetOf(allMatsObject);
-        console.log("  both are valid, result is " + result);
         return result;
     } catch {
-        console.log("  this value is not valid, so false")
         // This value is not valid, so we cannot be a subset
         return false;
     }
