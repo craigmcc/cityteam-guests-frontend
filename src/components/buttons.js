@@ -8,7 +8,7 @@ import React from "react";
 export const Button = (props) => {
     return (
         <button
-            className={props.className ? props.className : "btn"}
+            className={props.className ? props.className : "btn btn-sm"}
             disabled={props.disabled ? props.disabled : null}
             onClick={props.onClick}
             type={props.type ? props.type : "button"}
@@ -21,7 +21,7 @@ export const Button = (props) => {
 export const ActionButton = (props) => {
     return (
         <Button
-            className="btn btn-outline-primary ml-1 mr-1"
+            className="btn btn-outline-primary btn-sm ml-1 mr-1"
             disabled={props.disabled ? props.disabled : null}
             label={props.label ? props.label : "Action"}
             onClick={props.onClick}
@@ -55,7 +55,7 @@ export const CancelButton = (props) => {
 export const ClearButton = (props) => {
     return (
         <Button
-            className="btn btn-outline-primary"
+            className="btn btn-outline-primary btn-sm"
             disabled={props.disabled ? props.disabled : null}
             label={props.label ? props.label : "X"}
             onClick={props.onClick}
@@ -90,7 +90,7 @@ export const SaveButton = (props) => {
 export const SearchButton = (props) => {
     return (
         <Button
-            className="btn btn-outline-primary ml-1 mr-1"
+            className="btn btn-outline-primary btn-sm ml-1 mr-1"
             disabled={props.disabled ? props.disabled : null}
             label={props.label ? props.label : "Search"}
             onClick={props.onClick}
