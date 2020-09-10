@@ -18,6 +18,17 @@ export const Button = (props) => {
     );
 }
 
+export const ActionButton = (props) => {
+    return (
+        <Button
+            className="btn btn-outline-primary ml-1 mr-1"
+            disabled={props.disabled ? props.disabled : null}
+            label={props.label ? props.label : "Action"}
+            onClick={props.onClick}
+        />
+    );
+}
+
 export const AddButton = (props) => {
     return (
         <Button
@@ -44,7 +55,7 @@ export const CancelButton = (props) => {
 export const ClearButton = (props) => {
     return (
         <Button
-            className="btn btn-outline-secondary"
+            className="btn btn-outline-primary"
             disabled={props.disabled ? props.disabled : null}
             label={props.label ? props.label : "X"}
             onClick={props.onClick}

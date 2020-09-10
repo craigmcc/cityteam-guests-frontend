@@ -28,7 +28,7 @@ const update = (templateId, template) => {
 
 const generate = (templateId, registrationDate) => {
     return http.post(TEMPLATES_BASE +
-        `/${templateId}/registrations/${registrationDate}`);
+        `/${templateId}/generate/${registrationDate}`);
 }
 
 export default {
