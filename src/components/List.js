@@ -10,7 +10,7 @@ const List = (props) => {
 
     return (
 
-        <table className="table table-bordered table-sm">
+        <table className="table table-bordered table-hover table-sm">
 
             <thead>
             <tr className="table-secondary">

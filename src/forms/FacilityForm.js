@@ -2,37 +2,43 @@ import React, { useEffect, useState } from "react";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import * as Yup from "yup";
 
-import { CancelButton, RemoveButton, SaveButton }
+import { /* CancelButton, */ RemoveButton, SaveButton }
     from "../components/buttons";
 import { CheckboxField, TextField, toEmptyStrings, toNullValues }
     from "../components/fields";
 
 import FacilityClient from "../clients/FacilityClient";
 
+// facility     Object containing initial values to display, or null to
+//   request a blank form returned by internal initialValues() function
 // handleInsert Handle (facility) for successful insert
 // handleRemove Handle (facility) for successful remove
 // handleUpdate Handle (facility) for successful update
-// initialValues Object containing initial values to display, or null to
-//   request a blank form returned by internal initialValues() function
 const FacilityForm = (props) => {
 
     const [adding] =
-        useState(!props.initialValues);
-    const [initialValues, setInitialValues] =
-        useState(convertInitialValues(props.initialValues));
+        useState(!props.facility);
+    const [facility, setFacility] =
+        useState(convertInitialValues(props.facility));
     const [messageText, setMessageText] =
         useState(null);
     const [messageType, setMessageType] =
         useState("info");
 
     useEffect(() => {
-        setInitialValues(convertInitialValues(props.initialValues));
+        setFacility(convertInitialValues(props.facility));
         setMessageText(null);
         setMessageType("info");
-    }, [props.initialValues])
+    }, [props.facility])
 
-    let handleInsert = (facility) => {
-        let data = toNullValues(facility);
+/*
+    let handleCancel = () => {
+        console.log("FacilityForm.handleCancel(id=" + facility.id + ")");
+    }
+*/
+
+    let handleInsert = (insertedFacility) => {
+        let data = toNullValues(insertedFacility);
         setMessageText("Inserting ...");
         setMessageType("info");
         console.log("FacilityForm.handleInsert(" +
@@ -52,11 +58,11 @@ const FacilityForm = (props) => {
     }
 
     let handleRemove = () => {
-        console.log("FacilityForm.handleRemove(id=" + initialValues.id + ")");
+        console.log("FacilityForm.handleRemove(id=" + facility.id + ")");
         // TODO - confirm dialog?
         setMessageText("Removing ...");
         setMessageType("info");
-        FacilityClient.remove(initialValues.id)
+        FacilityClient.remove(facility.id)
             .then(response => {
                 setMessageText("Remove complete");
                 if (props.handleRemove) {
@@ -80,8 +86,8 @@ const FacilityForm = (props) => {
         actions.setSubmitting(false);
     }
 
-    let handleUpdate = (facility) => {
-        let data = toNullValues(facility);
+    let handleUpdate = (updatedFacility) => {
+        let data = toNullValues(updatedFacility);
         setMessageText("Updating ...");
         setMessageType("info");
         console.log("FacilityForm.handleUpdate(" +
@@ -106,7 +112,7 @@ const FacilityForm = (props) => {
                 .required("Name is required")
                 .test("unique-name",
                     "That name is already in use",
-                    (value) => validateUniqueName(value, initialValues.id)),
+                    (value) => validateUniqueName(value, facility.id)),
             address1: Yup.string(),
             address2: Yup.string(),
             city: Yup.string(),
@@ -129,9 +135,8 @@ const FacilityForm = (props) => {
     return (
 
         <Formik
-            enableReinitialize
-            initialValues={initialValues}
-            // key={JSON.stringify(initialValues.id)}
+            // enableReinitialize
+            initialValues={facility}
             onSubmit={(values, actions) => {
                 handleSubmit(values, actions);
             }}
@@ -139,14 +144,7 @@ const FacilityForm = (props) => {
             validationSchema={validationSchema}
         >
 
-            <Form className="form">
-
-                <div className="form-row mb-1">
-                    <div className="col-2"/>
-                    <div className="col-10">
-                        <h4>Facility Details</h4>
-                    </div>
-                </div>
+            <Form className="form mr-2">
 
                 <TextField autoFocus label="Name:" name="name"/>
                 <CheckboxField label="Active?" name="active"/>
@@ -216,7 +214,9 @@ const FacilityForm = (props) => {
                     <div className="col-2"/>
                     <div className="col-8">
                         <SaveButton/>
-                        <CancelButton/>
+{/*
+                        <CancelButton onClick={handleCancel}/>
+*/}
                     </div>
                     <div className="col-2 float-right">
                         <RemoveButton

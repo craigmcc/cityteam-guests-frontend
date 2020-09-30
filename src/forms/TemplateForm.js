@@ -4,7 +4,7 @@ import * as Yup from "yup";
 
 import { TextField, toEmptyStrings, toNullValues }
     from "../components/fields";
-import { CancelButton, RemoveButton, SaveButton }
+import { RemoveButton, ResetButton, SaveButton }
     from "../components/buttons";
 
 import FacilityClient from "../clients/FacilityClient";
@@ -176,7 +176,7 @@ const TemplateForm = (props) => {
                     <div className="col-2"/>
                     <div className="col-8">
                         <SaveButton/>
-                        <CancelButton/>
+                        <ResetButton/>
                     </div>
                     <div className="col-2 float-right">
                         <RemoveButton

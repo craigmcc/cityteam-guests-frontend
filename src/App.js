@@ -74,7 +74,7 @@ function App() {
 
             </nav>
 
-            <div className="container mt-3">
+            <div className="container fluid">
               <Switch>
                 <Route exact path={["/", "/facilities"]}>
                   <FacilityView/>

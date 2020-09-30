@@ -6,7 +6,7 @@ import FacilityClient from "../clients/FacilityClient";
 import GuestClient from "../clients/GuestClient";
 import { TextField, toEmptyStrings, toNullValues }
     from "../components/fields";
-import { CancelButton, RemoveButton, SaveButton }
+import { RemoveButton, ResetButton, SaveButton }
     from "../components/buttons";
 import { FacilityContext } from "../contexts/FacilityContext";
 
@@ -167,7 +167,7 @@ const GuestForm = (props) => {
                     <div className="col-3"/>
                     <div className="col-7">
                         <SaveButton/>
-                        <CancelButton/>
+                        <ResetButton/>
                     </div>
                     <div className="col-2 float-right">
                         <RemoveButton

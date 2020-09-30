@@ -47,7 +47,7 @@ export const CancelButton = (props) => {
             disabled={props.disabled ? props.disabled : null}
             label={props.label ? props.label : "Cancel"}
             onClick={props.onClick}
-            type="reset"
+//            type="reset"
         />
     );
 }
@@ -71,6 +71,18 @@ export const RemoveButton = (props) => {
             disabled={props.disabled ? props.disabled : null}
             label={props.label ? props.label : "Remove"}
             onClick={props.onClick}
+        />
+    );
+}
+
+export const ResetButton = (props) => {
+    return (
+        <Button
+            className="btn btn-secondary btn-sm ml-1 mr-1"
+            disabled={props.disabled ? props.disabled : null}
+            label={props.label ? props.label : "Reset"}
+            onClick={props.onClick}
+            type="reset"
         />
     );
 }

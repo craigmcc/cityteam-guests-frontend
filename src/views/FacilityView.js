@@ -5,25 +5,35 @@ import { AddButton } from "../components/buttons";
 import List from "../components/List";
 import SearchBar from "../components/SearchBar";
 import { FacilityContext } from "../contexts/FacilityContext";
-import FacilityForm from "../forms/FacilityForm";
+import FacilityModal from "../modals/FacilityModal";
 
 const FacilityView = () => {
 
     const facilityContext = useContext(FacilityContext);
 
-    const [adding, setAdding] = useState(null);
+    const [adding, setAdding] = useState(false);
     const [index, setIndex] = useState(-1);
     const [items, setItems] = useState([]);
     const [searchText, setSearchText] = useState("");
+    const [showModal, setShowModal] = useState(false);
 
     useEffect(() => {
         retrieveAllItems();
     }, []);
 
+    const handleHide = () => {
+        console.log("FacilityView.handleHide()");
+//        handleSelectedItem(-1);
+        setIndex(-1);
+        setAdding(false);
+//            setShowModal(false);  // Modal already hid itself
+    }
+
     const handleInsert = (facility) => {
-        console.log("FacilityContext.handleInsert(" +
+        console.log("FacilityView.handleInsert(" +
             JSON.stringify(facility, ["id", "name"]) + ")");
-        setAdding(null);
+        setAdding(false);
+        setShowModal(false);
         retrieveItems(searchText);
         facilityContext.refreshFacilities();
     }
@@ -31,6 +41,7 @@ const FacilityView = () => {
     const handleRemove = (facility) => {
         console.log("FacilityView.handleRemove(" +
             JSON.stringify(facility, ["id", "name"]) + ")");
+        setShowModal(false);
         retrieveItems(searchText);
         facilityContext.refreshFacilities();
     }
@@ -39,28 +50,33 @@ const FacilityView = () => {
         if (newIndex === index) {
             console.log("FacilityView.handleSelectedItem(-1)");
             setIndex(-1);
+            setAdding(false);
+            setShowModal(false);
         } else {
-            console.log("FacilityView.handleSelectedItem(" + newIndex +
-                ", " + JSON.stringify(items[newIndex]) + ")");
+            console.log("FacilityView.handleSelectedItem(" + newIndex + ", " +
+                JSON.stringify(items[newIndex], ["id", "name"]) + ")");
             setIndex(newIndex);
+            setAdding(false);
+            setShowModal(true);
         }
-        setAdding(null);
     }
 
     const handleUpdate = (facility) => {
         console.log("FacilityView.handleUpdate(" +
             JSON.stringify(facility, ["id", "name"]) + ")");
-        setAdding(null);
+        setAdding(false);
+        setShowModal(false);
         retrieveItems(searchText);
         facilityContext.refreshFacilities();
     }
 
     const onAdd = () => {
         console.log("FacilityView.onAdd()");
-        setAdding("true");
+        setAdding(true);
+        setShowModal(true);
     }
 
-    const onSearchChange = (event) => {
+   const onSearchChange = (event) => {
         console.log("FacilityView.onSearchChange(" + event.target.value + ")");
         setSearchText(event.target.value);
         retrieveItems(event.target.value);
@@ -107,11 +123,12 @@ const FacilityView = () => {
 
     return (
 
-        <div className={"container"}>
+        <div className="container fluid">
 
-            <div className="row mt-2 mb-2">
+            <div className="row mt-2 mb-3">
                 <div className="col-4">
-                    <h4>Facilities</h4>
+                    <strong>Facilities</strong>
+                    <AddButton onClick={onAdd}/>
                 </div>
                 <div className="col-8">
                     <SearchBar
@@ -128,34 +145,32 @@ const FacilityView = () => {
 
             <div className="row">
 
-                <div className="col-4">
-                    <AddButton onClick={onAdd}/>
-                    <p/>
+                <div className="col">
                     <List
-                        fields={["name", "state", "zipCode"]}
+                        fields={["name", "city", "state", "zipCode", "phone", "email"]}
                         handleSelect={handleSelectedItem}
-                        headers={["Name", "State", "Zip Code"]}
+                        headers={["Name", "City", "State", "Zip Code", "Phone Number",
+                            "Email Address"]}
                         index={index}
                         items={items}
                     />
                 </div>
 
-                <div className="col-8">
-                    { (adding || (index >= 0)) ? (
-                        <FacilityForm
-                            handleInsert={handleInsert}
-                            handleRemove={handleRemove}
-                            handleUpdate={handleUpdate}
-                            initialValues={(adding ? null : items[index])}
-                        />
-                    ) : (
-                        <div>
-                            <p>Please click on a Facility or press Add ...</p>
-                        </div>
-                    )}
-                </div>
-
             </div>
+
+            { (showModal) ? (
+                <div className={"col"}>
+                    <FacilityModal
+                        facility={(adding ? null : items[index])}
+                        handleHide={handleHide}
+                        handleInsert={handleInsert}
+                        handleRemove={handleRemove}
+                        handleUpdate={handleUpdate}
+                        show={true}
+                    />
+                </div>
+            ) : ( <div/> )
+            }
 
         </div>
 
