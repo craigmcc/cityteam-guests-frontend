@@ -12,32 +12,38 @@ import TemplateClient from "../clients/TemplateClient";
 import { FacilityContext } from "../contexts/FacilityContext";
 import MatsList from "../util/mats.list";
 
-// props.handleInsert Handle (template) for successful insert
-// props.handleRemove Handle (template) for successful remove
-// props.handleUpdate Handle (template) for successful update
-// props.initialValues Object containing initial values to display, or null to
-//   request a blank form returned by internal initialValues() function
+// handleInsert Handle (template) for successful insert
+// handleRemove Handle (template) for successful remove
+// handleUpdate Handle (template) for successful update
+// template     Object containing initial values to display, or null to
+//   request a blank form returned by emptyInitialValues() function
 const TemplateForm = (props) => {
 
     const facilityContext = useContext(FacilityContext);
 
     const [adding] =
-        useState(!props.initialValues);
-    const [initialValues, setInitialValues] =
-        useState(convertInitialValues(props.initialValues));
+        useState(!props.template);
+    const [template, setInitialValues] =
+        useState(convertInitialValues(props.template));
     const [messageText, setMessageText] =
         useState(null);
     const [messageType, setMessageType] =
         useState("info");
 
     useEffect(() => {
-        setInitialValues(convertInitialValues(props.initialValues));
+        setInitialValues(convertInitialValues(props.template));
         setMessageText(null);
         setMessageType("info");
-    }, [props.initialValues])
+    }, [props.template])
 
-    let handleInsert = (template) => {
-        let data = toNullValues(template);
+    /*
+        let handleCancel = () => {
+            console.log("TemplateForm.handleCancel(id=" + template.id + ")");
+        }
+    */
+
+    let handleInsert = (inserted) => {
+        let data = toNullValues(inserted);
         data.facilityId = facilityContext.selectedFacility.id;
         setMessageText("Inserting ...");
         setMessageType("info");
@@ -58,12 +64,11 @@ const TemplateForm = (props) => {
     }
 
     let handleRemove = () => {
-        console.log("TemplateForm.handleRemove(" +
-            JSON.stringify(initialValues, ["id", "name"]) + ")");
+        console.log("TemplateForm.handleRemove(id=" + template.id + ")");
         // TODO - confirm dialog?
         setMessageText("Removing ...");
         setMessageType("info");
-        TemplateClient.remove(initialValues.id)
+        TemplateClient.remove(template.id)
             .then((response) => {
                 setMessageText("Remove complete");
                 if (props.handleRemove) {
@@ -87,8 +92,8 @@ const TemplateForm = (props) => {
         actions.setSubmitting(false);
     }
 
-    let handleUpdate = (template) => {
-        let data = toNullValues(template);
+    let handleUpdate = (updated) => {
+        let data = toNullValues(updated);
         data.facilityId = facilityContext.selectedFacility.id;
         setMessageText("Updating ...");
         setMessageType("info");
@@ -116,7 +121,7 @@ const TemplateForm = (props) => {
                     "That name is already in use within this facility",
                     (value) => validateUniqueName(value,
                         facilityContext.selectedFacility.id,
-                        initialValues.id)),
+                        template.id)),
             comments: Yup.string(),
             allMats: Yup.string()
                 .required("All Mats list is required")
@@ -147,9 +152,8 @@ const TemplateForm = (props) => {
     return (
 
         <Formik
-            enableReinitialize
-            initialValues={initialValues}
-            // key={JSON.stringify(initialValues.id)}
+            // enableReinitialize
+            initialValues={template}
             onSubmit={(values, actions) => {
                 handleSubmit(values, actions);
             }}
@@ -157,14 +161,7 @@ const TemplateForm = (props) => {
             validationSchema={validationSchema}
         >
 
-            <Form className="form">
-
-                <div className="form-row mb-1">
-                    <div className="col-2"/>
-                    <div className="col-10">
-                        <h4>Template Details</h4>
-                    </div>
-                </div>
+            <Form className="form mr-2">
 
                 <TextField autoFocus label="Name:" name="name"/>
                 <TextField label="Comments:" name="comments"/>
@@ -204,9 +201,9 @@ const TemplateForm = (props) => {
 
 }
 
-let convertInitialValues = (initialValues) => {
-    return initialValues
-        ? toEmptyStrings(initialValues)
+let convertInitialValues = (template) => {
+    return template
+        ? toEmptyStrings(template)
         : toEmptyStrings(emptyInitialValues());
 }
 
@@ -254,10 +251,9 @@ let validateMatsSubset = (value, allMats) => {
     let thisMatsObject;
     try {
         thisMatsObject = new MatsList(value);
-        let result = thisMatsObject.isSubsetOf(allMatsObject);
-        return result;
+        return thisMatsObject.isSubsetOf(allMatsObject);
     } catch {
-        // This value is not valid, so we cannot be a subset
+        // This value is not valid, so it cannot be a subset
         return false;
     }
 }

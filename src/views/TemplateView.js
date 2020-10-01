@@ -4,7 +4,7 @@ import FacilityClient from "../clients/FacilityClient";
 import { AddButton } from "../components/buttons";
 import List from "../components/List";
 import { FacilityContext } from "../contexts/FacilityContext";
-import TemplateForm from "../forms/TemplateForm";
+import TemplateModal from "../modals/TemplateModal";
 
 const TemplateView = () => {
 
@@ -13,22 +13,32 @@ const TemplateView = () => {
     const [adding, setAdding] = useState(null);
     const [index, setIndex] = useState(-1);
     const [items, setItems] = useState([]);
+    const [showModal, setShowModal] = useState(false);
 
     useEffect(() => {
         retrieveAllItems();
         // eslint-disable-next-line
     }, [facilityContext.selectedFacility]);
 
+    const handleHide = () => {
+        console.log("TemplateView.handleHide()");
+//        handleSelectedItem(-1);
+        setIndex(-1);
+        setAdding(false);
+//            setShowModal(false);  // Modal already hid itself
+    }
     const handleInsert = (template) => {
         console.log("TemplateView.handleInsert(" +
             JSON.stringify(template, ["id", "name"]) + ")");
         setAdding(null);
+        setShowModal(false);
         retrieveAllItems();
     }
 
     const handleRemove = (template) => {
         console.log("TemplateView.handleRemove(" +
             JSON.stringify(template, ["id", "name"]) + ")");
+        setShowModal(false);
         retrieveAllItems();
     }
 
@@ -36,10 +46,14 @@ const TemplateView = () => {
         if (newIndex === index) {
             console.log("TemplateView.handleSelectedItem(-1)");
             setIndex(-1);
+            setAdding(false);
+            setShowModal(false);
         } else {
             console.log("TemplateView.handleSelectedItem(" + newIndex + ", " +
                 JSON.stringify(items[newIndex], ["id", "name"]) + ")");
             setIndex(newIndex);
+            setAdding(false);
+            setShowModal(true);
         }
         setAdding(null);
     }
@@ -47,16 +61,18 @@ const TemplateView = () => {
     const handleUpdate = (template) => {
         console.log("TemplateView.handleUpdate(" +
             JSON.stringify(template, ["id", "name"]) + ")");
+        setAdding(false);
+        setShowModal(false);
         retrieveAllItems();
     }
 
     const onAdd = () => {
         console.log("TemplateView.onAdd()");
-        setAdding("true");
+        setAdding(true);
+        setShowModal(true);
     }
 
     const retrieveAllItems = () => {
-
         console.log("TemplateView.retrieveAllItems for(" +
             JSON.stringify(facilityContext.selectedFacility,
                 ["id", "name"]) + ")");
@@ -72,49 +88,46 @@ const TemplateView = () => {
                 console.log(e);
             });
         setIndex(-1);
-
     }
 
     return (
 
-        <div className="container">
+        <div className="container fluid">
 
-            <div className="row mt-2 mb-2">
-                <div className="col-12">
-                    <h4>Templates for {facilityContext.selectedFacility.name}</h4>
+            <div className="row mt-2 mb-3">
+                <div className="col">
+                    <strong>Templates for {facilityContext.selectedFacility.name}</strong>
+                    <AddButton onClick={onAdd}/>
                 </div>
             </div>
 
             <div className="row">
 
-                <div className="col-4">
-                    <AddButton onClick={onAdd}/>
-                    <p/>
+                <div className="col">
                     <List
-                        fields={["name", "allMats"]}
+                        fields={["name", "allMats", "handicapMats", "socketMats"]}
                         handleSelect={handleSelectedItem}
-                        headers={["Name", "All Mats"]}
+                        headers={["Name", "All Mats", "Handicap Mats", "Socket Mats"]}
                         index={index}
                         items={items}
                     />
                 </div>
 
-                <div className="col-8">
-                    { (adding || (index >= 0)) ? (
-                        <TemplateForm
-                            initialValues={(adding ? null : items[index])}
-                            handleInsert={handleInsert}
-                            handleRemove={handleRemove}
-                            handleUpdate={handleUpdate}
-                        />
-                    ) : (
-                        <div>
-                            <p>Please click on a Template or press Add ...</p>
-                        </div>
-                    )}
-                </div>
-
             </div>
+
+            { (showModal) ? (
+                <div className={"col"}>
+                    <TemplateModal
+                        handleHide={handleHide}
+                        handleInsert={handleInsert}
+                        handleRemove={handleRemove}
+                        handleUpdate={handleUpdate}
+                        show={true}
+                        template={(adding ? null : items[index])}
+                    />
+                </div>
+            ) : ( <div/> )
+            }
 
         </div>
 

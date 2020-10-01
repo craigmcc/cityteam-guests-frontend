@@ -1,21 +1,21 @@
 import React, { useState } from "react";
 import Modal from "react-bootstrap/Modal";
 
-import FacilityForm from "../forms/FacilityForm";
+import TemplateForm from "../forms/TemplateForm";
 
-// facility      Facility to be edited, or null for adding a new object
 // handleHide    Handle () for modal being hidden
-// handleInsert  Handle (facility) for successful insert [none]
-// handleRemove  Handle (facility) for successful remove [none]
-// handleUpdate  Handle (facility) for successful update [none]
+// handleInsert  Handle (template) for successful insert [none]
+// handleRemove  Handle (template) for successful remove [none]
+// handleUpdate  Handle (template) for successful update [none]
 // show          Show this modal on initial render [false]
-const FacilityModal = (props) => {
+// template      Template to be edited, or null for adding a new object
+const TemplateModal = (props) => {
 
-    const [facility] = useState(props.facility);
     const [show, setShow] = useState(props.show);
+    const [template] = useState(props.template);
 
     let handleHide = () => {
-        console.log("FacilityModal.handleHide()");
+        console.log("TemplateModal.handleHide()");
         if (props.handleHide) {
             props.handleHide();
         }
@@ -23,7 +23,7 @@ const FacilityModal = (props) => {
     }
 
     let handleInsert = (inserted) => {
-        console.log("FacilityModal.handleInsert(" +
+        console.log("TemplateModal.handleInsert(" +
             JSON.stringify(inserted, ["id", "name"]) + ")");
         if (props.handleInsert) {
             props.handleInsert(inserted);
@@ -31,7 +31,7 @@ const FacilityModal = (props) => {
     }
 
     let handleRemove = (removed) => {
-        console.log("FacilityModal.handleRemove(" +
+        console.log("TemplateModal.handleRemove(" +
             JSON.stringify(removed, ["id", "name"]) + ")");
         if (props.handleRemove) {
             props.handleRemove(removed);
@@ -39,7 +39,7 @@ const FacilityModal = (props) => {
     }
 
     let handleUpdate = (updated) => {
-        console.log("FacilityModal.handleUpdate(" +
+        console.log("TemplateModal.handleUpdate(" +
             JSON.stringify(updated, ["id", "name"]) + ")");
         if (props.handleUpdate) {
             props.handleUpdate(updated);
@@ -57,19 +57,19 @@ const FacilityModal = (props) => {
             size="lg"
         >
 
-            { (facility) ? (
+            { (template) ? (
                 <Modal.Header>
-                    <Modal.Title>Edit Existing Facility</Modal.Title>
+                    <Modal.Title>Edit Existing Template</Modal.Title>
                 </Modal.Header>
             ) : (
                 <Modal.Header>
-                    <Modal.Title>Add New Facility</Modal.Title>
+                    <Modal.Title>Add New Template</Modal.Title>
                 </Modal.Header>
             )}
 
             <Modal.Body>
-                <FacilityForm
-                    facility={props.facility}
+                <TemplateForm
+                    template={props.template}
                     handleInsert={handleInsert}
                     handleRemove={handleRemove}
                     handleUpdate={handleUpdate}
@@ -86,4 +86,4 @@ const FacilityModal = (props) => {
 
 }
 
-export default FacilityModal;
+export default TemplateModal;

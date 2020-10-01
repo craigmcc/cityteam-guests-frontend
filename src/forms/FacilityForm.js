@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import * as Yup from "yup";
 
-import { /* CancelButton, */ RemoveButton, SaveButton }
+import { RemoveButton, ResetButton, SaveButton }
     from "../components/buttons";
 import { CheckboxField, TextField, toEmptyStrings, toNullValues }
     from "../components/fields";
@@ -10,7 +10,7 @@ import { CheckboxField, TextField, toEmptyStrings, toNullValues }
 import FacilityClient from "../clients/FacilityClient";
 
 // facility     Object containing initial values to display, or null to
-//   request a blank form returned by internal initialValues() function
+//   request a blank form returned by emptyInitialValues() function
 // handleInsert Handle (facility) for successful insert
 // handleRemove Handle (facility) for successful remove
 // handleUpdate Handle (facility) for successful update
@@ -37,8 +37,8 @@ const FacilityForm = (props) => {
     }
 */
 
-    let handleInsert = (insertedFacility) => {
-        let data = toNullValues(insertedFacility);
+    let handleInsert = (inserted) => {
+        let data = toNullValues(inserted);
         setMessageText("Inserting ...");
         setMessageType("info");
         console.log("FacilityForm.handleInsert(" +
@@ -86,8 +86,8 @@ const FacilityForm = (props) => {
         actions.setSubmitting(false);
     }
 
-    let handleUpdate = (updatedFacility) => {
-        let data = toNullValues(updatedFacility);
+    let handleUpdate = (updated) => {
+        let data = toNullValues(updated);
         setMessageText("Updating ...");
         setMessageType("info");
         console.log("FacilityForm.handleUpdate(" +
@@ -214,9 +214,7 @@ const FacilityForm = (props) => {
                     <div className="col-2"/>
                     <div className="col-8">
                         <SaveButton/>
-{/*
-                        <CancelButton onClick={handleCancel}/>
-*/}
+                        <ResetButton/>
                     </div>
                     <div className="col-2 float-right">
                         <RemoveButton
