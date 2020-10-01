@@ -27,6 +27,7 @@ const TemplateView = () => {
         setAdding(false);
 //            setShowModal(false);  // Modal already hid itself
     }
+
     const handleInsert = (template) => {
         console.log("TemplateView.handleInsert(" +
             JSON.stringify(template, ["id", "name"]) + ")");
@@ -55,7 +56,6 @@ const TemplateView = () => {
             setAdding(false);
             setShowModal(true);
         }
-        setAdding(null);
     }
 
     const handleUpdate = (template) => {

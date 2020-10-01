@@ -10,32 +10,31 @@ import { RemoveButton, ResetButton, SaveButton }
     from "../components/buttons";
 import { FacilityContext } from "../contexts/FacilityContext";
 
-// props.handleInsert Handle (guest) for successful insert
-// props.handleRemove Handle (guest) for successful remove
-// props.handleUpdate Handle (guest) for successful insert or update
-// props.initialValues Object containing initial values to display, or null to
-//   request a blank form returned by internal initialValues() function
+// guest        Guest to be edited, or null for adding a new object
+// handleInsert Handle (guest) for successful insert
+// handleRemove Handle (guest) for successful remove
+// handleUpdate Handle (guest) for successful insert or update
 const GuestForm = (props) => {
 
     const facilityContext = useContext(FacilityContext);
 
     const [adding] =
-        useState(!props.initialValues);
-    const [initialValues, setInitialValues] =
-        useState(convertInitialValues(props.initialValues));
+        useState(!props.guest);
+    const [guest, setGuest] =
+        useState(convertInitialValues(props.guest));
     const [messageText, setMessageText] =
         useState(null);
     const [messageType, setMessageType] =
         useState("info");
 
     useEffect(() => {
-        setInitialValues(convertInitialValues(props.initialValues));
+        setGuest(convertInitialValues(props.guest));
         setMessageText(null);
         setMessageType("info");
-    }, [props.initialValues])
+    }, [props.guest])
 
-    let handleInsert = (guest) => {
-        let data = toNullValues(guest);
+    let handleInsert = (inserted) => {
+        let data = toNullValues(inserted);
         data.facilityId = facilityContext.selectedFacility.id;
         setMessageText("Inserting ...");
         setMessageType("info");
@@ -57,12 +56,12 @@ const GuestForm = (props) => {
 
     let handleRemove = () => {
         console.log("GuestForm.handleRemove(" +
-            JSON.stringify(initialValues,
+            JSON.stringify(guest,
                 ["id", "firstName", "lastName"]) + ")");
         // TODO - confirm dialog?
         setMessageText("Removing ...");
         setMessageType("info");
-        GuestClient.remove(initialValues.id)
+        GuestClient.remove(guest.id)
             .then((response) => {
                 setMessageText("Remove complete");
                 if (props.handleRemove) {
@@ -86,8 +85,8 @@ const GuestForm = (props) => {
         actions.setSubmitting(false);
     }
 
-    let handleUpdate = (template) => {
-        let data = toNullValues(template);
+    let handleUpdate = (updated) => {
+        let data = toNullValues(updated);
         data.facilityId = facilityContext.selectedFacility.id;
         setMessageText("Updating ...");
         setMessageType("info");
@@ -119,7 +118,7 @@ const GuestForm = (props) => {
                         return validateUniqueName(value,
                             this.parent.firstName,
                             facilityContext.selectedFacility.id,
-                            initialValues.id)
+                            guest.id)
                     }),
             comments: Yup.string()
         });
@@ -128,8 +127,8 @@ const GuestForm = (props) => {
     return (
 
         <Formik
-            enableReinitialize
-            initialValues={initialValues}
+            // enableReinitialize
+            initialValues={guest}
             onSubmit={(values, actions) => {
                 handleSubmit(values, actions);
             }}
@@ -137,7 +136,7 @@ const GuestForm = (props) => {
             validationSchema={validationSchema}
         >
 
-            <Form className="form">
+            <Form className="form mr-2">
 
                 <div className="form-row mb-1">
                     <div className="col-3"/>
@@ -195,9 +194,9 @@ const GuestForm = (props) => {
 
 }
 
-let convertInitialValues = (initialValues) => {
-    return initialValues
-        ? toEmptyStrings(initialValues)
+let convertInitialValues = (guest) => {
+    return guest
+        ? toEmptyStrings(guest)
         : toEmptyStrings(emptyInitialValues());
 }
 

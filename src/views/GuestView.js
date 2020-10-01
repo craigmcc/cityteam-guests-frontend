@@ -5,8 +5,8 @@ import { AddButton } from "../components/buttons";
 import List from "../components/List";
 import SearchBar from "../components/SearchBar";
 import { FacilityContext } from "../contexts/FacilityContext";
-import GuestForm from "../forms/GuestForm";
 import Pagination from "../components/Pagination";
+import GuestModal from "../modals/GuestModal";
 
 const GuestView = () => {
 
@@ -18,21 +18,32 @@ const GuestView = () => {
     const [items, setItems] = useState([]);
     const [pageSize] = useState(10);
     const [searchText, setSearchText] = useState("");
+    const [showModal, setShowModal] = useState(false);
 
     useEffect(() => {
         retrieveAllItems();
     }, [facilityContext.selectedFacility]);
 
+    const handleHide = () => {
+        console.log("GuestView.handleHide()");
+//        handleSelectedItem(-1);
+        setIndex(-1);
+        setAdding(false);
+//            setShowModal(false);  // Modal already hid itself
+    }
+
     const handleInsert = (guest) => {
         console.log("GuestView.handleInsert(" +
             JSON.stringify(guest, ["id", "firstName", "lastName"]) + ")");
         setAdding(null);
+        setShowModal(false);
         retrieveItems(searchText, currentPage);
     }
 
     const handleRemove = (guest) => {
         console.log("GuestView.handleRemove(" +
             JSON.stringify(guest, ["id", "name", "lastName"]) + ")");
+        setShowModal(false);
         retrieveItems(searchText, currentPage);
     }
 
@@ -40,23 +51,29 @@ const GuestView = () => {
         if (newIndex === index) {
             console.log("GuestView.handleSelectedItem(-1)");
             setIndex(-1);
+            setAdding(false);
+            setShowModal(false);
         } else {
             console.log("GuestView.handleSelectedItem(" + newIndex + ", " +
                 JSON.stringify(items[newIndex], ["id", "firstName", "lastName"]) + ")");
             setIndex(newIndex);
+            setAdding(false);
+            setShowModal(true);
         }
-        setAdding(null);
     }
 
     const handleUpdate = (guest) => {
         console.log("GuestView.handleUpdate(" +
             JSON.stringify(guest, ["id", "firstName", "lastName"]) + ")");
+        setAdding(false);
+        setShowModal(false);
         retrieveItems(searchText, currentPage);
     }
 
     const onAdd = () => {
         console.log("GuestView.onAdd()");
-        setAdding("true");
+        setAdding(true);
+        setShowModal(true);
     }
 
     const onPageNext = () => {
@@ -122,11 +139,12 @@ const GuestView = () => {
 
     return (
 
-        <div className="container">
+        <div className="container fluid">
 
             <div className="row mt-2 mb-2">
                 <div className="col-4">
-                    <h4>Guests for {facilityContext.selectedFacility.name}</h4>
+                    <strong>Guests for {facilityContext.selectedFacility.name}</strong>
+                    <AddButton onClick={onAdd}/>
                 </div>
                 <div className="col-8">
                     <SearchBar
@@ -141,11 +159,8 @@ const GuestView = () => {
             </div>
 
             <div className="row">
-                <div className="col-5">
+                <div className="col">
                     <div className="row mb-1">
-                        <div className="col float-left">
-                            <AddButton onClick={onAdd}/>
-                        </div>
                         <div className="col float-right">
                             <Pagination
                                 currentPage={currentPage}
@@ -158,32 +173,31 @@ const GuestView = () => {
                     </div>
                     <div className="row">
                         <List
-                            fields={["firstName", "lastName"]}
+                            fields={["firstName", "lastName", "comments"]}
                             handleSelect={handleSelectedItem}
-                            headers={["First Name", "Last Name"]}
+                            headers={["First Name", "Last Name", "Comments About Guest"]}
                             index={index}
                             items={items}
                         />
                     </div>
                 </div>
 
-                <div className="col-7">
-                    { (adding || (index >= 0)) ? (
-                        <GuestForm
-                            initialValues={(adding ? null : items[index])}
-                            handleInsert={handleInsert}
-                            handleRemove={handleRemove}
-                            handleUpdate={handleUpdate}
-                        />
-                    ) : (
-                        <div>
-                            <p>Please click on a Guest or press Add ...</p>
-                        </div>
-                    )}
-                </div>
 
             </div>
 
+            { (showModal) ? (
+                <div className={"col"}>
+                    <GuestModal
+                        guest={(adding ? null : items[index])}
+                        handleHide={handleHide}
+                        handleInsert={handleInsert}
+                        handleRemove={handleRemove}
+                        handleUpdate={handleUpdate}
+                        show={true}
+                    />
+                </div>
+            ) : ( <div/> )
+            }
         </div>
 
     );
