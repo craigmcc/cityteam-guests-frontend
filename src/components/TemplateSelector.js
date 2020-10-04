@@ -38,7 +38,7 @@ export const TemplateSelector = (props) => {
         console.log("TemplateSelector.retrieveAllItems for(" +
             JSON.stringify(facilityContext.selectedFacility,
                 ["id", "name"]), 2)
-        FacilityClient.findTemplatesByFacilityId
+        FacilityClient.templateAll
                 (facilityContext.selectedFacility.id)
             .then(response => {
                 console.log("TemplateSelector.retrieveAllItems got(" +

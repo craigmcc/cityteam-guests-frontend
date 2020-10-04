@@ -121,7 +121,7 @@ const GuestView = () => {
             JSON.stringify(facilityContext.selectedFacility,
                 ["id", "name"]) + ", " + newSearchText + ", " +
                 newCurrentPage + ")");
-        FacilityClient.findGuestsByName
+        FacilityClient.guestName
                 (facilityContext.selectedFacility.id, newSearchText,
                     (pageSize * (newCurrentPage - 1)), pageSize)
             .then(response => {

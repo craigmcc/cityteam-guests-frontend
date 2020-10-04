@@ -260,7 +260,7 @@ let validateMatsSubset = (value, allMats) => {
 
 let validateUniqueName = (value, facilityId, id) => {
     return new Promise((resolve) => {
-        FacilityClient.findTemplatesByNameExact(facilityId, value)
+        FacilityClient.templateExact(facilityId, value)
             .then(response => {
                 // Exists but OK if it is this item
                 resolve(id === response.data.id);

@@ -41,7 +41,7 @@ const RegistrationView = () => {
     }
 
     const retrieveAllItems = (newRegistrationDate) => {
-        FacilityClient.findRegistrationsByFacilityAndDate(
+        FacilityClient.registrationDate(
             facilityContext.selectedFacility.id,
             newRegistrationDate
         )

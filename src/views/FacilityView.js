@@ -109,7 +109,7 @@ const FacilityView = () => {
     }
 
     const retrieveMatchingItems = (newSearchText) => {
-        FacilityClient.findByName(newSearchText)
+        FacilityClient.name(newSearchText)
             .then(response => {
                 console.log("FacilityView.retrieveMatchingItems(" +
                     JSON.stringify(response.data, ["id", "name"]) + ")");

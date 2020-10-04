@@ -2,21 +2,21 @@ import http from "../http-common";
 
 let FACILITIES_BASE = "/facilities";
 
-// Standard CRUD Endpoints
+// Standard CRUD Endpoints ---------------------------------------------------
 
 const all = () => {
     return http.get(FACILITIES_BASE);
 }
 
-const find = facilityId => {
+const find = (facilityId) => {
     return http.get(FACILITIES_BASE + `/${facilityId}`);
 }
 
-const insert = facility => {
+const insert = (facility) => {
     return http.post(FACILITIES_BASE, facility);
 }
 
-const remove = facilityId => {
+const remove = (facilityId) => {
     return http.delete(FACILITIES_BASE + `/${facilityId}`);
 }
 
@@ -24,57 +24,72 @@ const update = (facilityId, facility) => {
     return http.put(FACILITIES_BASE + `/${facilityId}`, facility);
 }
 
-// Model Specific Endpoints
+// Model Specific Endpoints --------------------------------------------------
 
-const findByActive = () => {
+// ***** Facility Lookups *****
+
+const active = () => {
     return http.get(FACILITIES_BASE + "/active");
 }
 
-const findByName = name => {
+const exact = (name) => {
+    return http.get(FACILITIES_BASE +`/exact/${name}`);
+}
+
+const name = (name) => {
     return http.get(FACILITIES_BASE + `/name/${name}`);
 }
 
-const findByNameExact = name => {
-    return http.get(FACILITIES_BASE +`/nameExact/${name}`);
-}
+// ***** Facility-Guest Relationships *****
 
-const findGuestsByFacilityId = facilityId => {
+const guestAll = (facilityId) => {
     return http.get(FACILITIES_BASE + `/${facilityId}/guests`);
 }
 
-const findGuestsByName = (facilityId, name, offset, limit) => {
+const guestExact = (facilityId, firstName, lastName) => {
+    return http.get(FACILITIES_BASE +
+        `/${facilityId}/guests/exact/${firstName}/${lastName}`);
+}
+
+const guestName = (facilityId, name, offset, limit) => {
     return http.get(FACILITIES_BASE +
         `/${facilityId}/guests/name/${name}?offset=${offset}&limit=${limit}`);
 }
 
-const findGuestsByNameExact = (facilityId, firstName, lastName) => {
+// ***** Facility-Registration Relationships *****
+
+const registrationAll = (facilityId) => {
     return http.get(FACILITIES_BASE +
-        `/${facilityId}/guests/nameExact/${firstName}/${lastName}`);
+        `/${facilityId}/registrations`);
 }
 
-const findRegistrationsByFacilityAndDate = (facilityId, registrationDate) => {
+const registrationDate = (facilityId, registrationDate) => {
     return http.get(FACILITIES_BASE +
         `/${facilityId}/registrations/${registrationDate}`);
 }
 
-const findTemplatesByFacilityId = facilityId => {
+// ***** Facility-Template Relationships *****
+
+const templateAll = (facilityId) => {
     return http.get(FACILITIES_BASE + `/${facilityId}/templates`);
 }
 
-const findTemplatesByName = (facilityId, name) => {
+const templateExact = (facilityId, name) => {
+    return http.get(FACILITIES_BASE +
+        `/${facilityId}/templates/exact/${name}`);
+}
+
+const templateName = (facilityId, name) => {
     return http.get(FACILITIES_BASE +
         `/${facilityId}/templates/name/${name}`);
 }
 
-const findTemplatesByNameExact = (facilityId, name) => {
-    return http.get(FACILITIES_BASE +
-        `/${facilityId}/templates/nameExact/${name}`);
-}
-
+/*
 const removeRegistrationsByFacilityAndDate = (facilityId, registrationDate) => {
     return http.delete(FACILITIES_BASE +
         `/${facilityId}/registrations/${registrationDate}`);
 }
+*/
 
 // Export All Endpoints
 
@@ -88,16 +103,17 @@ export default {
     update,
 
     // Specific
-    findByActive,
-    findByName,
-    findByNameExact,
-    findGuestsByFacilityId,
-    findGuestsByName,
-    findGuestsByNameExact,
-    findRegistrationsByFacilityAndDate,
-    findTemplatesByFacilityId,
-    findTemplatesByName,
-    findTemplatesByNameExact,
-    removeRegistrationsByFacilityAndDate
+    active: active,
+    exact: exact,
+    name: name,
+    guestAll: guestAll,
+    guestExact: guestExact,
+    guestName: guestName,
+    registrationAll: registrationAll,
+    registrationDate: registrationDate,
+    templateAll: templateAll,
+    templateExact: templateExact,
+    templateName: templateName,
+//    removeRegistrationsByFacilityAndDate
 
 };

@@ -214,7 +214,7 @@ let validateUniqueName = (value, firstName, facilityId, id) => {
     console.log("GuestForm.validateUniqueName(lastName=" + value +
         ", firstName=" + firstName + ", facilityId=" + facilityId + ", id=" + id + ")");
     return new Promise((resolve) => {
-        FacilityClient.findGuestsByNameExact(facilityId, firstName, value)
+        FacilityClient.guestExact(facilityId, firstName, value)
             .then(response => {
                 // Exists but OK if it is this item
                 resolve(id === response.data.id);

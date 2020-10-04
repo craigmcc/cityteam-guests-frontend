@@ -27,7 +27,7 @@ export const FacilityContextProvider = (props) => {
     useEffect(() => {
 
         function fetchData(name) {
-            FacilityClient.findByActive()
+            FacilityClient.active()
                 .then(response => {
                     console.log("FacilityContext.fetchData.available(" +
                         JSON.stringify(response.data, ["id", "name"]) + ")");
@@ -52,7 +52,7 @@ export const FacilityContextProvider = (props) => {
     }
 
     const refreshFacilities = () => {
-        FacilityClient.findByActive()
+        FacilityClient.active()
             .then(response => {
                 console.log("FacilityContext.refreshFacilities(" +
                     JSON.stringify(response.data, ["id", "name"]) + ")");

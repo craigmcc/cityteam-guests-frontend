@@ -290,7 +290,7 @@ let validateState = (value) => {
 
 let validateUniqueName = (value, id) => {
     return new Promise((resolve) => {
-        FacilityClient.findByNameExact(value)
+        FacilityClient.exact(value)
             .then(response => {
                 // Exists, but OK if it is this item
                 resolve(id === response.data.id);

@@ -76,7 +76,7 @@ const TemplateView = () => {
         console.log("TemplateView.retrieveAllItems for(" +
             JSON.stringify(facilityContext.selectedFacility,
                 ["id", "name"]) + ")");
-        FacilityClient.findTemplatesByFacilityId
+        FacilityClient.templateAll
                 (facilityContext.selectedFacility.id)
             .then(response => {
                 console.log("TemplateView.retrieveAllItems got(" +
