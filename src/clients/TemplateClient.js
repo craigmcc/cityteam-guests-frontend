@@ -1,22 +1,23 @@
 import http from "../http-common";
+import queryParameters from "../util/query.parameters";
 
 let TEMPLATES_BASE = "/templates";
 
-// Standard CRUD Endpoints
+// Standard CRUD Endpoints ---------------------------------------------------
 
-const all = () => {
-    return http.get(TEMPLATES_BASE);
+const all = (options) => {
+    return http.get(TEMPLATES_BASE + `${queryParameters(options)}`);
 }
 
-const find = templateId => {
-    return http.get(TEMPLATES_BASE + `/${templateId}`);
+const find = (templateId, options) => {
+    return http.get(TEMPLATES_BASE + `/${templateId}${queryParameters(options)}`);
 }
 
-const insert = template => {
+const insert = (template) => {
     return http.post(TEMPLATES_BASE, template);
 }
 
-const remove = templateId => {
+const remove = (templateId) => {
     return http.delete(TEMPLATES_BASE + `/${templateId}`);
 }
 

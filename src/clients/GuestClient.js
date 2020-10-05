@@ -1,15 +1,16 @@
 import http from "../http-common";
+import queryParameters from "../util/query.parameters";
 
 let GUESTS_BASE = "/guests";
 
 // Standard CRUD Endpoints
 
-const all = () => {
-    return http.get(GUESTS_BASE);
+const all = (options) => {
+    return http.get(GUESTS_BASE + `${queryParameters(options)}`);
 }
 
-const find = guestId => {
-    return http.get(GUESTS_BASE + `/${guestId}`);
+const find = (guestId, options) => {
+    return http.get(GUESTS_BASE + `/${guestId}${queryParameters(options)}`);
 }
 
 const insert = guest => {

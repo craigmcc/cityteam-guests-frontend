@@ -43,7 +43,8 @@ const RegistrationView = () => {
     const retrieveAllItems = (newRegistrationDate) => {
         FacilityClient.registrationDate(
             facilityContext.selectedFacility.id,
-            newRegistrationDate
+            newRegistrationDate,
+            { withGuest: "" }
         )
             .then(response => {
                 console.log("RegistrationView.retrieveAllItems(" +

@@ -1,15 +1,16 @@
 import http from "../http-common";
+import queryParameters from "../util/query.parameters";
 
 let BANS_BASE = "/bans";
 
 // Standard CRUD Endpoints
 
-const all = () => {
-    return http.get(BANS_BASE);
+const all = (options) => {
+    return http.get(BANS_BASE + `${queryParameters(options)}`);
 }
 
-const find = banId => {
-    return http.get(BANS_BASE + `/${banId}`);
+const find = (banId, options) => {
+    return http.get(BANS_BASE + `/${banId}${queryParameters(options)}`);
 }
 
 const insert = ban => {

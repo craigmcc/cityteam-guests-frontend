@@ -122,8 +122,12 @@ const GuestView = () => {
                 ["id", "name"]) + ", " + newSearchText + ", " +
                 newCurrentPage + ")");
         FacilityClient.guestName
-                (facilityContext.selectedFacility.id, newSearchText,
-                    (pageSize * (newCurrentPage - 1)), pageSize)
+                (facilityContext.selectedFacility.id,
+                 newSearchText,
+                 {
+                     limit: pageSize,
+                     offset: (pageSize * (newCurrentPage - 1))
+                 })
             .then(response => {
                 console.log("GuestView.retrieveItems got(" +
                     JSON.stringify(response.data,

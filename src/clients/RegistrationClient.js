@@ -1,15 +1,16 @@
 import http from "../http-common";
+import queryParameters from "../util/query.parameters";
 
 let REGISTRATIONS_BASE = "/registrations";
 
 // Standard CRUD Endpoints
 
-const all = () => {
-    return http.get(REGISTRATIONS_BASE);
+const all = (options) => {
+    return http.get(REGISTRATIONS_BASE + `${queryParameters(options)}`);
 }
 
-const find = registrationId => {
-    return http.get(REGISTRATIONS_BASE + `/${registrationId}`);
+const find = (registrationId, options) => {
+    return http.get(REGISTRATIONS_BASE + `/${registrationId}${queryParameters(options)}`);
 }
 
 const insert = registration => {
