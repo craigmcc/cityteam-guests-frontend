@@ -10,6 +10,7 @@ import { FacilityContextProvider } from "./contexts/FacilityContext";
 import FacilityView from "./views/FacilityView";
 import GuestView from "./views/GuestView";
 import RegistrationView from "./views/RegistrationView";
+import SandboxView from "./sandbox/SandboxView";
 import TemplateView from "./views/TemplateView";
 
 function App() {
@@ -66,6 +67,15 @@ function App() {
                     Templates
                   </NavLink>
                 </li>
+                <li className="nav-item">
+                  <NavLink
+                      activeClassName="active"
+                      className="nav-link"
+                      to={"/sandbox"}
+                  >
+                    Sandbox
+                  </NavLink>
+                </li>
               </div>
 
               <div className="navbar-nav mr-2">
@@ -84,6 +94,9 @@ function App() {
                 </Route>
                 <Route exact path="/registrations">
                   <RegistrationView/>
+                </Route>
+                <Route exact path="/sandbox">
+                  <SandboxView/>
                 </Route>
                 <Route exact path="/templates">
                   <TemplateView/>
