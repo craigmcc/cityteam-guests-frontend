@@ -125,7 +125,7 @@ const FacilityView = () => {
 
         <>
 
-            {/* Basic View */}
+            {/* List View */}
             <Container fluid>
 
                 <Row className="mt-3 mb-3">
