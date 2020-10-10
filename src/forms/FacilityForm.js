@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import Button from "react-bootstrap/Button";
+import Modal from "react-bootstrap/Modal";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import * as Yup from "yup";
 
@@ -16,64 +18,59 @@ import FacilityClient from "../clients/FacilityClient";
 // handleUpdate Handle (facility) for successful update
 const FacilityForm = (props) => {
 
-    const [adding] =
-        useState(!props.facility);
+    const [adding] = useState(!props.facility);
     const [facility, setFacility] =
         useState(convertInitialValues(props.facility));
-    const [messageText, setMessageText] =
-        useState(null);
-    const [messageType, setMessageType] =
-        useState("info");
+    const [showRemoveConfirm, setShowRemoveConfirm] = useState(false);
 
     useEffect(() => {
         setFacility(convertInitialValues(props.facility));
-        setMessageText(null);
-        setMessageType("info");
     }, [props.facility])
-
-/*
-    let handleCancel = () => {
-        console.log("FacilityForm.handleCancel(id=" + facility.id + ")");
-    }
-*/
 
     let handleInsert = (inserted) => {
         let data = toNullValues(inserted);
-        setMessageText("Inserting ...");
-        setMessageType("info");
-        console.log("FacilityForm.handleInsert(" +
+        console.info("FacilityForm.handleInsert(" +
             JSON.stringify(data, ["id", "name"]) + ")");
         FacilityClient.insert(data)
             .then(response => {
-                setMessageText("Insert complete");
                 if (props.handleInsert) {
                     props.handleInsert(response.data);
                 }
             })
-            .catch(error => {
-                setMessageText("Insert error: " +
-                    JSON.stringify(error, null, 2));
-                setMessageType("danger");
+            .catch(err => {
+                console.error("FacilityForm.insert() error: ", err);
+                alert(`FacilityForm.insert() error: '${err.message}'`)
             })
     }
 
     let handleRemove = () => {
-        console.log("FacilityForm.handleRemove(id=" + facility.id + ")");
-        // TODO - confirm dialog?
-        setMessageText("Removing ...");
-        setMessageType("info");
+        console.info("FacilityForm.handleRemove(id=" + facility.id + ")");
         FacilityClient.remove(facility.id)
             .then(response => {
-                setMessageText("Remove complete");
                 if (props.handleRemove) {
                     props.handleRemove(response.data);
                 }
             })
-            .catch(error => {
-                setMessageText("Remove error: " +
-                    JSON.stringify(error, null, 2));
-                setMessageType("danger");
+            .catch(err => {
+                console.error("FacilityForm.remove() error: ", err);
+                alert(`FacilityForm.remove() error: '${err.message}'`);
             })
+    }
+
+    let handleRemoveConfirm = () => {
+        console.info("FacilityForm.handleRemoveConfirm()");
+        setShowRemoveConfirm(true);
+    }
+
+    let handleRemoveConfirmNegative = () => {
+        console.info("FacilityForm.handleRemoveConfirmNegative()");
+        setShowRemoveConfirm(false);
+    }
+
+    let handleRemoveConfirmPositive = () => {
+        console.info("FacilityForm.handleRemoveConfirmPositive()");
+        setShowRemoveConfirm(false);
+        handleRemove();
     }
 
     let handleSubmit = (values, actions) => {
@@ -88,21 +85,17 @@ const FacilityForm = (props) => {
 
     let handleUpdate = (updated) => {
         let data = toNullValues(updated);
-        setMessageText("Updating ...");
-        setMessageType("info");
-        console.log("FacilityForm.handleUpdate(" +
+        console.info("FacilityForm.handleUpdate(" +
             JSON.stringify(data, ["id", "name"]) + ")");
         FacilityClient.update(data.id, data)
             .then(response => {
-                setMessageText("Update complete");
                 if (props.handleUpdate) {
                     props.handleUpdate(response.data);
                 }
             })
-            .catch(error => {
-                setMessageText("Update error: " +
-                    JSON.stringify(error, null, 2));
-                setMessageType("danger");
+            .catch(err => {
+                console.error("FacilityForm.update() error: ", err);
+                alert(`FacilityForm.update() error: '${err.message}'`);
             })
     }
 
@@ -134,109 +127,142 @@ const FacilityForm = (props) => {
 
     return (
 
-        <Formik
-            // enableReinitialize
-            initialValues={facility}
-            onSubmit={(values, actions) => {
-                handleSubmit(values, actions);
-            }}
-            validateOnChange={false}
-            validationSchema={validationSchema}
-        >
+        <>
 
-            <Form className="form mr-2">
+            {/* Details Form */}
+            <Formik
+                // enableReinitialize
+                initialValues={facility}
+                onSubmit={(values, actions) => {
+                    handleSubmit(values, actions);
+                }}
+                validateOnChange={false}
+                validationSchema={validationSchema}
+            >
 
-                <TextField autoFocus label="Name:" name="name"/>
-                <CheckboxField label="Active?" name="active"/>
-                <TextField label="Address:" name="address1"/>
-                <TextField label="" name="address2"/>
+                <Form className="form mr-2">
 
-                <div className="form-row">
+                    <TextField autoFocus label="Name:" name="name"/>
+                    <CheckboxField label="Active?" name="active"/>
+                    <TextField label="Address:" name="address1"/>
+                    <TextField label="" name="address2"/>
 
-                    <div className="row form-group">
-                        <label className="col-2" htmlFor="city">City:</label>
-                        <Field
-                            className="col-5"
-                            id="city"
-                            name="city"
-                            type="text"
-                        />
-                        <label className="col-1" htmlFor="state">St:</label>
-                        <Field
-                            className="col-1"
-                            id="state"
-                            name="state"
-                            type="text"
-                        />
-                        <label className="col-1" htmlFor="zipCode">Zip:</label>
-                        <Field
-                            className="col-2"
-                            id="zipCode"
-                            name="zipCode"
-                            type="text"
-                        />
+                    <div className="form-row">
+
+                        <div className="row form-group">
+                            <label className="col-2" htmlFor="city">City:</label>
+                            <Field
+                                className="col-5"
+                                id="city"
+                                name="city"
+                                type="text"
+                            />
+                            <label className="col-1" htmlFor="state">St:</label>
+                            <Field
+                                className="col-1"
+                                id="state"
+                                name="state"
+                                type="text"
+                            />
+                            <label className="col-1" htmlFor="zipCode">Zip:</label>
+                            <Field
+                                className="col-2"
+                                id="zipCode"
+                                name="zipCode"
+                                type="text"
+                            />
+                        </div>
+
                     </div>
 
-                </div>
-
-                <div className="row">
-                    <div className="col-2"/>
-                    <div className="col-10">
-                        <ErrorMessage
-                            className="col alert alert-danger"
-                            component="div"
-                            name="city"/>
-                    </div>
-                </div>
-                <div className="row">
-                    <div className="col-2"/>
-                    <div className="col-10">
-                        <ErrorMessage
-                            className="col alert alert-danger"
-                            component="div"
-                            name="state"/>
-                    </div>
-                </div>
-                <div className="row">
-                    <div className="col-2"/>
-                    <div className="col-10">
-                        <ErrorMessage
-                            className="col alert alert-danger"
-                            component="div"
-                            name="zipCode"/>
-                    </div>
-                </div>
-
-                <TextField label="Email:" name="email"/>
-                <TextField label="Phone:" name="phone"/>
-
-                <div className="row">
-                    <div className="col-2"/>
-                    <div className="col-8">
-                        <SaveButton/>
-                        <ResetButton/>
-                    </div>
-                    <div className="col-2 float-right">
-                        <RemoveButton
-                            disabled={adding}
-                            onClick={handleRemove}/>
-                    </div>
-                </div>
-
-                { (messageText) ? (
-                    <div className="row mt-1">
+                    <div className="row">
                         <div className="col-2"/>
-                        <div className={"alert alert-" + messageType}>
-                            {messageText}
+                        <div className="col-10">
+                            <ErrorMessage
+                                className="col alert alert-danger"
+                                component="div"
+                                name="city"/>
                         </div>
                     </div>
-                ) : (
-                    <div/>
-                )}
+                    <div className="row">
+                        <div className="col-2"/>
+                        <div className="col-10">
+                            <ErrorMessage
+                                className="col alert alert-danger"
+                                component="div"
+                                name="state"/>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-2"/>
+                        <div className="col-10">
+                            <ErrorMessage
+                                className="col alert alert-danger"
+                                component="div"
+                                name="zipCode"/>
+                        </div>
+                    </div>
 
-            </Form>
+                    <TextField label="Email:" name="email"/>
+                    <TextField label="Phone:" name="phone"/>
 
-        </Formik>
+                    <div className="row">
+                        <div className="col-2"/>
+                        <div className="col-8">
+                            <SaveButton/>
+                            <ResetButton/>
+                        </div>
+                        <div className="col-2 float-right">
+                            <RemoveButton
+                                disabled={adding}
+                                onClick={handleRemoveConfirm}/>
+                        </div>
+                    </div>
+
+                </Form>
+
+            </Formik>
+
+            {/* Remove Confirm Modal */}
+            <Modal
+                animation={false}
+                backdrop="static"
+                centered
+                dialogClassName="bg-danger"
+                onHide={handleRemoveConfirmNegative}
+                show={showRemoveConfirm}
+                size="lg"
+            >
+                <Modal.Header closeButton>
+                    <Modal.Title>WARNING:  Potential Data Loss</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <p>
+                        Removing this Facility not reversible, and
+                        <strong>
+                            &nbsp;will also remove ALL related Guest,
+                            Registration, and Template information
+                        </strong>.
+                    </p>
+                    <p>Consider marking this Facility as inactive instead.</p>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button
+                        onClick={handleRemoveConfirmPositive}
+                        variant="danger"
+                    >
+                        Remove
+                    </Button>
+                    <Button
+                        onClick={handleRemoveConfirmNegative}
+                        variant="primary"
+                    >
+                        Cancel
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+
+        </>
 
     );
 
@@ -296,8 +322,8 @@ let validateUniqueName = (value, id) => {
                 resolve(id === response.data.id);
             })
             .catch(() => {
-//                console.log("Uniqueness status: ", error.response.status);
-//                console.log("Uniqueness body:   " + error.response.data);
+//                console.info("Uniqueness status: ", error.response.status);
+//                console.info("Uniqueness body:   " + error.response.data);
                 // Does not exist, so definitely unique
                 resolve(true);
             })
