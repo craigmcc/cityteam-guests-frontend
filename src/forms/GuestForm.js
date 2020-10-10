@@ -1,4 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
+import Button from "react-bootstrap/Button";
+import Modal from "react-bootstrap/Modal";
 import { Form, Formik } from "formik";
 import * as Yup from "yup";
 
@@ -8,6 +10,7 @@ import { TextField, toEmptyStrings, toNullValues }
     from "../components/fields";
 import { RemoveButton, ResetButton, SaveButton }
     from "../components/buttons";
+
 import { FacilityContext } from "../contexts/FacilityContext";
 
 // guest        Guest to be edited, or null for adding a new object
@@ -18,61 +21,62 @@ const GuestForm = (props) => {
 
     const facilityContext = useContext(FacilityContext);
 
-    const [adding] =
-        useState(!props.guest);
+    const [adding] = useState(!props.guest);
     const [guest, setGuest] =
         useState(convertInitialValues(props.guest));
-    const [messageText, setMessageText] =
-        useState(null);
-    const [messageType, setMessageType] =
-        useState("info");
+    const [showRemoveConfirm, setShowRemoveConfirm] = useState(false);
 
     useEffect(() => {
         setGuest(convertInitialValues(props.guest));
-        setMessageText(null);
-        setMessageType("info");
     }, [props.guest])
 
     let handleInsert = (inserted) => {
         let data = toNullValues(inserted);
         data.facilityId = facilityContext.selectedFacility.id;
-        setMessageText("Inserting ...");
-        setMessageType("info");
-        console.log("GuestForm.handleInsert(" +
+        console.info("GuestForm.handleInsert(" +
             JSON.stringify(data, ["id", "firstName", "lastName"]) + ")");
         GuestClient.insert(data)
             .then(response => {
-                setMessageText("Insert complete");
                 if (props.handleInsert) {
                     props.handleInsert(response.data);
                 }
             })
-            .catch(error => {
-                setMessageText("Insert error: " +
-                    JSON.stringify(error, null, 2));
-                setMessageType("danger");
+            .catch(err => {
+                console.error("GuestForm.insert() error: ", err);
+                alert(`GuestForm.insert() error: '${err.message}'`);
             })
     }
 
     let handleRemove = () => {
-        console.log("GuestForm.handleRemove(" +
+        console.info("GuestForm.handleRemove(" +
             JSON.stringify(guest,
                 ["id", "firstName", "lastName"]) + ")");
-        // TODO - confirm dialog?
-        setMessageText("Removing ...");
-        setMessageType("info");
         GuestClient.remove(guest.id)
             .then((response) => {
-                setMessageText("Remove complete");
                 if (props.handleRemove) {
                     props.handleRemove(response.data);
                 }
             })
-            .catch(error => {
-                setMessageText("Remove error: " +
-                    JSON.stringify(error, null, 2));
-                setMessageType("danger");
+            .catch(err => {
+                console.error("GuestForm.remove() error: ", err);
+                alert(`GuestForm.insert() error: '${err.message}'`);
             })
+    }
+
+    let handleRemoveConfirm = () => {
+        console.info("GuestForm.handleRemoveConfirm()");
+        setShowRemoveConfirm(true);
+    }
+
+    let handleRemoveConfirmNegative = () => {
+        console.info("GuestForm.handleRemoveConfirmNegative()");
+        setShowRemoveConfirm(false);
+    }
+
+    let handleRemoveConfirmPositive = () => {
+        console.info("GuestForm.handleRemoveConfirmPositive()");
+        setShowRemoveConfirm(false);
+        handleRemove();
     }
 
     let handleSubmit = (values, actions) => {
@@ -88,21 +92,17 @@ const GuestForm = (props) => {
     let handleUpdate = (updated) => {
         let data = toNullValues(updated);
         data.facilityId = facilityContext.selectedFacility.id;
-        setMessageText("Updating ...");
-        setMessageType("info");
-        console.log("GuestForm.handleUpdate(" +
+        console.info("GuestForm.handleUpdate(" +
             JSON.stringify(data, ["id", "firstName", "lastName"]) + ")");
         GuestClient.update(data.id, data)
             .then(response => {
-                setMessageText("Update complete");
                 if (props.handleUpdate) {
                     props.handleUpdate(response.data);
                 }
             })
-            .catch(error => {
-                setMessageText("Update error: " +
-                    JSON.stringify(error, null, 2));
-                setMessageType("danger");
+            .catch(err => {
+                console.error("GuestForm.update() error: ", err);
+                alert(`GuestForm.update() error: '${err.message}'`);
             })
     }
 
@@ -126,69 +126,102 @@ const GuestForm = (props) => {
 
     return (
 
-        <Formik
-            // enableReinitialize
-            initialValues={guest}
-            onSubmit={(values, actions) => {
-                handleSubmit(values, actions);
-            }}
-            validateOnChange={false}
-            validationSchema={validationSchema}
-        >
+        <>
 
-            <Form className="form mr-2">
+            {/* Details Form */}
+            <Formik
+                // enableReinitialize
+                initialValues={guest}
+                onSubmit={(values, actions) => {
+                    handleSubmit(values, actions);
+                }}
+                validateOnChange={false}
+                validationSchema={validationSchema}
+            >
 
-                <div className="form-row mb-1">
-                    <div className="col-3"/>
-                    <div className="col-9">
-                        <h4>Guest Details</h4>
-                    </div>
-                </div>
+                <Form className="form mr-2">
 
-                <TextField
-                    autoFocus
-                    fieldClassName="col-9"
-                    label="First Name:"
-                    labelClassName="col-3"
-                    name="firstName"/>
-                <TextField
-                    fieldClassName="col-9"
-                    label="Last Name:"
-                    labelClassName="col-3"
-                    name="lastName"/>
-                <TextField
-                    fieldClassName="col-9"
-                    label="Comments:"
-                    labelClassName="col-3"
-                    name="comments"/>
-
-                <div className="row">
-                    <div className="col-3"/>
-                    <div className="col-7">
-                        <SaveButton/>
-                        <ResetButton/>
-                    </div>
-                    <div className="col-2 float-right">
-                        <RemoveButton
-                            disabled={adding}
-                            onClick={handleRemove}/>
-                    </div>
-                </div>
-
-                { (messageText) ? (
-                    <div className="row mt-1">
-                        <div className="col-2"/>
-                        <div className={"alert alert-" + messageType}>
-                            {messageText}
+                    <div className="form-row mb-1">
+                        <div className="col-3"/>
+                        <div className="col-9">
+                            <h4>Guest Details</h4>
                         </div>
                     </div>
-                ) : (
-                    <div/>
-                )}
 
-            </Form>
+                    <TextField
+                        autoFocus
+                        fieldClassName="col-9"
+                        label="First Name:"
+                        labelClassName="col-3"
+                        name="firstName"/>
+                    <TextField
+                        fieldClassName="col-9"
+                        label="Last Name:"
+                        labelClassName="col-3"
+                        name="lastName"/>
+                    <TextField
+                        fieldClassName="col-9"
+                        label="Comments:"
+                        labelClassName="col-3"
+                        name="comments"/>
 
-        </Formik>
+                    <div className="row">
+                        <div className="col-3"/>
+                        <div className="col-7">
+                            <SaveButton/>
+                            <ResetButton/>
+                        </div>
+                        <div className="col-2 float-right">
+                            <RemoveButton
+                                disabled={adding}
+                                onClick={handleRemoveConfirm}/>
+                        </div>
+                    </div>
+
+                </Form>
+
+            </Formik>
+
+            {/* Remove Confirm Modal */}
+            <Modal
+                animation={false}
+                backdrop="static"
+                centered
+                dialogClassName="bg-danger"
+                onHide={handleRemoveConfirmNegative}
+                show={showRemoveConfirm}
+                size="lg"
+            >
+                <Modal.Header closeButton>
+                    <Modal.Title>WARNING:  Potential Data Loss</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <p>
+                        Removing this Guest not reversible, and
+                        <strong>
+                            &nbsp;will also remove ALL related
+                            Registration history information
+                        </strong>.
+                    </p>
+                    <p>Consider marking this Guest as inactive instead.</p>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button
+                        onClick={handleRemoveConfirmPositive}
+                        variant="danger"
+                    >
+                        Remove
+                    </Button>
+                    <Button
+                        onClick={handleRemoveConfirmNegative}
+                        variant="primary"
+                    >
+                        Cancel
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+
+        </>
 
     )
 
@@ -211,7 +244,7 @@ let emptyInitialValues = () => {
 }
 
 let validateUniqueName = (value, firstName, facilityId, id) => {
-    console.log("GuestForm.validateUniqueName(lastName=" + value +
+    console.info("GuestForm.validateUniqueName(lastName=" + value +
         ", firstName=" + firstName + ", facilityId=" + facilityId + ", id=" + id + ")");
     return new Promise((resolve) => {
         FacilityClient.guestExact(facilityId, firstName, value)

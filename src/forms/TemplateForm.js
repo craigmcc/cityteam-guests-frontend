@@ -1,11 +1,13 @@
 import React, { useContext, useEffect, useState } from "react";
+import Button from "react-bootstrap/Button";
+import Modal from "react-bootstrap/Modal";
 import { Form, Formik } from "formik";
 import * as Yup from "yup";
 
-import { TextField, toEmptyStrings, toNullValues }
-    from "../components/fields";
 import { RemoveButton, ResetButton, SaveButton }
     from "../components/buttons";
+import { TextField, toEmptyStrings, toNullValues }
+    from "../components/fields";
 
 import FacilityClient from "../clients/FacilityClient";
 import TemplateClient from "../clients/TemplateClient";
@@ -21,65 +23,60 @@ const TemplateForm = (props) => {
 
     const facilityContext = useContext(FacilityContext);
 
-    const [adding] =
-        useState(!props.template);
+    const [adding] = useState(!props.template);
     const [template, setInitialValues] =
         useState(convertInitialValues(props.template));
-    const [messageText, setMessageText] =
-        useState(null);
-    const [messageType, setMessageType] =
-        useState("info");
+    const [showRemoveConfirm, setShowRemoveConfirm] = useState(false);
 
     useEffect(() => {
         setInitialValues(convertInitialValues(props.template));
-        setMessageText(null);
-        setMessageType("info");
     }, [props.template])
-
-    /*
-        let handleCancel = () => {
-            console.log("TemplateForm.handleCancel(id=" + template.id + ")");
-        }
-    */
 
     let handleInsert = (inserted) => {
         let data = toNullValues(inserted);
         data.facilityId = facilityContext.selectedFacility.id;
-        setMessageText("Inserting ...");
-        setMessageType("info");
-        console.log("TemplateForm.handleInsert(" +
+        console.info("TemplateForm.handleInsert(" +
             JSON.stringify(data, ["id", "name"]) + ")");
         TemplateClient.insert(data)
             .then(response => {
-                setMessageText("Insert complete");
                 if (props.handleInsert) {
                     props.handleInsert(response.data);
                 }
             })
-            .catch(error => {
-                setMessageText("Insert error: " +
-                    JSON.stringify(error, null, 2));
-                setMessageType("danger");
+            .catch(err => {
+                console.error("TemplateForm.insert() error: ", err);
+                alert(`TemplateForm.insert() error: '${err.message}'`);
             })
     }
 
     let handleRemove = () => {
-        console.log("TemplateForm.handleRemove(id=" + template.id + ")");
-        // TODO - confirm dialog?
-        setMessageText("Removing ...");
-        setMessageType("info");
+        console.info("TemplateForm.handleRemove(id=" + template.id + ")");
         TemplateClient.remove(template.id)
             .then((response) => {
-                setMessageText("Remove complete");
                 if (props.handleRemove) {
                     props.handleRemove(response.data);
                 }
             })
-            .catch(error => {
-                setMessageText("Remove error: " +
-                    JSON.stringify(error, null, 2));
-                setMessageType("danger");
+            .catch(err => {
+                console.error("TemplateForm.remove() error: ", err);
+                alert(`TemplateForm.remove() error: '${err.message}'`);
             })
+    }
+
+    let handleRemoveConfirm = () => {
+        console.info("TemplateForm.handleRemoveConfirm()");
+        setShowRemoveConfirm(true);
+    }
+
+    let handleRemoveConfirmNegative = () => {
+        console.info("TemplateForm.handleRemoveConfirmNegative()");
+        setShowRemoveConfirm(false);
+    }
+
+    let handleRemoveConfirmPositive = () => {
+        console.info("TemplateForm.handleRemoveConfirmPositive()");
+        setShowRemoveConfirm(false);
+        handleRemove();
     }
 
     let handleSubmit = (values, actions) => {
@@ -95,21 +92,17 @@ const TemplateForm = (props) => {
     let handleUpdate = (updated) => {
         let data = toNullValues(updated);
         data.facilityId = facilityContext.selectedFacility.id;
-        setMessageText("Updating ...");
-        setMessageType("info");
-        console.log("TemplateForm.handleUpdate(" +
+        console.info("TemplateForm.handleUpdate(" +
             JSON.stringify(data, ["id", "name"]) + ")");
         TemplateClient.update(data.id, data)
             .then(response => {
-                setMessageText("Update complete");
                 if (props.handleUpdate) {
                     props.handleUpdate(response.data);
                 }
             })
-            .catch(error => {
-                setMessageText("Update error: " +
-                    JSON.stringify(error, null, 2));
-                setMessageType("danger");
+            .catch(err => {
+                console.error("TemplateForm.update() error: ", err);
+                alert(`TemplateForm.update() error: '${err.message}'`);
             })
     }
 
@@ -151,51 +144,82 @@ const TemplateForm = (props) => {
 
     return (
 
-        <Formik
-            // enableReinitialize
-            initialValues={template}
-            onSubmit={(values, actions) => {
-                handleSubmit(values, actions);
-            }}
-            validateOnChange={false}
-            validationSchema={validationSchema}
-        >
+        <>
 
-            <Form className="form mr-2">
+            {/* Details Form */}
+            <Formik
+                // enableReinitialize
+                initialValues={template}
+                onSubmit={(values, actions) => {
+                    handleSubmit(values, actions);
+                }}
+                validateOnChange={false}
+                validationSchema={validationSchema}
+            >
 
-                <TextField autoFocus label="Name:" name="name"/>
-                <TextField label="Comments:" name="comments"/>
-                <TextField label="All Mats:" name="allMats"/>
-                <TextField label="Handicap Mats:" name="handicapMats"/>
-                <TextField label="Socket Mats:" name="socketMats"/>
+                <Form className="form mr-2">
 
-                <div className="row">
-                    <div className="col-2"/>
-                    <div className="col-8">
-                        <SaveButton/>
-                        <ResetButton/>
-                    </div>
-                    <div className="col-2 float-right">
-                        <RemoveButton
-                            disabled={adding}
-                            onClick={handleRemove}/>
-                    </div>
-                </div>
+                    <TextField autoFocus label="Name:" name="name"/>
+                    <TextField label="Comments:" name="comments"/>
+                    <TextField label="All Mats:" name="allMats"/>
+                    <TextField label="Handicap Mats:" name="handicapMats"/>
+                    <TextField label="Socket Mats:" name="socketMats"/>
 
-                { (messageText) ? (
-                    <div className="row mt-1">
+                    <div className="row">
                         <div className="col-2"/>
-                        <div className={"alert alert-" + messageType}>
-                            {messageText}
+                        <div className="col-8">
+                            <SaveButton/>
+                            <ResetButton/>
+                        </div>
+                        <div className="col-2 float-right">
+                            <RemoveButton
+                                disabled={adding}
+                                onClick={handleRemoveConfirm}/>
                         </div>
                     </div>
-                ) : (
-                    <div/>
-                )}
 
-            </Form>
+                </Form>
 
-        </Formik>
+            </Formik>
+
+            {/* Remove Confirm Modal */}
+            <Modal
+                animation={false}
+                backdrop="static"
+                centered
+                dialogClassName="bg-danger"
+                onHide={handleRemoveConfirmNegative}
+                show={showRemoveConfirm}
+                size="lg"
+            >
+                <Modal.Header closeButton>
+                    <Modal.Title>WARNING:  Potential Data Loss</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <p>
+                        Removing this Template not reversible, and will
+                        eliminate the possibility of using it for setting up
+                        future date registrations.
+                    </p>
+                    <p>Consider marking this Template as inactive instead.</p>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button
+                        onClick={handleRemoveConfirmPositive}
+                        variant="danger"
+                    >
+                        Remove
+                    </Button>
+                    <Button
+                        onClick={handleRemoveConfirmNegative}
+                        variant="primary"
+                    >
+                        Cancel
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+
+        </>
 
     );
 

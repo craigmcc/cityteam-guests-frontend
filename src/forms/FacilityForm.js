@@ -39,7 +39,7 @@ const FacilityForm = (props) => {
             })
             .catch(err => {
                 console.error("FacilityForm.insert() error: ", err);
-                alert(`FacilityForm.insert() error: '${err.message}'`)
+                alert(`FacilityForm.insert() error: '${err.message}'`);
             })
     }
 
