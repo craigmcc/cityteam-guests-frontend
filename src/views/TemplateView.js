@@ -112,9 +112,11 @@ const TemplateView = () => {
                 <Row>
                     <Col>
                         <List
-                            fields={["name", "allMats", "handicapMats", "socketMats"]}
+                            fields={["name", "active", "allMats",
+                                     "handicapMats", "socketMats"]}
                             handleSelect={handleSelectedItem}
-                            headers={["Name", "All Mats", "Handicap Mats", "Socket Mats"]}
+                            headers={["Name", "Active", "All Mats",
+                                      "Handicap Mats", "Socket Mats"]}
                             index={index}
                             items={templates}
                         />

@@ -153,10 +153,10 @@ const FacilityView = () => {
                 <Row>
                     <Col>
                         <List
-                            fields={["name", "city", "state",
+                            fields={["name", "active", "city", "state",
                                      "zipCode", "phone", "email"]}
                             handleSelect={handleSelectedItem}
-                            headers={["Name", "City", "State",
+                            headers={["Name", "Active", "City", "State",
                                       "Zip Code", "Phone Number", "Email Address"]}
                             index={index}
                             items={facilities}

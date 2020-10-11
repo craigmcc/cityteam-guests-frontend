@@ -185,10 +185,11 @@ const GuestView = () => {
                         </Row>
                         <Row>
                             <List
-                                fields={["firstName", "lastName", "comments"]}
+                                fields={["firstName", "lastName",
+                                         "active", "comments"]}
                                 handleSelect={handleSelectedItem}
                                 headers={["First Name", "Last Name",
-                                          "Comments About Guest"]}
+                                          "Active", "Comments About Guest"]}
                                 index={index}
                                 items={guests}
                             />
