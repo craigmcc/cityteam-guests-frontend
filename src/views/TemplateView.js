@@ -123,6 +123,11 @@ const TemplateView = () => {
                     </Col>
                 </Row>
 
+                <Row>
+                    Click &nbsp;<strong>Add</strong>&nbsp; for a new Template, or
+                    click on a row in the table to edit an existing one.
+                </Row>
+
             </Container>
 
             {/* Details Modal */}

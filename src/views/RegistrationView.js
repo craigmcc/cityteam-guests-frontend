@@ -80,7 +80,7 @@ const RegistrationView = () => {
         <>
 
             {/* List View */}
-            <Container>
+            <Container fluid>
 
                 <Row className="row mt-2 mb-2">
                     <Col className="col-6">

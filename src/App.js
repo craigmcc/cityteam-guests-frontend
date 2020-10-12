@@ -1,6 +1,9 @@
 import React from 'react';
-import { BrowserRouter as Router, NavLink, Switch, Route }
-  from "react-router-dom";
+import { Switch, Route } from "react-router-dom";
+import Form from 'react-bootstrap/Form'
+import Nav from 'react-bootstrap/Nav'
+import Navbar from "react-bootstrap/Navbar";
+
 import "bootstrap/dist/css/bootstrap.min.css";
 // import logo from './logo.svg';
 import './App.css';
@@ -12,103 +15,96 @@ import GuestView from "./views/GuestView";
 import RegistrationView from "./views/RegistrationView";
 import SandboxView from "./sandbox/SandboxView";
 import TemplateView from "./views/TemplateView";
+import NavDropdown from "react-bootstrap/cjs/NavDropdown";
 
 function App() {
 
   return (
 
-      <FacilityContextProvider>
+      <>
 
-        <Router>
+        <FacilityContextProvider>
 
-          <div>
+          <Navbar
+              bg="light"
+              expand={true}
+              fixed="top"
+              sticky="top"
+              variant="light"
+          >
 
-            <nav className="navbar navbar-expand navbar-dark bg-dark">
+            <Navbar.Brand
+                // href="http://cityteam.org"
+            >
+              <img
+                alt="CityTeam Logo"
+                height={66}
+                src="./CityTeamDarkBlue.png"
+                width={160}
+              />
+            </Navbar.Brand>
 
-              {/*<a href="http://cityteam.org">*/}
-              <img src="./CityTeamWhite.png" alt="CityTeam Logo"
-                   width="160" height="66" className="navbar-brand"/>
-              {/*</a>*/}
+            <Nav
+                className="mr-auto"
+//                defaultActiveKey="/facilities"
+            >
 
-              <div className="navbar-nav mr-auto">
-                <li className="nav-item">
-                  <NavLink
-                      activeClassName="active"
-                      className="nav-link"
-                      to={"/facilities"}
-                  >
-                    Facilities
-                  </NavLink>
-                </li>
-                <li className="nav-item">
-                  <NavLink
-                      activeClassName="active"
-                      className="nav-link"
-                      to={"/guests"}
-                  >
-                    Guests
-                  </NavLink>
-                </li>
-                <li className="nav-item">
-                  <NavLink
-                      activeClassName="active"
-                      className="nav-link"
-                      to={"/registrations"}
-                  >
-                    Registrations
-                  </NavLink>
-                </li>
-                <li className="nav-item">
-                  <NavLink
-                      activeClassName="active"
-                      className="nav-link"
-                      to={"/templates"}
-                  >
-                    Templates
-                  </NavLink>
-                </li>
-                <li className="nav-item">
-                  <NavLink
-                      activeClassName="active"
-                      className="nav-link"
-                      to={"/sandbox"}
-                  >
-                    Sandbox
-                  </NavLink>
-                </li>
-              </div>
+              {/* TODO - active link is not getting highlighted */}
+              <Nav.Link href="/facilities">Facilities</Nav.Link>
+              <Nav.Link href="/guests">Guests</Nav.Link>
+              <Nav.Link href="/registrations">Registrations</Nav.Link>
+              <Nav.Link href="/templates">Templates</Nav.Link>
 
-              <div className="navbar-nav mr-2">
-                <FacilitySelector labelClassName="text-secondary"/>
-              </div>
+              <NavDropdown title="Reports">
+                <NavDropdown.Item href="/reports#DailySummary">
+                  Daily Summary
+                </NavDropdown.Item>
+                <NavDropdown.Divider/>
+                <NavDropdown.Item href="/reports#GuestHistory">
+                  Guest History
+                </NavDropdown.Item>
+                <NavDropdown.Item href="/reports#MonthlySummary">
+                    Monthly Summary
+                </NavDropdown.Item>
+              </NavDropdown>
 
-            </nav>
+            </Nav>
 
-            <div className="container fluid">
-              <Switch>
-                <Route exact path={["/", "/facilities"]}>
-                  <FacilityView/>
-                </Route>
-                <Route exact path="/guests">
-                  <GuestView/>
-                </Route>
-                <Route exact path="/registrations">
-                  <RegistrationView/>
-                </Route>
-                <Route exact path="/sandbox">
-                  <SandboxView/>
-                </Route>
-                <Route exact path="/templates">
-                  <TemplateView/>
-                </Route>
-              </Switch>
-            </div>
+            <Form
+                className="mr-4"
+                inline
+            >
+              <FacilitySelector labelClassName="text-secondary"/>
+            </Form>
 
-          </div>
+          </Navbar>
 
-        </Router>
+          {/*<Container fluid>*/}
 
-      </FacilityContextProvider>
+            <Switch>
+              <Route exact path={["/", "/facilities"]}>
+                <FacilityView/>
+              </Route>
+              <Route exact path="/guests">
+                <GuestView/>
+              </Route>
+              <Route exact path="/registrations">
+                <RegistrationView/>
+              </Route>
+              <Route exact path="/sandbox">
+                <SandboxView/>
+              </Route>
+              <Route exact path="/templates">
+                <TemplateView/>
+              </Route>
+              {/* TODO - routes for reports */}
+            </Switch>
+
+          {/*</Container>*/}
+
+        </FacilityContextProvider>
+
+      </>
 
   );
 }
