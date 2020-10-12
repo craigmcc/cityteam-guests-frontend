@@ -3,7 +3,7 @@ import queryParameters from "../util/query.parameters";
 
 let GUESTS_BASE = "/guests";
 
-// Standard CRUD Endpoints
+// Standard CRUD Endpoints ---------------------------------------------------
 
 const all = (options) => {
     return http.get(GUESTS_BASE + `${queryParameters(options)}`);
@@ -25,26 +25,23 @@ const update = (guestId, guest) => {
     return http.put(GUESTS_BASE + `/${guestId}`, guest);
 }
 
-// Model Specific Endpoints
+// Model Specific Endpoints --------------------------------------------------
 
-const findBans = (guestId) => {
+/*
+const banAll = (guestId) => {
     return http.get(GUESTS_BASE +
         `/${guestId}/bans`);
 }
 
-const findBansByRegistrationDate = (guestId, registrationDate) => {
+const banRegistrationDate = (guestId, registrationDate) => {
     return http.get(GUESTS_BASE +
         `/${guestId}/bans/${registrationDate}`);
 }
+*/
 
-const findRegistrations = (guestId) => {
+const registrationAll = (guestId, options) => {
     return http.get(GUESTS_BASE +
-        `/${guestId}/registrations`);
-}
-
-const findRegistrationsByRegistrationDate = (guestId, registrationDate) => {
-    return http.get(GUESTS_BASE +
-        `/${guestId}/registrations/${registrationDate}`);
+        `/${guestId}/registrations${queryParameters(options)}`);
 }
 
 export default {
@@ -57,9 +54,10 @@ export default {
     update,
 
     // Specific
+/*
     findBans,
     findBansByRegistrationDate,
-    findRegistrations,
-    findRegistrationsByRegistrationDate
+*/
+    registrationAll,
 
 }

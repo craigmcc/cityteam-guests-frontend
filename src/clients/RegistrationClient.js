@@ -3,7 +3,7 @@ import queryParameters from "../util/query.parameters";
 
 let REGISTRATIONS_BASE = "/registrations";
 
-// Standard CRUD Endpoints
+// Standard CRUD Endpoints ---------------------------------------------------
 
 const all = (options) => {
     return http.get(REGISTRATIONS_BASE + `${queryParameters(options)}`);
@@ -25,7 +25,7 @@ const update = (registrationId, registration) => {
     return http.put(REGISTRATIONS_BASE + `/${registrationId}`, registration);
 }
 
-// Model Specific Endpoints
+// Model Specific Endpoints --------------------------------------------------
 
 const assign = (registrationId, assign) => {
     return http.post(REGISTRATIONS_BASE + `/${registrationId}/assign`, assign);
@@ -33,6 +33,11 @@ const assign = (registrationId, assign) => {
 
 const deassign = (registrationId) => {
     return http.post(REGISTRATIONS_BASE + `/${registrationId}`);
+}
+
+const reassign = (registrationIdFrom, registrationIdTo) => {
+    return http.post(REGISTRATIONS_BASE +
+        `/${registrationIdFrom}/reassign/${registrationIdTo}`);
 }
 
 export default {
@@ -47,5 +52,6 @@ export default {
     // Specific
     assign,
     deassign,
+    reassign,
 
 }

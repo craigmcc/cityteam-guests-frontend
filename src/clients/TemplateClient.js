@@ -25,7 +25,7 @@ const update = (templateId, template) => {
     return http.put(TEMPLATES_BASE + `/${templateId}`, template);
 }
 
-// Model Specific Endpoints
+// Model Specific Endpoints --------------------------------------------------
 
 const generate = (templateId, registrationDate) => {
     return http.post(TEMPLATES_BASE +

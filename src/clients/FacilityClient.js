@@ -64,6 +64,11 @@ const registrationAll = (facilityId, options) => {
         `/${facilityId}/registrations${queryParameters(options)}`);
 }
 
+const registrationAvailable = (facilityId, registrationDate, options) => {
+    return http.get(FACILITIES_BASE +
+        `/${facilityId}/registrations/${registrationDate}/available${queryParameters(options)}`);
+}
+
 const registrationDate = (facilityId, registrationDate, options) => {
     return http.get(FACILITIES_BASE +
         `/${facilityId}/registrations/${registrationDate}${queryParameters(options)}`);
@@ -111,6 +116,7 @@ export default {
     guestExact: guestExact,
     guestName: guestName,
     registrationAll: registrationAll,
+    registrationAvailable: registrationAvailable,
     registrationDate: registrationDate,
     templateAll: templateAll,
     templateExact: templateExact,
