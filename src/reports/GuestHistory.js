@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-//import Button from "react-bootstrap/Button"
+import Button from "react-bootstrap/Button"
 import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
@@ -18,6 +18,7 @@ const GuestHistoryView = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [guest, setGuest] = useState(null);
     const [guests, setGuests] = useState([]);
+    const [heading, setHeading] = useState("");
     const [index, setIndex] = useState(-1);
     const [pageSize] = useState(5);
     const [registrations, setRegistrations] = useState([]);
@@ -35,10 +36,19 @@ const GuestHistoryView = () => {
         } else {
             console.info("GuestHistory.handleSelecvtedItem(" + newIndex + ", " +
                 JSON.stringify(guests[newIndex], ["id", "firstName", "lastName"]) + ")");
+            retrieveRegistrations(guests[newIndex]);
+            setHeading("Guest History for " +
+                facilityContext.selectedFacility.name +
+                " Guest " + guests[newIndex].firstName +
+                " " + guests[newIndex].lastName);
             setGuest(guests[newIndex]);
             setIndex(newIndex);
-            retrieveRegistrations(guests[newIndex]);
         }
+    }
+
+    const onBack = () => {
+        setGuest(null);
+        setHeading("");
     }
 
     const onPageNext = () => {
@@ -54,7 +64,7 @@ const GuestHistoryView = () => {
     }
 
     const onSearchChange = (event) => {
-        console.info("GuestView.onSearchChange(" +
+        console.info("GuestHistory.onSearchChange(" +
             event.target.value + ")");
         setCurrentPage(1);
         setSearchText(event.target.value);
@@ -62,7 +72,7 @@ const GuestHistoryView = () => {
     }
 
     const onSearchClick = () => {
-        console.info("GuestView.onSearchClick(" +
+        console.info("GuestHistory.onSearchClick(" +
             searchText + ")");
         retrieveGuests(searchText, currentPage);
     }
@@ -134,25 +144,25 @@ const GuestHistoryView = () => {
 
             <Container fluid>
 
-                <Row className="mt-3 mb-3">
-                    <Col className="col-4">
-                        <strong>Guest History for {facilityContext.selectedFacility.name}</strong>
-                    </Col>
-                    <Col className="col-8">
-                        <SearchBar
-                            label="Filter"
-                            onChange={onSearchChange}
-                            onClick={onSearchClick}
-                            placeholder="Enter all or part of either name ..."
-                            value={searchText}
-                            withClear
-                        />
-                    </Col>
-                </Row>
+                { (!guest) ? (
 
-                <Row>
+                    <>
 
-                    <Col>
+                        <Row className="mt-3 mb-3">
+                            <Col className="col-4">
+                                <strong>Guest History for {facilityContext.selectedFacility.name}</strong>
+                            </Col>
+                            <Col className="col-8">
+                                <SearchBar
+                                    label="Filter"
+                                    onChange={onSearchChange}
+                                    onClick={onSearchClick}
+                                    placeholder="Enter all or part of either name ..."
+                                    value={searchText}
+                                    withClear
+                                />
+                            </Col>
+                        </Row>
 
                         <Row className="mb-2 mt-1">
                             <Col>
@@ -183,11 +193,19 @@ const GuestHistoryView = () => {
                             Guest for which you wish to retrieve Guest History.
                         </Row>
 
-                        <Row className="ml-1 mr-1 mt-2">
-                            Guest History for&nbsp;
-                            <strong>{facilityContext.selectedFacility.name}</strong>
-                            &nbsp;Guest&nbsp;
-                            <strong>Foo Bar</strong>
+                    </>
+
+                    ) : (
+
+                    <>
+
+                        <Row className="ml-1 mr-1 justify-content-end">
+                            <Col className="text-left">
+                                {(new Date()).toLocaleString()}
+                            </Col>
+                            <Col className="text-right">
+                                <Button onClick={onBack}>Back</Button>
+                            </Col>
                         </Row>
 
                         <Row className="ml-1 mr-1 mt-2">
@@ -199,14 +217,15 @@ const GuestHistoryView = () => {
                                     "wakeupTime", "comments"]}
                                 headers={["Date", "Mat", "$$", "Amount",
                                     "Shower", "Wakeup", "Comments"]}
+                                heading={heading}
                                 index={-1}
                                 items={registrations}
                             />
                         </Row>
 
-                    </Col>
+                    </>
 
-                </Row>
+                )}
 
             </Container>
 
