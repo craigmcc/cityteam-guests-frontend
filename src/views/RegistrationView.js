@@ -95,7 +95,7 @@ const RegistrationView = () => {
                 </Row>
 
                 { (registrations.length === 0) ? (
-                    <Row className="mb-2">
+                    <Row className="mb-2 ml-1">
                         <Col className="col-6 ml-2">
                             <TemplateSelector
                                 actionLabel="Generate"

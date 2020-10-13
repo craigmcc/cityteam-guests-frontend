@@ -164,7 +164,7 @@ const FacilityView = () => {
                     </Col>
                 </Row>
 
-                <Row>
+                <Row className="ml-1">
                     Click &nbsp;<strong>Add</strong>&nbsp; for a new Facility, or
                     click on a row in the table to edit an existing one.
                 </Row>

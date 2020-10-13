@@ -10,6 +10,7 @@ import './App.css';
 
 import FacilitySelector from "./components/FacilitySelector";
 import { FacilityContextProvider } from "./contexts/FacilityContext";
+import GuestHistoryView from "./reports/GuestHistory";
 import FacilityView from "./views/FacilityView";
 import GuestView from "./views/GuestView";
 import RegistrationView from "./views/RegistrationView";
@@ -56,17 +57,19 @@ function App() {
               <Nav.Link href="/templates">Templates</Nav.Link>
 
               <NavDropdown title="Reports">
-                <NavDropdown.Item href="/reports#DailySummary">
+                <NavDropdown.Item href="/reports-DailySummary">
                   Daily Summary
                 </NavDropdown.Item>
                 <NavDropdown.Divider/>
-                <NavDropdown.Item href="/reports#GuestHistory">
+                <NavDropdown.Item href="/reports-GuestHistory">
                   Guest History
                 </NavDropdown.Item>
-                <NavDropdown.Item href="/reports#MonthlySummary">
+                <NavDropdown.Item href="/reports-MonthlySummary">
                     Monthly Summary
                 </NavDropdown.Item>
               </NavDropdown>
+
+              <Nav.Link href="/sandbox">Sandbox</Nav.Link>
 
             </Nav>
 
@@ -90,6 +93,9 @@ function App() {
               </Route>
               <Route exact path="/registrations">
                 <RegistrationView/>
+              </Route>
+              <Route exact path="/reports-GuestHistory">
+                <GuestHistoryView/>
               </Route>
               <Route exact path="/sandbox">
                 <SandboxView/>

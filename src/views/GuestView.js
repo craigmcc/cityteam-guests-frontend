@@ -183,7 +183,7 @@ const GuestView = () => {
                                 />
                             </Col>
                         </Row>
-                        <Row>
+                        <Row className="ml-1 mr-1">
                             <List
                                 fields={["firstName", "lastName",
                                          "active", "comments"]}
@@ -199,12 +199,12 @@ const GuestView = () => {
 
                 </Row>
 
-                <Row className="mb-2">
+                <Row className="mb-2 ml-1">
                     Enter all or part of either name to search for
                     matching Guests.
                 </Row>
 
-                <Row>
+                <Row className="ml-1">
                     Click &nbsp;<strong>Add</strong>&nbsp; for a new Guest, or
                     click on a row in the table to edit an existing one.
                 </Row>
