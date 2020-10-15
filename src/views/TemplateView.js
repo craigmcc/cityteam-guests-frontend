@@ -20,7 +20,7 @@ const TemplateView = () => {
     const [templates, setTemplates] = useState([]);
 
     useEffect(() => {
-        retrieveAllItems();
+        retrieveAllTemplates();
         // eslint-disable-next-line
     }, [facilityContext.selectedFacility]);
 
@@ -34,14 +34,14 @@ const TemplateView = () => {
         console.log("TemplateView.handleInsert(" +
             JSON.stringify(template, ["id", "name"]) + ")");
         setShow(false);
-        retrieveAllItems();
+        retrieveAllTemplates();
     }
 
     const handleRemove = (template) => {
         console.log("TemplateView.handleRemove(" +
             JSON.stringify(template, ["id", "name"]) + ")");
         setShow(false);
-        retrieveAllItems();
+        retrieveAllTemplates();
     }
 
     const handleSelectedItem = (newIndex) => {
@@ -63,7 +63,7 @@ const TemplateView = () => {
         console.log("TemplateView.handleUpdate(" +
             JSON.stringify(template, ["id", "name"]) + ")");
         setShow(false);
-        retrieveAllItems();
+        retrieveAllTemplates();
     }
 
     const onAdd = () => {
@@ -72,21 +72,26 @@ const TemplateView = () => {
         setTemplate(null);
     }
 
-    const retrieveAllItems = () => {
-        console.log("TemplateView.retrieveAllItems for(" +
+    const retrieveAllTemplates = () => {
+        if (facilityContext.selectedFacility.id <= 0) {
+            setTemplates([]);
+            return;
+        }
+        console.log("TemplateView.retrieveAllTemplates for(" +
             JSON.stringify(facilityContext.selectedFacility,
                 ["id", "name"]) + ")");
         FacilityClient.templateAll
                 (facilityContext.selectedFacility.id)
             .then(response => {
-                console.log("TemplateView.retrieveAllItems got(" +
+                console.log("TemplateView.retrieveAllTemplates got(" +
                     JSON.stringify(response.data,
                         ["id", "name"]) + ")");
                 setTemplates(response.data);
             })
-            .catch(e => {
-                console.log(e);
-            });
+            .catch(err => {
+                console.error("TemplateView.retrieveAllTemplates() error: ", err);
+                alert(`RegistrationView.retrieveAllTemplates() error: '${err.message}'`);
+            })
         setIndex(-1);
     }
 
