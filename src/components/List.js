@@ -1,13 +1,26 @@
-import React from "react";
+import React, { useState } from "react";
 
-// props.fields Array of Strings containing field names
-//   to extract from items for each row
-// props.handleSelect Optional handle (index) for item being selected [none]
-// props.headers Array of Strings for column headers
-// props.heading Optional extra header, to render above column headers
-// props.index Zero-relative index of selected item, or -1 for none
-// props.items Array of items to be represented as rows in the list.
+// fields       Array of Strings containing field names
+//              to extract from items for each row
+// booleanFalse Text to display for boolean false [No]
+// booleanTrue  Text to display for boolean true [Yes]
+// handleSelect Optional handle (index) for item being selected [none]
+// headers      Array of Strings for column headers
+// heading      Optional extra header, to render above column headers
+// index        Zero-relative index of selected item, or -1 for none
+// items        Array of items to be represented as rows in the list.
 const List = (props) => {
+
+    const [ booleanFalse ] = useState(props.booleanFalse || "No");
+    const [ booleanTrue ] = useState(props.booleanTrue || "Yes");
+
+    let renderField = (field) => {
+        if (typeof(field) === "boolean") {
+            return field ? booleanTrue : booleanFalse;
+        } else {
+            return field;
+        }
+    }
 
     return (
 
@@ -49,7 +62,7 @@ const List = (props) => {
                     {props.fields.map((field, index2) => (
                         <td
                             key={100 + (index * 100) + index2}
-                        >{item[field]}</td>
+                        >{renderField(item[field])}</td>
                     ))}
                 </tr>
             ))}
