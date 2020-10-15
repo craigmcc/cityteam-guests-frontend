@@ -6,7 +6,7 @@ import * as Yup from "yup";
 
 import { RemoveButton, ResetButton, SaveButton }
     from "../components/buttons";
-import { TextField, toEmptyStrings, toNullValues }
+import {CheckboxField, TextField, toEmptyStrings, toNullValues}
     from "../components/fields";
 
 import FacilityClient from "../clients/FacilityClient";
@@ -160,6 +160,7 @@ const TemplateForm = (props) => {
                 <Form className="form mr-2">
 
                     <TextField autoFocus label="Name:" name="name"/>
+                    <CheckboxField label="Active?" name="active"/>
                     <TextField label="Comments:" name="comments"/>
                     <TextField label="All Mats:" name="allMats"/>
                     <TextField label="Handicap Mats:" name="handicapMats"/>
@@ -234,6 +235,7 @@ let convertInitialValues = (template) => {
 let emptyInitialValues = () => {
     return {
         id: -1,
+        active: true,
         allMats: "",
         comments: "",
         facilityId: -1,

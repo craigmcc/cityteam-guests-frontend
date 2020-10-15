@@ -6,7 +6,7 @@ import * as Yup from "yup";
 
 import FacilityClient from "../clients/FacilityClient";
 import GuestClient from "../clients/GuestClient";
-import { TextField, toEmptyStrings, toNullValues }
+import {CheckboxField, TextField, toEmptyStrings, toNullValues}
     from "../components/fields";
 import { RemoveButton, ResetButton, SaveButton }
     from "../components/buttons";
@@ -159,6 +159,7 @@ const GuestForm = (props) => {
                         label="Last Name:"
                         labelClassName="col-3"
                         name="lastName"/>
+                    <CheckboxField label="Active?" name="active"/>
                     <TextField
                         fieldClassName="col-9"
                         label="Comments:"
@@ -236,6 +237,7 @@ let convertInitialValues = (guest) => {
 let emptyInitialValues = () => {
     return {
         id: -1,
+        active: true,
         comments: "",
         facilityId: -1,
         firstName: "",

@@ -20,7 +20,7 @@ const RegistrationView = () => {
     const [index, setIndex] = useState(-1);
     const [registration, setRegistration] = useState(null);
     const [registrationDate, setRegistrationDate] =
-        useState("2020-07-04"); // TODO - "today"
+        useState((new Date()).toISOString().slice(0,10));
     const [registrations, setRegistrations] = useState([]);
 
     useEffect(() => {
