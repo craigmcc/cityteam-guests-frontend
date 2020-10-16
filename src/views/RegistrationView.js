@@ -2,10 +2,12 @@ import React, { useContext, useEffect, useState } from "react";
 import Button from "react-bootstrap/Button"
 import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
+import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
 import Row from "react-bootstrap/Row";
 
 import FacilityClient from "../clients/FacilityClient";
+import RegistrationClient from "../clients/RegistrationClient";
 import TemplateClient from "../clients/TemplateClient";
 import { withFlattenedObjects } from "../components/fields";
 import List from "../components/List";
@@ -18,6 +20,7 @@ const RegistrationView = () => {
     const facilityContext = useContext(FacilityContext);
 
     const [availables, setAvailables] = useState([]);
+    const [emptyRegistrationId, setEmptyRegistrationId] = useState(-1);
     const [index, setIndex] = useState(-1);
     const [registration, setRegistration] = useState(null);
     const [registrationDate, setRegistrationDate] =
@@ -43,12 +46,17 @@ const RegistrationView = () => {
         return flattenedItems;
     }
 
+    const handleEmptyChange = (event) => {
+        console.info("RegistrationView.handleEmptyChange(" + event.target.value + ")");
+        setEmptyRegistrationId(event.target.value);
+    }
+
     const handleGenerate = (template) => {
-        console.log("RegistrationView.handleGenerate for (" +
+        console.info("RegistrationView.handleGenerate for (" +
             JSON.stringify(template, ["id", "name"]) + ")");
         TemplateClient.generate(template.id, registrationDate)
             .then(response => {
-                console.log("RegistrationView.handleGenerate got (" +
+                console.info("RegistrationView.handleGenerate got (" +
                     JSON.stringify(response.data, ["id", "matNumber", "features"]) + ")");
                 setRegistrations(flattenedRegistrations(response.data));
                 setIndex(-1);
@@ -56,48 +64,64 @@ const RegistrationView = () => {
     }
 
     const handleHideAssigned = () => {
-        console.log("RegistrationView.handleHideAssigned()");
+        console.info("RegistrationView.handleHideAssigned()");
         setShowAssigned(false);
         setAvailables([]);
         retrieveAllRegistrations(registrationDate);
     }
 
     const handleHideUnassigned = () => {
-        console.log("RegistrationView.handleHideUnassigned()");
+        console.info("RegistrationView.handleHideUnassigned()");
         setShowUnassigned(false);
         retrieveAllRegistrations(registrationDate);
     }
 
-    const handleRegistrationDate = (newRegistrationDate) => {
-        console.log("RegistrationView.handleRegistrationDate(" +
-            newRegistrationDate + ")");
-        setRegistrationDate(newRegistrationDate);
-        retrieveAllRegistrations(newRegistrationDate);
-    }
-
     const handleRegistrationAssign = () => {
-        console.log("RegistrationView.handleRegistrationAssign(" +
+        console.info("RegistrationView.handleRegistrationAssign(" +
             JSON.stringify(registration) + ")");
         // TODO - perform the assign
         handleHideUnassigned();
     }
 
+    const handleRegistrationDate = (newRegistrationDate) => {
+        console.info("RegistrationView.handleRegistrationDate(" +
+            newRegistrationDate + ")");
+        setRegistrationDate(newRegistrationDate);
+        retrieveAllRegistrations(newRegistrationDate);
+    }
+
     const handleRegistrationDeassign = () => {
-        console.log("RegistrationView.handleRegistrationDeassign(" +
-            JSON.stringify(registration) + ")");
-        // TODO - perform the deassign
+        console.info("RegistrationView.handleRegistrationDeassign(" +
+            registration.id + ")");
+        RegistrationClient.deassign(registration.id)
+            .then(response => {
+                setEmptyRegistrationId(-1);
+                retrieveAllRegistrations(registrationDate);
+            })
+            .catch(err => {
+                console.error("RegistrationView.handleRegistrationDeassign() error: ", err);
+                alert(`RegistrationView.handleRegistrationDeassign() error: '${err.message}'`);
+            })
         handleHideAssigned();
     }
 
     const handleRegistrationReassign = () => {
-        console.log("RegistrationView.handleRegistrationReassign(" +
-            JSON.stringify(registration) + ")");
-        // TODO - perform the reassign
+        console.info("RegistrationView.handleRegistrationReassign(" +
+            JSON.stringify(registration) + ", " + emptyRegistrationId + ")");
+        RegistrationClient.reassign(registration.id, emptyRegistrationId)
+            .then(response => {
+                setEmptyRegistrationId(-1);
+                retrieveAllRegistrations(registrationDate);
+            })
+            .catch(err => {
+                console.error("RegistrationView.handleRegistrationReassign() error: ", err);
+                alert(`RegistrationView.handleRegistrationReassign() error: '${err.message}'`);
+            })
         handleHideAssigned();
     }
 
     const handleRegistrationUpdate = () => {
-        console.log("RegistrationView.handleRegistrationUpdate(" +
+        console.info("RegistrationView.handleRegistrationUpdate(" +
             JSON.stringify(registration) + ")");
         // TODO - perform the update
         handleHideAssigned();
@@ -105,18 +129,19 @@ const RegistrationView = () => {
 
     const handleSelectedItem = (newIndex) => {
         if (newIndex === index) {
-            console.log("RegistrationView.handleSelectedItem(-1)");
+            console.info("RegistrationView.handleSelectedItem(-1)");
             setIndex(-1);
             setRegistration(false);
             setShowAssigned(false);
             setShowUnassigned(false);
         } else {
-            console.log("RegistrationView.handleSelectedItem(" + newIndex + ", " +
+            console.info("RegistrationView.handleSelectedItem(" + newIndex + ", " +
                 JSON.stringify(registrations[newIndex], ["id", "guest.firstName", "guest.lastName"]) + ")");
             setIndex(newIndex);
             setRegistration(registrations[newIndex]);
             if (registrations[newIndex].guestId) {
                 retrieveAvailableRegistrations(registrationDate);
+                setEmptyRegistrationId(-1);
                 setShowAssigned(true);
             } else {
                 setShowUnassigned(true);
@@ -136,7 +161,7 @@ const RegistrationView = () => {
             { withGuest: "" }
         )
             .then(response => {
-                console.log("RegistrationView.retrieveAllRegistrations(" +
+                console.info("RegistrationView.retrieveAllRegistrations(" +
                     JSON.stringify(response.data, ["id", "matNumber", "features", "guest"]) + ")");
                 setRegistrations(flattenedRegistrations(response.data));
             })
@@ -148,14 +173,14 @@ const RegistrationView = () => {
     }
 
     const retrieveAvailableRegistrations = (newRegistrationDate) => {
-        console.log("RegistrationView.retrieveAllRegistrations(" + facilityContext.selectedFacility.id + ", " + registrationDate + ")");
+        console.info("RegistrationView.retrieveAllRegistrations(" + facilityContext.selectedFacility.id + ", " + registrationDate + ")");
         FacilityClient.registrationAvailable(
             facilityContext.selectedFacility.id,
             newRegistrationDate,
             { withGuest: "" }
         )
             .then(response => {
-                console.log("RegistrationView.retrieveAvailableRegistrations(" +
+                console.info("RegistrationView.retrieveAvailableRegistrations(" +
                     JSON.stringify(response.data, ["id", "matNumberAndFeatures"]) + ")");
                 setAvailables(flattenedRegistrations(response.data));
             })
@@ -214,7 +239,7 @@ const RegistrationView = () => {
                 </Row>
 
                 <Row>
-                    Click on a row to manage assignments to that mat.
+                    Click on a row to manage assignments for that mat.
                 </Row>
 
                 {/* Assigned Modal */}
@@ -283,10 +308,31 @@ const RegistrationView = () => {
                                     reassignment.
                                 </Col>
                                 <Col className="col-4">
-                                    TODO
+                                    <Form.Group controlId="emptyMatSelect">
+                                        <Form.Label>Empty Mat:</Form.Label>
+                                        <Form.Control
+                                            as="select"
+                                            onChange={handleEmptyChange}
+                                            size="sm"
+                                        >
+                                            <option key="0" value="0">
+                                                (Select Empty Mat)
+                                            </option>
+                                            {availables.map(available => (
+                                                <option
+                                                    key={available.id}
+                                                    value={available.id}
+                                                >
+                                                    {available.matNumberAndFeatures}
+                                                </option>
+                                            ))}
+                                        </Form.Control>
+                                    </Form.Group>
                                 </Col>
+
                                 <Col className={"col-2 text-right"}>
                                     <Button
+                                        disabled={emptyRegistrationId < 1}
                                         onClick={handleRegistrationReassign}
                                         variant="secondary"
                                     >Move</Button>

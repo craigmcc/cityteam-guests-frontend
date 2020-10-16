@@ -32,7 +32,7 @@ const assign = (registrationId, assign) => {
 }
 
 const deassign = (registrationId) => {
-    return http.post(REGISTRATIONS_BASE + `/${registrationId}`);
+    return http.post(REGISTRATIONS_BASE + `/${registrationId}/deassign`);
 }
 
 const reassign = (registrationIdFrom, registrationIdTo) => {
