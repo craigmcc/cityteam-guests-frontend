@@ -89,17 +89,17 @@ const AssignForm = (props) => {
                     <Form>
 
                         <Row>
-                            <Col className="col-6">
+                            <Col className="col-7">
                                 <SelectField
                                     autoFocus
-                                    fieldClassName="col-6"
+                                    fieldClassName="col-7"
                                     label="Payment Type:"
-                                    labelClassName="col-6"
+                                    labelClassName="col-5"
                                     name="paymentType"
                                     options={paymentOptions}
                                 />
                             </Col>
-                            <Col className="col-4">
+                            <Col className="col-3">
                                 <TextField
                                     fieldClassName="col-5"
                                     label="Amount:"
@@ -115,7 +115,7 @@ const AssignForm = (props) => {
                                 <TextField
                                     fieldClassName="col-5"
                                     label="Shower At:"
-                                    labelClassName="col-7"
+                                    labelClassName="col-6"
                                     name="showerTime"
                                 />
                             </Col>

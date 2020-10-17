@@ -27,11 +27,12 @@ function App() {
         <FacilityContextProvider>
 
           <Navbar
-              bg="light"
+              bg="info"
+              className="mb-3"
               expand={true}
               fixed="top"
               sticky="top"
-              variant="light"
+              variant="dark"
           >
 
             <Navbar.Brand

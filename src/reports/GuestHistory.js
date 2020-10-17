@@ -20,7 +20,7 @@ const GuestHistoryView = () => {
     const [guests, setGuests] = useState([]);
     const [heading, setHeading] = useState("");
     const [index, setIndex] = useState(-1);
-    const [pageSize] = useState(5);
+    const [pageSize] = useState(15);
     const [registrations, setRegistrations] = useState([]);
     const [searchText, setSearchText] = useState("");
 
@@ -164,7 +164,7 @@ const GuestHistoryView = () => {
                             </Col>
                         </Row>
 
-                        <Row className="mb-2 mt-1">
+                        <Row className="mb-3">
                             <Col>
                                 <Pagination
                                     currentPage={currentPage}
@@ -199,7 +199,7 @@ const GuestHistoryView = () => {
 
                     <>
 
-                        <Row className="ml-1 mr-1 justify-content-end">
+                        <Row className="ml-1 mr-1 mt-3 mb-3justify-content-end">
                             <Col className="text-left">
                                 {(new Date()).toLocaleString()}
                             </Col>
@@ -220,6 +220,7 @@ const GuestHistoryView = () => {
                                 heading={heading}
                                 index={-1}
                                 items={registrations}
+                                showFooter
                             />
                         </Row>
 

@@ -226,7 +226,7 @@ const RegistrationView = () => {
             {/* List View */}
             <Container fluid>
 
-                <Row className="row mt-2 mb-2">
+                <Row className="row mt-3 mb-3">
                     <Col className="col-6">
                         <strong>Registrations for {facilityContext.selectedFacility.name}</strong>
                     </Col>
@@ -267,8 +267,9 @@ const RegistrationView = () => {
                     </Col>
                 </Row>
 
-                <Row>
-                    Click on a row to manage assignments for that mat.
+                <Row className="ml-1">
+                    Click on a row to create a new, or manage an existing,
+                    assignment for that mat.
                 </Row>
 
                 {/* Assigned Modal */}
@@ -290,24 +291,18 @@ const RegistrationView = () => {
                         <Container className="ml-1">
 
                             <Row>
-                                <h6>Option 1: Edit Assignment Details:</h6>
-                            </Row>
-                            <Row className="ml-1">
                                 <Col className="col-12">
-                                    { (registration) ? (
-                                        <>
-                                            <Row className="col-12 text-center mb-3">
-                                                Mat Number: {registration.matNumberAndFeatures}
-                                                &nbsp;&nbsp;
-                                                Guest:  {registration.guest.firstName} {registration.guest.lastName}
-                                            </Row>
-                                            <Row>
-                                                <AssignForm
-                                                    assign={assign}
-                                                    handleAssign={handleRegistrationUpdate}
-                                                />
-                                            </Row>
-                                        </>
+                                    { (registration && registration.guest) ? (
+                                        <Row className="col-12 justify-content-center">
+                                            Facility:&nbsp;
+                                            <span className="text-info">{facilityContext.selectedFacility.name}</span>
+                                            &nbsp;&nbsp;&nbsp;
+                                            Mat Number:&nbsp;
+                                            <span className="text-info">{registration.matNumberAndFeatures}</span>
+                                            &nbsp;&nbsp;&nbsp;
+                                            Guest:&nbsp;
+                                            <span className="text-info">{registration.guest.firstName} {registration.guest.lastName}</span>
+                                        </Row>
                                     ) : (
                                         <span>No registration???</span>
                                     )}
@@ -315,35 +310,60 @@ const RegistrationView = () => {
                             </Row>
                             <hr/>
 
-                            <Row>
-                                <h6>Option 2: Move Guest To Different Mat:</h6>
+                            <Row className="mb-1">
+                                <h5>Option 1: Edit Assignment Details:</h5>
+                            </Row>
+                            <Row className="ml-1">
+                                <Col className="col-12">
+                                    { (registration) ? (
+                                            <Row>
+                                                <AssignForm
+                                                    assign={assign}
+                                                    handleAssign={handleRegistrationUpdate}
+                                                />
+                                            </Row>
+                                    ) : (
+                                        <span>No registration???</span>
+                                    )}
+                                </Col>
+                            </Row>
+                            <hr/>
+
+                            <Row className="mb-1">
+                                <h5>Option 2: Move Guest To Different Mat:</h5>
                             </Row>
                             <Row>
-                                <Col className="col-6">
-                                    Transfer this guest (and details)
-                                    to a different mat.
-                                </Col>
                                 <Col className="col-4">
-                                    <Form.Group controlId="emptyMatSelect">
-                                        <Form.Label>Empty Mat:</Form.Label>
-                                        <Form.Control
-                                            as="select"
-                                            onChange={handleEmptyChange}
-                                            size="sm"
-                                        >
-                                            <option key="0" value="0">
-                                                (Select Empty Mat)
-                                            </option>
-                                            {availables.map(available => (
-                                                <option
-                                                    key={available.id}
-                                                    value={available.id}
-                                                >
-                                                    {available.matNumberAndFeatures}
+                                    Move this guest (and transfer the related
+                                    details) to a different mat.
+                                </Col>
+                                <Col className="col-1"/>
+                                <Col className="col-5">
+                                    <Row>
+                                        {/*<Form.Group controlId="emptyMatSelect">*/}
+                                            <Form.Label className="col-8">
+                                                Transfer To Mat:
+                                            </Form.Label>
+                                            <Form.Control
+                                                as="select"
+                                                className="col-4"
+                                                onChange={handleEmptyChange}
+                                                size="sm"
+                                            >
+                                                <option key="0" value="0">
+                                                    (Select)
                                                 </option>
-                                            ))}
-                                        </Form.Control>
-                                    </Form.Group>
+                                                {availables.map(available => (
+                                                    <option
+                                                        key={available.id}
+                                                        value={available.id}
+                                                    >
+                                                        {available.matNumberAndFeatures}
+                                                    </option>
+                                                ))}
+                                            </Form.Control>
+                                        {/*</Form.Group>*/}
+                                    </Row>
                                 </Col>
 
                                 <Col className={"col-2 text-right"}>
@@ -356,8 +376,8 @@ const RegistrationView = () => {
                             </Row>
                             <hr/>
 
-                            <Row>
-                                <h6>Option 3: Remove Existing Assignment</h6>
+                            <Row className="mb-1">
+                                <h5>Option 3: Remove Existing Assignment</h5>
                             </Row>
                             <Row>
                                 <Col className="col-10">
@@ -392,6 +412,7 @@ const RegistrationView = () => {
                     show={showDeassignConfirm}
                     size="lg"
                 >
+
                     <Modal.Header closeButton>
                         <Modal.Title>Confirm Deassign</Modal.Title>
                         <Modal.Body>
@@ -416,8 +437,8 @@ const RegistrationView = () => {
                                 Cancel
                             </Button>
                         </Modal.Footer>
-                    </Modal.Header>
 
+                    </Modal.Header>
 
                 </Modal>
 
@@ -436,6 +457,23 @@ const RegistrationView = () => {
                     </Modal.Header>
 
                     <Modal.Body>
+                        <Row>
+                            <Col className="col-12">
+                                { (registration) ? (
+                                    <Row className="col-12 justify-content-center">
+                                        Facility:&nbsp;
+                                        <span className="text-info">{facilityContext.selectedFacility.name}</span>
+                                        &nbsp;&nbsp;&nbsp;
+                                        Mat Number:&nbsp;
+                                        <span className="text-info">{registration.matNumberAndFeatures}</span>
+                                    </Row>
+                                ) : (
+                                    <span>No registration???</span>
+                                )}
+                            </Col>
+                        </Row>
+                        <hr/>
+
                         <p>TODO - Unassigned Mat body</p>
                         <p>Current Registration: {JSON.stringify(registration)}</p>
                     </Modal.Body>

@@ -9,6 +9,7 @@ import React, { useState } from "react";
 // heading      Optional extra header, to render above column headers
 // index        Zero-relative index of selected item, or -1 for none
 // items        Array of items to be represented as rows in the list.
+// showFooter   Show the table footer?  [false]
 const List = (props) => {
 
     const [ booleanFalse ] = useState(props.booleanFalse || "No");
@@ -67,6 +68,22 @@ const List = (props) => {
                 </tr>
             ))}
             </tbody>
+
+            { (props.showFooter) ? (
+                <tfoot>
+                <tr className="table-secondary">
+                    {props.headers.map((header, index) => (
+                        <th
+                            key={-index}
+                            scope="col"
+                        >{header}</th>
+                    ))}
+                </tr>
+                </tfoot>
+
+            ) : (
+                null
+            )}
 
         </table>
 
