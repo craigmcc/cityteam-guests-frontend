@@ -8,6 +8,7 @@ import { RemoveButton, ResetButton, SaveButton }
     from "../components/buttons";
 import { CheckboxField, TextField, toEmptyStrings, toNullValues }
     from "../components/fields";
+import { validatePhone, validateState, validateZipCode } from "../util/validations";
 
 import FacilityClient from "../clients/FacilityClient";
 
@@ -289,31 +290,6 @@ let emptyInitialValues = () => {
     }
 }
 
-let stateAbbreviations =
-      [ "AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "DC",
-        "FL", "GA", "HI", "ID", "IL", "IN", "IA", "KS", "KY",
-        "LA", "ME", "MD", "MA", "MI", "MN", "MS", "MO", "MT",
-        "NE", "NV", "NH", "NJ", "NM", "NY", "NC", "ND", "OH",
-        "OK", "OR", "PA", "RI", "SC", "SD", "TN", "TX", "UT",
-        "VT", "VA", "WA", "WV", "WI", "WY" ];
-
-let validatePhone = (value) => {
-    // Not a required field
-    if (!value || (value.length === 0)) {
-        return true;
-    }
-    let pattern = /^\d{3}-\d{3}-\d{4}$/;
-    return pattern.test(value);
-}
-
-let validateState = (value) => {
-    // Not a required field
-    if (!value || (value.length === 0)) {
-        return true;
-    }
-    return value.length === 2 && stateAbbreviations.indexOf(value) >= 0;
-}
-
 let validateUniqueName = (value, id) => {
     return new Promise((resolve) => {
         FacilityClient.exact(value)
@@ -328,15 +304,6 @@ let validateUniqueName = (value, id) => {
                 resolve(true);
             })
     })
-}
-
-let validateZipCode = (value) => {
-    // Not a required field
-    if (!value || (value.length === 0)) {
-        return true;
-    }
-    let pattern = /^\d{5}$|^\d{5}-\d{4}$/;
-    return pattern.test(value);
 }
 
 export default FacilityForm;

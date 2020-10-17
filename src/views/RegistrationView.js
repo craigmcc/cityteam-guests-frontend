@@ -14,11 +14,13 @@ import List from "../components/List";
 import RegistrationDateSelector from "../components/RegistrationDateSelector";
 import TemplateSelector from "../components/TemplateSelector";
 import { FacilityContext } from "../contexts/FacilityContext";
+import AssignForm from "../forms/AssignForm";
 
 const RegistrationView = () => {
 
     const facilityContext = useContext(FacilityContext);
 
+    const [assign, setAssign] = useState(null);
     const [availables, setAvailables] = useState([]);
     const [emptyRegistrationId, setEmptyRegistrationId] = useState(-1);
     const [index, setIndex] = useState(-1);
@@ -27,12 +29,25 @@ const RegistrationView = () => {
         useState((new Date()).toISOString().slice(0,10));
     const [registrations, setRegistrations] = useState([]);
     const [showAssigned, setShowAssigned] = useState(false);
+    const [showDeassignConfirm, setShowDeassignConfirm] = useState(false);
     const [showUnassigned, setShowUnassigned] = useState(false);
 
     useEffect(() => {
         retrieveAllRegistrations(registrationDate);
         // eslint-disable-next-line
     }, [facilityContext.selectedFacility])
+
+    const extractAssign = (registration) => {
+        return {
+            id: registration.id,
+            comments: registration.comments,
+            guestId: registration.guestId,
+            paymentAmount: registration.paymentAmount,
+            paymentType: registration.paymentType,
+            showerTime: registration.showerTime,
+            wakeupTime: registration.wakeupTime
+        }
+    }
 
     const flattenedRegistrations = (registrations) => {
         let flattenedItems =
@@ -44,6 +59,22 @@ const RegistrationView = () => {
             }
         }
         return flattenedItems;
+    }
+
+    const handleDeassignConfirm = () => {
+        console.info("RegistrationView.handleDeassignConfirm()");
+        setShowDeassignConfirm(true);
+    }
+
+    const handleDeassignConfirmNegative = () => {
+        console.info("RegistrationView.handleDeassignConfirmNegative()");
+        setShowDeassignConfirm(false);
+    }
+
+    const handleDeassignConfirmPositive = () => {
+        console.info("RegistrationView.handleDeassignConfirmPositive()");
+        setShowDeassignConfirm(false);
+        handleRegistrationDeassign();
     }
 
     const handleEmptyChange = (event) => {
@@ -76,13 +107,6 @@ const RegistrationView = () => {
         retrieveAllRegistrations(registrationDate);
     }
 
-    const handleRegistrationAssign = () => {
-        console.info("RegistrationView.handleRegistrationAssign(" +
-            JSON.stringify(registration) + ")");
-        // TODO - perform the assign
-        handleHideUnassigned();
-    }
-
     const handleRegistrationDate = (newRegistrationDate) => {
         console.info("RegistrationView.handleRegistrationDate(" +
             newRegistrationDate + ")");
@@ -93,6 +117,7 @@ const RegistrationView = () => {
     const handleRegistrationDeassign = () => {
         console.info("RegistrationView.handleRegistrationDeassign(" +
             registration.id + ")");
+        // Perform the required database transaction
         RegistrationClient.deassign(registration.id)
             .then(response => {
                 setEmptyRegistrationId(-1);
@@ -108,6 +133,7 @@ const RegistrationView = () => {
     const handleRegistrationReassign = () => {
         console.info("RegistrationView.handleRegistrationReassign(" +
             JSON.stringify(registration) + ", " + emptyRegistrationId + ")");
+        // Perform the required database transaction
         RegistrationClient.reassign(registration.id, emptyRegistrationId)
             .then(response => {
                 setEmptyRegistrationId(-1);
@@ -120,10 +146,11 @@ const RegistrationView = () => {
         handleHideAssigned();
     }
 
-    const handleRegistrationUpdate = () => {
+    const handleRegistrationUpdate = (newRegistration) => {
         console.info("RegistrationView.handleRegistrationUpdate(" +
-            JSON.stringify(registration) + ")");
-        // TODO - perform the update
+            JSON.stringify(newRegistration) + ")");
+        // Database transaction has already occurred
+        retrieveAllRegistrations(registrationDate);
         handleHideAssigned();
     }
 
@@ -131,6 +158,7 @@ const RegistrationView = () => {
         if (newIndex === index) {
             console.info("RegistrationView.handleSelectedItem(-1)");
             setIndex(-1);
+            setAssign(null);
             setRegistration(false);
             setShowAssigned(false);
             setShowUnassigned(false);
@@ -141,6 +169,7 @@ const RegistrationView = () => {
             setRegistration(registrations[newIndex]);
             if (registrations[newIndex].guestId) {
                 retrieveAvailableRegistrations(registrationDate);
+                setAssign(extractAssign(registrations[newIndex]));
                 setEmptyRegistrationId(-1);
                 setShowAssigned(true);
             } else {
@@ -260,39 +289,28 @@ const RegistrationView = () => {
 
                         <Container className="ml-1">
 
-{/*
-                            <Row>
-                                <p>Current Registration:</p>
-                                <p> {JSON.stringify(registration, ["id", "matNumberAndFeatures", "guest.firstName", "guest.lastName"])}</p>
-                            </Row>
-                            <hr/>
-*/}
-
                             <Row>
                                 <h6>Option 1: Edit Assignment Details:</h6>
                             </Row>
                             <Row className="ml-1">
                                 <Col className="col-12">
                                     { (registration) ? (
-                                        <Row>
-                                            Mat Number: {registration.matNumberAndFeatures}
-                                            &nbsp;&nbsp;
-                                            Guest:  {registration.guest.firstName} {registration.guest.lastName}
-                                        </Row>
+                                        <>
+                                            <Row className="col-12 text-center mb-3">
+                                                Mat Number: {registration.matNumberAndFeatures}
+                                                &nbsp;&nbsp;
+                                                Guest:  {registration.guest.firstName} {registration.guest.lastName}
+                                            </Row>
+                                            <Row>
+                                                <AssignForm
+                                                    assign={assign}
+                                                    handleAssign={handleRegistrationUpdate}
+                                                />
+                                            </Row>
+                                        </>
                                     ) : (
-                                        <span/>
+                                        <span>No registration???</span>
                                     )}
-                                </Col>
-                            </Row>
-                            <Row>
-                                <Col className="col-10">
-                                    <p>TODO - comments, paymentAmount, paymentType, showerTime, wakeupTime</p>
-                                </Col>
-                                <Col className="col-2 text-right">
-                                    <Button
-                                        onClick={handleRegistrationUpdate}
-                                        variant="primary"
-                                    >Save</Button>
                                 </Col>
                             </Row>
                             <hr/>
@@ -302,10 +320,8 @@ const RegistrationView = () => {
                             </Row>
                             <Row>
                                 <Col className="col-6">
-                                    Transfer this guest (and the associated
-                                    assignment details) to the newly selected
-                                    mat, and make this mat available for
-                                    reassignment.
+                                    Transfer this guest (and details)
+                                    to a different mat.
                                 </Col>
                                 <Col className="col-4">
                                     <Form.Group controlId="emptyMatSelect">
@@ -338,14 +354,6 @@ const RegistrationView = () => {
                                     >Move</Button>
                                 </Col>
                             </Row>
-{/*
-                            <Row>
-                                <p>Available Registrations:</p>
-                            </Row>
-                            <Row>
-                                <p>{JSON.stringify(availables, ["id", "matNumberAndFeatures"])}</p>
-                            </Row>
-*/}
                             <hr/>
 
                             <Row>
@@ -358,7 +366,7 @@ const RegistrationView = () => {
                                 </Col>
                                 <Col className="col-2 text-right">
                                     <Button
-                                        onClick={handleRegistrationDeassign}
+                                        onClick={handleDeassignConfirm}
                                         variant="danger"
                                     >Remove</Button>
                                 </Col>
@@ -371,6 +379,45 @@ const RegistrationView = () => {
                     <Modal.Footer>
                         Press <strong>&times;</strong> to exit with no changes
                     </Modal.Footer>
+
+                </Modal>
+
+                {/* Deassign Confirm Modal */}
+                <Modal
+                    animation={false}
+                    backdrop="static"
+                    centered
+                    dialogClassName="bg-danger"
+                    onHide={handleDeassignConfirmNegative}
+                    show={showDeassignConfirm}
+                    size="lg"
+                >
+                    <Modal.Header closeButton>
+                        <Modal.Title>Confirm Deassign</Modal.Title>
+                        <Modal.Body>
+                            <p>
+                                Deassigning this mat will delete the associated
+                                assignment details.  If you want to transfer this
+                                guest to a different mat and preserve the details,
+                                use the <strong>Move</strong> option instead.
+                            </p>
+                        </Modal.Body>
+                        <Modal.Footer>
+                            <Button
+                                onClick={handleDeassignConfirmPositive}
+                                variant="danger"
+                            >
+                                Deassign
+                            </Button>
+                            <Button
+                                onClick={handleDeassignConfirmNegative}
+                                variant="primary"
+                            >
+                                Cancel
+                            </Button>
+                        </Modal.Footer>
+                    </Modal.Header>
+
 
                 </Modal>
 
@@ -390,7 +437,7 @@ const RegistrationView = () => {
 
                     <Modal.Body>
                         <p>TODO - Unassigned Mat body</p>
-                        <p>Curent Registration: {JSON.stringify(registration)}</p>
+                        <p>Current Registration: {JSON.stringify(registration)}</p>
                     </Modal.Body>
 
                     <Modal.Footer>

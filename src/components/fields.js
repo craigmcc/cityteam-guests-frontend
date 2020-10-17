@@ -1,5 +1,5 @@
-import React from "react";
-import { ErrorMessage, Field } from "formik";
+import React, { useEffect, useState } from "react";
+import { ErrorMessage, Field, /* useField */} from "formik";
 
 // props.autoFocus Set automatic focus to this field on render [not set]
 // props.errorClassName CSS styles for error message [alert alert-danger]
@@ -32,6 +32,63 @@ export const CheckboxField = (props) => {
                     name={props.name}
                     type="checkbox"
                 />
+            </div>
+            <div className="row mt-1">
+                <div className={labelClassName}></div>
+                <ErrorMessage
+                    className={errorClassName}
+                    component="div"
+                    name={props.name}
+                />
+            </div>
+        </div>
+    );
+}
+
+// props.autoFocus      Set automatic focus to this field on render [not set]
+// props.errorClassName CSS styles for error message [alert alert-danger]
+// props.fieldClassName CSS styles for the field column [col-10]
+// props.label          Textual label for this field
+// props.labelClassName CSS styles for label column [col-2]
+// props.name           Field name in the containing object
+// props.options        Array of objects with "value" and "description" fields
+// props.value          Currently selected value
+export const SelectField = (props) => {
+
+//    const [field, meta] = useField(props);
+    let [options] = useState(props.options);
+
+    useEffect(() => {
+        console.info("options = ", options);
+    }, [options])
+
+    let errorClassName =
+        props.errorClassName ? props.errorClassName : "alert alert-danger";
+    let fieldClassName =
+        props.fieldClassName ? props.fieldClassName : "col-10";
+    let labelClassName =
+        props.labelClassName ? props.labelClassName : "col-2";
+
+    return (
+        <div className="form-group">
+            <div className="row">
+                <label className={labelClassName} htmlFor={props.name}>
+                    {props.label}
+                </label>
+                <Field
+                    as="select"
+                    autoFocus={props.autoFocus ? props.autoFocus : null}
+                    className={fieldClassName}
+                    id={props.name}
+                    name={props.name}
+                >
+                    {options.map(option => (
+                        <option key={option.value} value={option.value}>
+                            {option.description}
+                        </option>
+
+                    ))}
+                </Field>
             </div>
             <div className="row mt-1">
                 <div className={labelClassName}></div>
@@ -117,7 +174,7 @@ export const toNullValues = (incoming) => {
 
 // For each incoming item, copy it's fields to outgoing.  In addition, if the
 // item has a field with key {name}, assume it is an object and add
-// {name}.{subname} fields to the outgoing item for each field in the
+// {name}.{subName} fields to the outgoing item for each field in the
 // named object.  NOTE:  This only goes one level deep.
 export const withFlattenedObject = (incoming, name) => {
 //    console.log("wFO incoming is " +
@@ -127,9 +184,9 @@ export const withFlattenedObject = (incoming, name) => {
         outgoing[key] = value;
         if ((key === name) && (value)) {
 //            console.log("Object value  is " + JSON.stringify(value, null, 2));
-            for (let subname in value) {
-//                console.log("  Adding [" + name + "." + subname + "] = " + value[subname]);
-                outgoing[name + "." + subname] = value[subname];
+            for (let subName in value) {
+//                console.log("  Adding [" + name + "." + subName + "] = " + value[subName]);
+                outgoing[name + "." + subName] = value[subName];
             }
         }
     }
