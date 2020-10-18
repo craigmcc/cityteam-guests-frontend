@@ -89,7 +89,7 @@ const AssignForm = (props) => {
                     <Form>
 
                         <Row>
-                            <Col className="col-7">
+                            <Col className="col-6">
                                 <SelectField
                                     autoFocus
                                     fieldClassName="col-7"
@@ -99,7 +99,7 @@ const AssignForm = (props) => {
                                     options={paymentOptions}
                                 />
                             </Col>
-                            <Col className="col-3">
+                            <Col className="col-6">
                                 <TextField
                                     fieldClassName="col-5"
                                     label="Amount:"
@@ -107,19 +107,18 @@ const AssignForm = (props) => {
                                     name="paymentAmount"
                                 />
                             </Col>
-                            <Col className="col-2"/>
                         </Row>
 
                         <Row>
-                            <Col className="col-5">
+                            <Col className="col-6">
                                 <TextField
                                     fieldClassName="col-5"
                                     label="Shower At:"
-                                    labelClassName="col-6"
+                                    labelClassName="col-7"
                                     name="showerTime"
                                 />
                             </Col>
-                            <Col className="col-5">
+                            <Col className="col-6">
                                 <TextField
                                     fieldClassName="col-5"
                                     label="Wakeup At:"
@@ -127,21 +126,27 @@ const AssignForm = (props) => {
                                     name="wakeupTime"
                                 />
                             </Col>
-                            <Col className="col-2"/>
                         </Row>
 
                         <Row>
-                            <Col className="col-10">
+                            <Col>
                                 <TextField
-                                    fieldClassName="col-9"
+                                    fieldClassName="col-10"
                                     label="Comments:"
-                                    labelClassName="col-3"
+                                    labelClassName="col-2"
                                     name="comments"
                                 />
                             </Col>
-                            <Col className="col-2 text-right">
-                                <Button type="submit" variant="primary">Save</Button>
-                            </Col>
+                        </Row>
+
+                        <Row className="ml-2">
+                            <Button
+                                size="sm"
+                                type="submit"
+                                variant="primary"
+                            >
+                                Save
+                            </Button>
                         </Row>
 
                     </Form>

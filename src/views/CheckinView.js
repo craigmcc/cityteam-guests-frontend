@@ -3,6 +3,7 @@ import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 
+import CheckinAssignedView from "./CheckinAssignedView";
 import CheckinRegistrationsView from "./CheckinRegistrationsView";
 import RegistrationDateSelector from "../components/RegistrationDateSelector";
 import { FacilityContext } from "../contexts/FacilityContext";
@@ -14,18 +15,36 @@ const CheckinView = () => {
     const [registration, setRegistration] = useState({});
     const [registrationDate, setRegistrationDate] =
         useState((new Date()).toISOString().slice(0, 10)); // TODO - local date
+    const [stage, setStage] = useState("List");
+
+    // Valid Stages:  "List", "Assigned", "Unassigned"
+
+    useEffect(() => {
+        console.info("CheckinView.useEffect()");
+    });
 
     const handleRegistration = (newRegistration) => {
         console.info("CheckinView.handleRegistration("
             + JSON.stringify(newRegistration, ["id", "guest.firstName", "guest.lastName"])
             + ")");
         setRegistration(newRegistration);
+        if (newRegistration.guestId) {
+            setStage("Assigned");
+        } else {
+            alert("Unassigned stage not defined yet!");
+        }
     }
 
     const handleRegistrationDate = (newRegistrationDate) => {
         console.info("CheckinRegistrationsView.handleRegistrationDate(" +
             newRegistrationDate + ")");
         setRegistrationDate(newRegistrationDate);
+        setStage("List");
+    }
+
+    const handleStage = (newStage) => {
+        console.info("CheckinView.handleStage(" + newStage + ")");
+        setStage(newStage);
     }
 
     return (
@@ -46,10 +65,19 @@ const CheckinView = () => {
                 </Row>
             </Container>
 
-            <CheckinRegistrationsView
-                handleRegistration={handleRegistration}
-                registrationDate={registrationDate}
-            />
+            {(stage === "List") ? (
+                <CheckinRegistrationsView
+                    handleRegistration={handleRegistration}
+                    registrationDate={registrationDate}
+                />
+            ) : null}
+
+            {(stage === "Assigned") ? (
+                <CheckinAssignedView
+                    handleStage={handleStage}
+                    registration={registration}
+                />
+            ) : null}
 
         </>
 

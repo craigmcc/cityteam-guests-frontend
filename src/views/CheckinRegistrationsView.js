@@ -4,12 +4,11 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 
 import { withFlattenedObjects} from "../components/fields";
+import FacilityClient from "../clients/FacilityClient";
+import TemplateClient from "../clients/TemplateClient";
 import List from "../components/List";
-import RegistrationDateSelector from "../components/RegistrationDateSelector";
 import TemplateSelector from "../components/TemplateSelector";
 import { FacilityContext } from "../contexts/FacilityContext";
-import TemplateClient from "../clients/TemplateClient";
-import FacilityClient from "../clients/FacilityClient";
 import { reportError } from "../util/error.handling";
 
 // handleRegistration        Handle (registration) when a registration is selected
@@ -98,7 +97,7 @@ const CheckinRegistrationsView = (props) => {
 
         <Container fluid>
 
-            { (registrations.length === 0) ? (
+            { (facilityContext.selectedFacility) && (registrations.length === 0) ? (
                 <Row className="mb-3 ml-1">
                     <TemplateSelector
                         actionLabel="Generate"
