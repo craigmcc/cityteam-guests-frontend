@@ -339,7 +339,7 @@ const RegistrationView = () => {
                         <Col className="col-6 ml-2">
                             <TemplateSelector
                                 actionLabel="Generate"
-                                handleAction={handleGenerate}
+                                handleTemplate={handleGenerate}
                             />
                         </Col>
                     </Row>

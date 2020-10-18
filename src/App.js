@@ -11,6 +11,7 @@ import './App.css';
 import FacilitySelector from "./components/FacilitySelector";
 import { FacilityContextProvider } from "./contexts/FacilityContext";
 import GuestHistoryView from "./reports/GuestHistory";
+import CheckinView from "./views/CheckinView";
 import FacilityView from "./views/FacilityView";
 import GuestView from "./views/GuestView";
 import RegistrationView from "./views/RegistrationView";
@@ -56,6 +57,7 @@ function App() {
               <Nav.Link href="/guests">Guests</Nav.Link>
               <Nav.Link href="/registrations">Registrations</Nav.Link>
               <Nav.Link href="/templates">Templates</Nav.Link>
+              <Nav.Link href="/checkins">Checkins</Nav.Link>
 
               <NavDropdown title="Reports">
                 <NavDropdown.Item href="/reports-DailySummary">
@@ -78,7 +80,7 @@ function App() {
                 className="mr-4"
                 inline
             >
-              <FacilitySelector labelClassName="text-secondary"/>
+              <FacilitySelector labelClassName="text-light"/>
             </Form>
 
           </Navbar>
@@ -88,6 +90,9 @@ function App() {
             <Switch>
               <Route exact path={["/", "/facilities"]}>
                 <FacilityView/>
+              </Route>
+              <Route exact path="/checkins">
+                <CheckinView/>
               </Route>
               <Route exact path="/guests">
                 <GuestView/>

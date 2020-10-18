@@ -1,21 +1,23 @@
 import React, { useState } from "react";
+import Container from "react-bootstrap/Container";
+import Row from "react-bootstrap/Row";
 import { Form, Formik } from "formik";
 import * as Yup from "yup";
 
 import { TextField } from "../components/fields";
 
-// handleRegistrationDate - Handle (registrationDate) for successful change
-// registrationDate - Initial value for registrationDate "field"
+// autoFocus                 Should this field receive autoFocus? [false]
+// handleRegistrationDate    Handle (registrationDate) for successful change
+// registrationDate          Initial value for registrationDate "field"
 const RegistrationDateSelector = (props) => {
 
     const [initialValues] =
         useState({ registrationDate: props.registrationDate });
 
-    // TODO - do we need a useEffect?
-
     let handleSubmit = (values) => {
-        console.log("RegistrationDateSelector.handleSubmit(" +
-            values.registrationDate + ")");
+        console.info("RegistrationDateSelector.handleSubmit("
+            + values.registrationDate
+            + ")");
         if (props.handleRegistrationDate) {
             props.handleRegistrationDate(values.registrationDate);
         }
@@ -40,17 +42,19 @@ const RegistrationDateSelector = (props) => {
             validationSchema={validationSchema}
         >
 
-            <Form className="form">
-
-                <TextField
-                    autoFocus
-                    fieldClassName="col-7"
-                    label="Registration Date:"
-                    labelClassName="col-5"
-                    name="registrationDate"
-                />
-
-            </Form>
+            <Container fluid>
+                <Form>
+                    <Row>
+                        <TextField
+                            autoFocus={props.autoFocus}
+                            fieldClassName="col-5"
+                            label="Registration Date:"
+                            labelClassName="col-7 text-right"
+                            name="registrationDate"
+                        />
+                    </Row>
+                </Form>
+            </Container>
 
         </Formik>
 
