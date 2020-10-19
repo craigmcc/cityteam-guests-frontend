@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
+import Modal from "react-bootstrap/Modal";
 import Row from "react-bootstrap/Row";
 
 import FacilityClient from "../clients/FacilityClient";
@@ -119,9 +120,41 @@ const CheckinAssignedView = (props) => {
             })
     }
 
+    // For Option 3 ----------------------------------------------------------
+
+    const [showDeassignConfirm, setShowDeassignConfirm] = useState(false);
+
+    const handleDeassignConfirm = () => {
+        console.info("RegistrationView.handleDeassignConfirm()");
+        setShowDeassignConfirm(true);
+    }
+
+    const handleDeassignConfirmNegative = () => {
+        console.info("RegistrationView.handleDeassignConfirmNegative()");
+        setShowDeassignConfirm(false);
+    }
+
+    const handleDeassignConfirmPositive = () => {
+        console.info("RegistrationView.handleDeassignConfirmPositive("
+            + JSON.stringify(props.registration,
+                ["id", "guestId", "guest.firstName", "guest.lastName"])
+            + ")");
+        RegistrationClient.deassign(props.registration.id)
+            .then(response => {
+                setShowDeassignConfirm(false);
+                requestStage("List");
+            })
+            .catch(err => {
+                reportError
+                    ("CheckinAssignedView.handleDeassignConfirmPositive()", err);
+            })
+    }
+
     return (
 
         <Container fluid>
+
+            {/* Common Header -------------------------------------------- */}
 
             <Row className="mb-4">
                 <Col className="col-11">
@@ -183,7 +216,7 @@ const CheckinAssignedView = (props) => {
                         <h6>Option 2: Move Guest To A Different Mat</h6>
                         <hr className="mb-3"/>
                         <Row className="ml-2 mb-3">
-                            Move this guest (and transfer the related assignment
+                            Move this Guest (and transfer the related assignment
                             details) to a different mat.
                         </Row>
                         <Row className="ml-2 mb-2">
@@ -227,10 +260,65 @@ const CheckinAssignedView = (props) => {
                     <>
                         <h6>Option 3: Remove Assignment Details</h6>
                         <hr className="mb-3"/>
+                        <Row className="ml-2 mb-3">
+                            Remove the current assignment, erasing any
+                            of the details that were specified.  If you
+                            just want to move an assigned Guest to a
+                            different available mat, use Option 2 instead.
+                        </Row>
+                        <Row className="justify-content-end">
+                            <Button
+                                onClick={handleDeassignConfirm}
+                                size="sm"
+                                variant="danger"
+                            >
+                                Remove
+                            </Button>
+                        </Row>
                     </>
                 </Col>
 
             </Row>
+
+            {/* Option 3 Confirm Modal ----------------------------------- */}
+
+            <Modal
+                animation={false}
+                backdrop="static"
+                centered
+                onHide={handleDeassignConfirmNegative}
+                show={showDeassignConfirm}
+                size="lg"
+            >
+
+                <Modal.Header closeButton>
+                    <Modal.Title>Confirm Deassign</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <p>
+                        Do you really want to remove this assignment
+                        and erase the assignment details (including which
+                        Guest was assigned to this mat)?
+                    </p>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button
+                        onClick={handleDeassignConfirmPositive}
+                        variant="danger"
+                    >
+                        Confirm
+                    </Button>
+                    <Button
+                        onClick={handleDeassignConfirmNegative}
+                        variant="primary"
+                    >
+                        Cancel
+                    </Button>
+                </Modal.Footer>
+
+            </Modal>
+
+            {/* Common Footer -------------------------------------------- */}
 
             <Row>
                 <Col className="col-11">
