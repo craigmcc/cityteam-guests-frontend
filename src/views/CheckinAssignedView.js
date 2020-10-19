@@ -57,9 +57,32 @@ const CheckinAssignedView = (props) => {
     const [availables, setAvailables] = useState([]);
 
     useEffect(() => {
+
+        const retrieveAvailableRegistrations = () => {
+            console.info("CheckinAssignedView.retrieveAvailableRegistrations() for("
+                + JSON.stringify(props.registration, ["id", "facilityId", "registrationDate"])
+                + ")");
+            FacilityClient.registrationAvailable(
+                props.registration.facilityId,
+                props.registration.registrationDate
+            )
+                .then(response => {
+                    console.info("RegistrationView.retrieveAvailableRegistrations("
+                        + JSON.stringify(response.data, ["id", "matNumber"])
+                        + ")");
+                    setAvailableId(-1);
+                    setAvailables(flattenedRegistrations(response.data));
+                })
+                .catch(err => {
+                    reportError("CheckinAssignedView.retrieveAvailableRegistrations()", err);
+                    setAvailableId(-1);
+                    setAvailables([]);
+                })
+        }
+
         console.info("CheckinAssignedView.useEffect()");
         retrieveAvailableRegistrations();
-        setAvailableId(-1);
+
     }, [props.registration]);
 
     const flattenedRegistrations = (registrations) => {
@@ -93,26 +116,6 @@ const CheckinAssignedView = (props) => {
             })
             .catch(err => {
                 reportError("CheckAssignedView.handleReassign()", err);
-            })
-    }
-
-    const retrieveAvailableRegistrations = () => {
-        console.info("CheckinAssignedView.retrieveAvailableRegistrations() for("
-            + JSON.stringify(props.registration, ["id", "facilityId", "registrationDate"])
-            + ")");
-        FacilityClient.registrationAvailable(
-            props.registration.facilityId,
-            props.registration.registrationDate
-        )
-            .then(response => {
-                console.info("RegistrationView.retrieveAvailableRegistrations("
-                    + JSON.stringify(response.data, ["id", "matNumber"])
-                    + ")");
-                setAvailables(flattenedRegistrations(response.data));
-            })
-            .catch(err => {
-                reportError("CheckinAssignedView.retrieveAvailableRegistrations()", err);
-                setAvailables([]);
             })
     }
 
