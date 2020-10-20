@@ -9,17 +9,21 @@ import * as Yup from "yup";
 import RegistrationClient from "../clients/RegistrationClient";
 import { SelectField, TextField, toEmptyStrings, toNullValues }
     from "../components/fields";
+import { reportError } from "../util/error.handling";
 import { validatePaymentTypes, validateTime } from "../util/validations";
 
 // assign       Assign object containing initial values to display
+// autoFocus    Should we autofocus on the first field?  (Required field for true)
 // handleAssign Handle (assign) for successful assignment
 const AssignForm = (props) => {
 
     const [assign, setAssign] = useState(props.assign);
 
     useEffect(() => {
-        setAssign(toEmptyStrings(props.assign));
-    }, [props.assign]);
+        console.info("AssignForm.useEffect(assign="
+            + JSON.stringify(assign)
+            + ")");
+    }, [assign]);
 
     const handleAssign = (assigned) => {
         let data = toNullValues(assigned);
@@ -31,8 +35,7 @@ const AssignForm = (props) => {
                 }
             })
             .catch(err => {
-                console.error("RegistrationForm.assign() error: ", err);
-                alert(`RegistrationForm.assign() error: '${err.message}'`);
+                reportError("AssignForm.handleAssign()", err);
             })
     }
 
@@ -49,7 +52,6 @@ const AssignForm = (props) => {
                 value: paymentType.substr(0, 2),
                 description: paymentType
             })});
-        console.info("AssignForm.assemblePaymentOptions(" + JSON.stringify(results) + ")");
         return results;
     }
 
@@ -76,7 +78,7 @@ const AssignForm = (props) => {
 
             {/* Details Form */}
             <Formik
-                initialValues={assign}
+                initialValues={toEmptyStrings(assign)}
                 onSubmit={(values, actions) => {
                     handleSubmit(values, actions);
                 }}
@@ -91,7 +93,7 @@ const AssignForm = (props) => {
                         <Row>
                             <Col className="col-6">
                                 <SelectField
-                                    autoFocus
+                                    autoFocus={props.autoFocus}
                                     fieldClassName="col-7"
                                     label="Payment Type:"
                                     labelClassName="col-5"
@@ -141,6 +143,7 @@ const AssignForm = (props) => {
 
                         <Row className="ml-2">
                             <Button
+                                disabled={!assign.guestId}
                                 size="sm"
                                 type="submit"
                                 variant="primary"

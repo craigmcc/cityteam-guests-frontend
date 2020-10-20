@@ -12,7 +12,7 @@ import AssignForm from "../forms/AssignForm";
 import { toEmptyStrings } from "../components/fields";
 
 // handleStage               Handle (stage) change request
-// registration              Registration to be processed
+// registration              Currently assigned Registration to be processed
 const CheckinAssignedView = (props) => {
 
     // Global Support --------------------------------------------------------
@@ -49,6 +49,7 @@ const CheckinAssignedView = (props) => {
         console.info("CheckinAssignedView.handleAssign("
             + JSON.stringify(newRegistration)
             + ")");
+        // Database update was inside AssignForm
         requestStage("List");
     }
 
@@ -194,13 +195,14 @@ const CheckinAssignedView = (props) => {
                 {/* Option 1 --------------------------------------------- */}
 
 
-                <Col className="col-6 bg-light mb-1">
+                <Col className="col-6 mb-1">
                     <>
                         <h6>Option 1: Edit Assignment Details</h6>
                         <hr className="mb-3"/>
                         { (props.registration && props.registration.guest) ? (
                             <AssignForm
                                 assign={toEmptyStrings(extractAssign(props.registration))}
+                                autoFocus={true}
                                 handleAssign={handleAssign}
                             />
                         ) : (
@@ -211,7 +213,7 @@ const CheckinAssignedView = (props) => {
 
                 {/* Option 2 --------------------------------------------- */}
 
-                <Col className="col-3">
+                <Col className="col-3 bg-light">
                     <>
                         <h6>Option 2: Move Guest To A Different Mat</h6>
                         <hr className="mb-3"/>
@@ -219,10 +221,11 @@ const CheckinAssignedView = (props) => {
                             Move this Guest (and transfer the related assignment
                             details) to a different mat.
                         </Row>
-                        <Row className="ml-2 mb-2">
+                        <Row className="ml-2 mb-3">
                             <label
                                 className="mr-3"
-                                htmlFor="availableMat">Move To Mat:</label>
+                                htmlFor="availableMat">Move To Mat:
+                            </label>
                             <select
                                 className="mr-3"
                                 id="availableMat"
@@ -242,11 +245,13 @@ const CheckinAssignedView = (props) => {
                                     </option>
                                 ))}
                             </select>
+                        </Row>
+                        <Row className="justify-content-center">
                             <Button
                                 disabled={availableId <= 0}
                                 onClick={handleReassign}
                                 size="sm"
-                                variant="primary"
+                                variant="info"
                             >
                                 Move
                             </Button>
@@ -256,7 +261,7 @@ const CheckinAssignedView = (props) => {
 
                 {/* Option 3 --------------------------------------------- */}
 
-                <Col className="col-3 bg-light">
+                <Col className="col-3">
                     <>
                         <h6>Option 3: Remove Assignment Details</h6>
                         <hr className="mb-3"/>

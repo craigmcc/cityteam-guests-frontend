@@ -5,6 +5,7 @@ import Row from "react-bootstrap/Row";
 
 import CheckinAssignedView from "./CheckinAssignedView";
 import CheckinRegistrationsView from "./CheckinRegistrationsView";
+import CheckinUnassignedView from "./CheckinUnassignedView";
 import RegistrationDateSelector from "../components/RegistrationDateSelector";
 import { FacilityContext } from "../contexts/FacilityContext";
 
@@ -31,7 +32,7 @@ const CheckinView = () => {
         if (newRegistration.guestId) {
             setStage("Assigned");
         } else {
-            alert("Unassigned stage not defined yet!");
+            setStage("Unassigned");
         }
     }
 
@@ -65,15 +66,23 @@ const CheckinView = () => {
                 </Row>
             </Container>
 
+            {(stage === "Assigned") ? (
+                <CheckinAssignedView
+                    handleStage={handleStage}
+                    registration={registration}
+                />
+            ) : null}
+
             {(stage === "List") ? (
                 <CheckinRegistrationsView
                     handleRegistration={handleRegistration}
+                    handleStage={handleStage}
                     registrationDate={registrationDate}
                 />
             ) : null}
 
-            {(stage === "Assigned") ? (
-                <CheckinAssignedView
+            {(stage === "Unassigned") ? (
+                <CheckinUnassignedView
                     handleStage={handleStage}
                     registration={registration}
                 />

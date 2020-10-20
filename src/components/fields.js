@@ -59,7 +59,6 @@ export const SelectField = (props) => {
     let [options] = useState(props.options);
 
     useEffect(() => {
-        console.info("options = ", options);
     }, [options])
 
     let errorClassName =
