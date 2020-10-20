@@ -9,11 +9,11 @@ import * as Yup from "yup";
 
 import FacilityClient from "../clients/FacilityClient";
 import GuestClient from "../clients/GuestClient";
-import { toEmptyStrings, toNullValues } from "../components/fields";
 import { RemoveButton, ResetButton, SaveButton } from "../components/react.buttons";
 import { CheckboxField, TextField } from "../components/react.fields";
 import { FacilityContext } from "../contexts/FacilityContext";
 import { reportError } from "../util/error.handling";
+import { toEmptyStrings, toNullValues } from "../util/transformations";
 
 // guest                    Guest to be edited, or null for adding a new object
 // handleInsert             Handle (guest) for successful insert
@@ -182,36 +182,16 @@ const GuestForm = (props) => {
                     <Form>
 
                         <Row>
-                            <TextField
-                                fieldClassName="col-9"
-                                label="First Name:"
-                                labelClassName="col-3"
-                                name="firstName"
-                            />
+                            <TextField label="First Name:" name="firstName"/>
                         </Row>
                         <Row>
-                            <TextField
-                                fieldClassName="col-9"
-                                label="Last Name:"
-                                labelClassName="col-3"
-                                name="lastName"
-                            />
+                            <TextField label="Last Name:" name="lastName"/>
                         </Row>
                         <Row>
-                            <CheckboxField
-                                fieldClassName="col-9"
-                                label="Active?"
-                                labelClassName="col-3"
-                                name="active"
-                            />
+                            <CheckboxField label="Active?" name="active"/>
                         </Row>
                         <Row className="mb-2">
-                            <TextField
-                                fieldClassName="col-9"
-                                label="Comments:"
-                                name="comments"
-                                labelClassName="col-3"
-                            />
+                            <TextField label="Comments:" name="comments"/>
                         </Row>
 
                         <Row>

@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from "react";
-import Button from "react-bootstrap/Button";
+import React from "react";
 import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
@@ -7,28 +6,23 @@ import { Form, Formik } from "formik";
 import * as Yup from "yup";
 
 import RegistrationClient from "../clients/RegistrationClient";
-import { SelectField, TextField, toEmptyStrings, toNullValues }
-    from "../components/fields";
+import { SaveButton } from "../components/react.buttons";
+import { SelectField, TextField } from "../components/react.fields";
 import { reportError } from "../util/error.handling";
+import { toEmptyStrings, toNullValues } from "../util/transformations";
 import { validatePaymentTypes, validateTime } from "../util/validations";
 
-// assign       Assign object containing initial values to display
-// autoFocus    Should we autofocus on the first field?  (Required field for true)
-// handleAssign Handle (assign) for successful assignment
+// assign                   Assign object containing initial values to display
+// autoFocus                Should we autofocus on the first field?  (Required field for true)
+// handleAssign             Handle (assign) for successful assignment
 const AssignForm = (props) => {
-
-    const [assign] = useState(props.assign);
-
-    useEffect(() => {
-        console.info("AssignForm.useEffect(assign="
-            + JSON.stringify(assign)
-            + ")");
-    }, [assign]);
 
     const handleAssign = (assigned) => {
         let data = toNullValues(assigned);
-        console.info("AssignForm.handleAssign(" + JSON.stringify(data) + ")");
-        RegistrationClient.assign(assign.id, data)
+        console.info("AssignForm.handleAssign("
+            + JSON.stringify(data)
+            + ")");
+        RegistrationClient.assign(props.assign.id, data)
             .then(response => {
                 if (props.handleAssign) {
                     props.handleAssign(response.data);
@@ -78,7 +72,7 @@ const AssignForm = (props) => {
 
             {/* Details Form */}
             <Formik
-                initialValues={toEmptyStrings(assign)}
+                initialValues={toEmptyStrings(props.assign)}
                 onSubmit={(values, actions) => {
                     handleSubmit(values, actions);
                 }}
@@ -103,9 +97,9 @@ const AssignForm = (props) => {
                             </Col>
                             <Col className="col-6">
                                 <TextField
-                                    fieldClassName="col-5"
+                                    fieldClassName="col-6"
                                     label="Amount:"
-                                    labelClassName="col-7"
+                                    labelClassName="col-6"
                                     name="paymentAmount"
                                 />
                             </Col>
@@ -114,17 +108,17 @@ const AssignForm = (props) => {
                         <Row>
                             <Col className="col-6">
                                 <TextField
-                                    fieldClassName="col-5"
+                                    fieldClassName="col-7"
                                     label="Shower At:"
-                                    labelClassName="col-7"
+                                    labelClassName="col-5"
                                     name="showerTime"
                                 />
                             </Col>
                             <Col className="col-6">
                                 <TextField
-                                    fieldClassName="col-5"
+                                    fieldClassName="col-7"
                                     label="Wakeup At:"
-                                    labelClassName="col-7"
+                                    labelClassName="col-5"
                                     name="wakeupTime"
                                 />
                             </Col>
@@ -142,14 +136,7 @@ const AssignForm = (props) => {
                         </Row>
 
                         <Row className="ml-2">
-                            <Button
-                                disabled={!assign.guestId}
-                                size="sm"
-                                type="submit"
-                                variant="primary"
-                            >
-                                Save
-                            </Button>
+                            <SaveButton disabled={!props.assign.guestId}/>
                         </Row>
 
                     </Form>

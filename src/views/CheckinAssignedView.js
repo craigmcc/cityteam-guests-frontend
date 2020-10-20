@@ -195,7 +195,7 @@ const CheckinAssignedView = (props) => {
                 {/* Option 1 --------------------------------------------- */}
 
 
-                <Col className="col-6 mb-1">
+                <Col className="col-7 mb-1">
                     <>
                         <h6>Option 1: Edit Assignment Details</h6>
                         <hr className="mb-3"/>
@@ -261,7 +261,7 @@ const CheckinAssignedView = (props) => {
 
                 {/* Option 3 --------------------------------------------- */}
 
-                <Col className="col-3">
+                <Col className="col-2">
                     <>
                         <h6>Option 3: Remove Assignment Details</h6>
                         <hr className="mb-3"/>
