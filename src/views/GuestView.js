@@ -11,6 +11,7 @@ import SearchBar from "../components/SearchBar";
 import { FacilityContext } from "../contexts/FacilityContext";
 import Pagination from "../components/Pagination";
 import GuestForm from "../forms/GuestForm"
+import { reportError } from "../util/error.handling";
 
 const GuestView = () => {
 
@@ -22,29 +23,33 @@ const GuestView = () => {
     const [index, setIndex] = useState(-1);
     const [pageSize] = useState(10);
     const [searchText, setSearchText] = useState("");
-    const [show, setShow] = useState(false);
+    const [showDetails, setShowDetails] = useState(false);
 
     useEffect(() => {
         retrieveAllItems();
     }, [facilityContext.selectedFacility]);
 
+    let SHORT_LIST = ["id", "facilityId", "firstName", "lastName"];
+
     const handleHide = () => {
         console.log("GuestView.handleHide()");
         setIndex(-1);
-        setShow(false);
+        setShowDetails(false);
     }
 
     const handleInsert = (guest) => {
-        console.log("GuestView.handleInsert(" +
-            JSON.stringify(guest, ["id", "firstName", "lastName"]) + ")");
-        setShow(false);
+        console.log("GuestView.handleInsert("
+            + JSON.stringify(guest, SHORT_LIST)
+            + ")");
+        setShowDetails(false);
         retrieveItems(searchText, currentPage);
     }
 
     const handleRemove = (guest) => {
-        console.log("GuestView.handleRemove(" +
-            JSON.stringify(guest, ["id", "name", "lastName"]) + ")");
-        setShow(false);
+        console.log("GuestView.handleRemove("
+            + JSON.stringify(guest, SHORT_LIST)
+            + ")");
+        setShowDetails(false);
         retrieveItems(searchText, currentPage);
     }
 
@@ -53,27 +58,28 @@ const GuestView = () => {
             console.log("GuestView.handleSelectedItem(-1)");
             setGuest(null);
             setIndex(-1);
-            setShow(false);
+            setShowDetails(false);
         } else {
-            console.log("GuestView.handleSelectedItem(" + newIndex + ", " +
-                JSON.stringify(guests[newIndex], ["id", "firstName", "lastName"]) + ")");
+            console.log("GuestView.handleSelectedItem(" + newIndex + ", "
+                + JSON.stringify(guests[newIndex], SHORT_LIST)
+                + ")");
             setGuest(guests[newIndex]);
             setIndex(newIndex);
-            setShow(true);
+            setShowDetails(true);
         }
     }
 
     const handleUpdate = (guest) => {
         console.log("GuestView.handleUpdate(" +
-            JSON.stringify(guest, ["id", "firstName", "lastName"]) + ")");
-        setShow(false);
+            JSON.stringify(guest, SHORT_LIST) + ")");
+        setShowDetails(false);
         retrieveItems(searchText, currentPage);
     }
 
     const onAdd = () => {
         console.log("GuestView.onAdd()");
         setGuest(null);
-        setShow(true);
+        setShowDetails(true);
     }
 
     const onPageNext = () => {
@@ -96,12 +102,6 @@ const GuestView = () => {
         retrieveItems(event.target.value, currentPage);
     }
 
-    const onSearchClick = () => {
-        console.log("GuestView.onSearchClick(" +
-            searchText + ")");
-        retrieveItems(searchText, currentPage);
-    }
-
     const retrieveAllItems = () => {
         setCurrentPage(1);
         setGuests([]);
@@ -117,10 +117,11 @@ const GuestView = () => {
     }
 
     const retrieveMatchingItems = (newSearchText, newCurrentPage) => {
-        console.log("GuestView.retrieveItems for(" +
-            JSON.stringify(facilityContext.selectedFacility,
-                ["id", "name"]) + ", " + newSearchText + ", " +
-                newCurrentPage + ")");
+        console.log("GuestView.retrieveMatchingItems for("
+            + "search=" + newSearchText + ", "
+            + "page=" + newCurrentPage + ", "
+            + "facilityId=" + facilityContext.selectedFacility.id
+            + ")");
         FacilityClient.guestName
                 (facilityContext.selectedFacility.id,
                  newSearchText,
@@ -129,14 +130,15 @@ const GuestView = () => {
                      offset: (pageSize * (newCurrentPage - 1))
                  })
             .then(response => {
-                console.log("GuestView.retrieveItems got(" +
-                    JSON.stringify(response.data,
-                        ["id", "firstName", "lastName"]) +
-                        ", " + newSearchText + ")");
+                console.log("GuestView.retrieveMatchingItems got("
+                    + "search=" + newSearchText + ", "
+                    + "page=" + newCurrentPage + ", "
+                    + JSON.stringify(response.data, SHORT_LIST)
+                    + ")");
                 setGuests(response.data);
             })
-            .catch(e => {
-                console.log(e);
+            .catch(err => {
+                reportError("GuestView.retrieveMatchingItems()", err);
             });
         setIndex(-1);
     }
@@ -162,7 +164,7 @@ const GuestView = () => {
                         <SearchBar
                             label="Filter"
                             onChange={onSearchChange}
-                            onClick={onSearchClick}
+//                            onClick={onSearchClick}
                             placeholder="Enter all or part of either name ..."
                             value={searchText}
                             withClear
@@ -217,7 +219,7 @@ const GuestView = () => {
                 backdrop="static"
                 centered
                 onHide={handleHide}
-                show={show}
+                show={showDetails}
                 size="lg"
             >
 
@@ -237,6 +239,8 @@ const GuestView = () => {
                         handleInsert={handleInsert}
                         handleRemove={handleRemove}
                         handleUpdate={handleUpdate}
+                        withRemove
+                        withReset
                     />
                 </Modal.Body>
 

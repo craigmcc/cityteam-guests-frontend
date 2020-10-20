@@ -1,44 +1,31 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 
-import { toEmptyStrings } from "../components/fields";
 import FacilityClient from "../clients/FacilityClient";
 import List from "../components/List";
 import Pagination from "../components/Pagination";
 import SearchBar from "../components/SearchBar";
 import AssignForm from "../forms/AssignForm";
+import GuestForm from "../forms/GuestForm";
 
-// handleStage               Handle (stage) change request
-// registration              Currently unassigned Registration to be processed
+// handleStage              Handle (stage) change request
+// registration             Currently unassigned Registration to be processed
 const CheckinUnassignedView = (props) => {
-
-//    const facilityContext = useContext(FacilityContext);
 
     // Global Support --------------------------------------------------------
 
     const [assign, setAssign] = useState(null);
-//    const [availableId, setAvailableId] = useState(-1);
-//    const [availables] = useState(props.availables);
     const [guest, setGuest] = useState(null);
     const [registration] = useState(props.registration);
 
     useEffect(() => {
-        console.info("CheckinUnassignedView.useEffect(assign="
-            + JSON.stringify(assign)
-            + ")");
-        console.info("CheckinUnassignedView.useEffect(guest="
-            + JSON.stringify(guest)
-            + ")");
         registration.matNumberAndFeatures = "" + registration.matNumber;
         if (registration.features) {
             registration.matNumberAndFeatures += registration.features;
         }
-        console.info("CheckinUnassignedView.useEffect(registration="
-            + JSON.stringify(registration)
-            + ")");
     }, [assign, guest, registration]);
 
     const handleBack = () => {
@@ -70,7 +57,6 @@ const CheckinUnassignedView = (props) => {
         setCurrentPage(1);
         setGuest(null);
         setIndex(-1);
-        // TODO - handleAdd()
     }
 
     const handleAddSave = (registration) => {
@@ -230,7 +216,7 @@ const CheckinUnassignedView = (props) => {
 
                 {/* Step 1 --------------------------------------------------- */}
 
-                <Col className="col-6 bg-light mb-1">
+                <Col className="col-6 bg-light mb-1 mt-1">
                     <>
 
                         <h6>Step 1: Select or Add A Guest To Assign</h6>
@@ -266,7 +252,12 @@ const CheckinUnassignedView = (props) => {
                         { (adding) ? (
 
                             <Row className="ml-1 mr-1 mb-2">
-                                TODO - the add form goes here
+                                <GuestForm
+                                    // No guest triggers add behavior
+                                    handleInsert={handleAddSave}
+                                    saveLabel="Add"
+                                    // No withRemove or withReset skips those buttons
+                                />
                             </Row>
 
                         ) : (
@@ -288,7 +279,7 @@ const CheckinUnassignedView = (props) => {
 
                 {/* Step 2 --------------------------------------------------- */}
 
-                <Col className="col-6 mb-1">
+                <Col className="col-6 mb-1 mt-1">
                     <>
                         <h6>Step 2: Complete Assignment Details</h6>
                         <hr className="mb-3"/>
@@ -297,6 +288,7 @@ const CheckinUnassignedView = (props) => {
                                 assign={assign}
                                 autoFocus={false}
                                 handleAssign={handleAssign}
+                                saveLabel="Add"
                             />
                         ) : (
                             <span>No guest has been selected for assignment yet</span>

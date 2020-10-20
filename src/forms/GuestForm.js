@@ -1,40 +1,60 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import Button from "react-bootstrap/Button";
+import Col from "react-bootstrap/Col";
+import Container from "react-bootstrap/Container";
 import Modal from "react-bootstrap/Modal";
+import Row from "react-bootstrap/Row";
 import { Form, Formik } from "formik";
 import * as Yup from "yup";
 
 import FacilityClient from "../clients/FacilityClient";
 import GuestClient from "../clients/GuestClient";
-import {CheckboxField, TextField, toEmptyStrings, toNullValues}
-    from "../components/fields";
-import { RemoveButton, ResetButton, SaveButton }
-    from "../components/buttons";
-
+import { toEmptyStrings, toNullValues } from "../components/fields";
+import { RemoveButton, ResetButton, SaveButton } from "../components/react.buttons";
+import { CheckboxField, TextField } from "../components/react.fields";
 import { FacilityContext } from "../contexts/FacilityContext";
+import { reportError } from "../util/error.handling";
 
-// guest        Guest to be edited, or null for adding a new object
-// handleInsert Handle (guest) for successful insert
-// handleRemove Handle (guest) for successful remove
-// handleUpdate Handle (guest) for successful insert or update
+// guest                    Guest to be edited, or null for adding a new object
+// handleInsert             Handle (guest) for successful insert
+// handleRemove             Handle (guest) for successful remove
+// handleUpdate             Handle (guest) for successful insert or update
+// saveLabel                Label for Save button [Save]
+// withRemove               Should we render a remove button?
+// withReset                Should we render a reset button?
 const GuestForm = (props) => {
 
     const facilityContext = useContext(FacilityContext);
 
     const [adding] = useState(!props.guest);
-    const [guest, setGuest] =
-        useState(convertInitialValues(props.guest));
+    const [guest] = useState(props.guest);
     const [showRemoveConfirm, setShowRemoveConfirm] = useState(false);
 
-    useEffect(() => {
-        setGuest(convertInitialValues(props.guest));
-    }, [props.guest])
+    const SHORT_LIST = ["id", "facilityId", "firstName", "lastName"];
 
-    let handleInsert = (inserted) => {
+    const convertInitialValues = (guest) => {
+        return guest
+            ? toEmptyStrings(guest)
+            : toEmptyStrings(emptyInitialValues());
+    }
+
+    const emptyInitialValues = () => {
+        return {
+            id: -1,
+            active: true,
+            comments: "",
+            facilityId: -1,
+            firstName: "",
+            lastName: "",
+        }
+    }
+
+    const handleInsert = (inserted) => {
         let data = toNullValues(inserted);
         data.facilityId = facilityContext.selectedFacility.id;
-        console.info("GuestForm.handleInsert(" +
-            JSON.stringify(data, ["id", "firstName", "lastName"]) + ")");
+        console.info("GuestForm.handleInsert("
+            + JSON.stringify(data, SHORT_LIST)
+            + ")");
         GuestClient.insert(data)
             .then(response => {
                 if (props.handleInsert) {
@@ -42,15 +62,14 @@ const GuestForm = (props) => {
                 }
             })
             .catch(err => {
-                console.error("GuestForm.insert() error: ", err);
-                alert(`GuestForm.insert() error: '${err.message}'`);
+                reportError("GuestForm.handleInsert()", err);
             })
     }
 
-    let handleRemove = () => {
-        console.info("GuestForm.handleRemove(" +
-            JSON.stringify(guest,
-                ["id", "firstName", "lastName"]) + ")");
+    const handleRemove = () => {
+        console.info("GuestForm.handleRemove("
+            + JSON.stringify(guest,SHORT_LIST)
+            + ")");
         GuestClient.remove(guest.id)
             .then((response) => {
                 if (props.handleRemove) {
@@ -58,28 +77,27 @@ const GuestForm = (props) => {
                 }
             })
             .catch(err => {
-                console.error("GuestForm.remove() error: ", err);
-                alert(`GuestForm.insert() error: '${err.message}'`);
+                reportError("GuestForm.handleRemove()", err);
             })
     }
 
-    let handleRemoveConfirm = () => {
+    const handleRemoveConfirm = () => {
         console.info("GuestForm.handleRemoveConfirm()");
         setShowRemoveConfirm(true);
     }
 
-    let handleRemoveConfirmNegative = () => {
+    const handleRemoveConfirmNegative = () => {
         console.info("GuestForm.handleRemoveConfirmNegative()");
         setShowRemoveConfirm(false);
     }
 
-    let handleRemoveConfirmPositive = () => {
+    const handleRemoveConfirmPositive = () => {
         console.info("GuestForm.handleRemoveConfirmPositive()");
         setShowRemoveConfirm(false);
         handleRemove();
     }
 
-    let handleSubmit = (values, actions) => {
+    const handleSubmit = (values, actions) => {
         actions.setSubmitting(true);
         if (values.id > 0) {
             handleUpdate(values);
@@ -89,11 +107,12 @@ const GuestForm = (props) => {
         actions.setSubmitting(false);
     }
 
-    let handleUpdate = (updated) => {
+    const handleUpdate = (updated) => {
         let data = toNullValues(updated);
         data.facilityId = facilityContext.selectedFacility.id;
-        console.info("GuestForm.handleUpdate(" +
-            JSON.stringify(data, ["id", "firstName", "lastName"]) + ")");
+        console.info("GuestForm.handleUpdate("
+            + JSON.stringify(data, SHORT_LIST)
+            + ")");
         GuestClient.update(data.id, data)
             .then(response => {
                 if (props.handleUpdate) {
@@ -101,12 +120,11 @@ const GuestForm = (props) => {
                 }
             })
             .catch(err => {
-                console.error("GuestForm.update() error: ", err);
-                alert(`GuestForm.update() error: '${err.message}'`);
+                reportError("GuestForm.handleUpdate()", err);
             })
     }
 
-    let validationSchema = () => {
+    const validationSchema = () => {
         return Yup.object().shape({
             firstName: Yup.string()
                 .required("First Name is required"),
@@ -114,14 +132,35 @@ const GuestForm = (props) => {
                 .required("Last Name is required")
                 .test("unique-name",
                     "That name is already in use within this facility",
-                    function (value) {
-                        return validateUniqueName(value,
-                            this.parent.firstName,
+                    function (lastName) {
+                        return validateUniqueName(this.parent.id,
                             facilityContext.selectedFacility.id,
-                            guest.id)
+                            this.parent.firstName,
+                            lastName
+                        )
                     }),
             comments: Yup.string()
         });
+    }
+
+    const validateUniqueName = (guestId, facilityId, firstName, lastName) => {
+        console.info("GuestForm.validateUniqueName("
+            + ", guestId=" + guestId
+            + ", facilityId=" + facilityId
+            + ", firstName=" + firstName
+            + ", lastName=" + lastName
+            + ")");
+        return new Promise((resolve) => {
+            FacilityClient.guestExact(facilityId, firstName, lastName)
+                .then(response => {
+                    // Exists but OK if it is this item
+                    resolve(guestId === response.data.id);
+                })
+                .catch(() => {
+                    // Does not exist, so definitely unique
+                    resolve(true);
+                })
+        })
     }
 
     return (
@@ -130,8 +169,7 @@ const GuestForm = (props) => {
 
             {/* Details Form */}
             <Formik
-                // enableReinitialize
-                initialValues={guest}
+                initialValues={convertInitialValues(guest)}
                 onSubmit={(values, actions) => {
                     handleSubmit(values, actions);
                 }}
@@ -139,47 +177,64 @@ const GuestForm = (props) => {
                 validationSchema={validationSchema}
             >
 
-                <Form className="form mr-2">
+                <Container fluid>
 
-                    <div className="form-row mb-1">
-                        <div className="col-3"/>
-                        <div className="col-9">
-                            <h4>Guest Details</h4>
-                        </div>
-                    </div>
+                    <Form>
 
-                    <TextField
-                        autoFocus
-                        fieldClassName="col-9"
-                        label="First Name:"
-                        labelClassName="col-3"
-                        name="firstName"/>
-                    <TextField
-                        fieldClassName="col-9"
-                        label="Last Name:"
-                        labelClassName="col-3"
-                        name="lastName"/>
-                    <CheckboxField label="Active?" name="active"/>
-                    <TextField
-                        fieldClassName="col-9"
-                        label="Comments:"
-                        labelClassName="col-3"
-                        name="comments"/>
+                        <Row>
+                            <TextField
+                                fieldClassName="col-9"
+                                label="First Name:"
+                                labelClassName="col-3"
+                                name="firstName"
+                            />
+                        </Row>
+                        <Row>
+                            <TextField
+                                fieldClassName="col-9"
+                                label="Last Name:"
+                                labelClassName="col-3"
+                                name="lastName"
+                            />
+                        </Row>
+                        <Row>
+                            <CheckboxField
+                                fieldClassName="col-9"
+                                label="Active?"
+                                labelClassName="col-3"
+                                name="active"
+                            />
+                        </Row>
+                        <Row className="mb-2">
+                            <TextField
+                                fieldClassName="col-9"
+                                label="Comments:"
+                                name="comments"
+                                labelClassName="col-3"
+                            />
+                        </Row>
 
-                    <div className="row">
-                        <div className="col-3"/>
-                        <div className="col-7">
-                            <SaveButton/>
-                            <ResetButton/>
-                        </div>
-                        <div className="col-2 float-right">
-                            <RemoveButton
-                                disabled={adding}
-                                onClick={handleRemoveConfirm}/>
-                        </div>
-                    </div>
+                        <Row>
+                            <Col className="col-3"/>
+                            <Col>
+                                <SaveButton label={props.saveLabel}/>&nbsp;
+                                {(props.withReset) ? (
+                                    <ResetButton/>
+                                ) : null }
+                            </Col>
+                            <Col className="justify-content-end">
+                                {(props.withRemove) ? (
+                                    <RemoveButton
+                                        disabled={adding}
+                                        onClick={handleRemoveConfirm}
+                                    />
+                                ) :  null }
+                            </Col>
+                        </Row>
 
-                </Form>
+                    </Form>
+
+                </Container>
 
             </Formik>
 
@@ -226,39 +281,6 @@ const GuestForm = (props) => {
 
     )
 
-}
-
-let convertInitialValues = (guest) => {
-    return guest
-        ? toEmptyStrings(guest)
-        : toEmptyStrings(emptyInitialValues());
-}
-
-let emptyInitialValues = () => {
-    return {
-        id: -1,
-        active: true,
-        comments: "",
-        facilityId: -1,
-        firstName: "",
-        lastName: "",
-    }
-}
-
-let validateUniqueName = (value, firstName, facilityId, id) => {
-    console.info("GuestForm.validateUniqueName(lastName=" + value +
-        ", firstName=" + firstName + ", facilityId=" + facilityId + ", id=" + id + ")");
-    return new Promise((resolve) => {
-        FacilityClient.guestExact(facilityId, firstName, value)
-            .then(response => {
-                // Exists but OK if it is this item
-                resolve(id === response.data.id);
-            })
-            .catch(() => {
-                // Does not exist, so definitely unique
-                resolve(true);
-            })
-    })
 }
 
 export default GuestForm;

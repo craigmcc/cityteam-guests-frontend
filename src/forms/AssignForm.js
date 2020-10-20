@@ -17,7 +17,7 @@ import { validatePaymentTypes, validateTime } from "../util/validations";
 // handleAssign Handle (assign) for successful assignment
 const AssignForm = (props) => {
 
-    const [assign, setAssign] = useState(props.assign);
+    const [assign] = useState(props.assign);
 
     useEffect(() => {
         console.info("AssignForm.useEffect(assign="
