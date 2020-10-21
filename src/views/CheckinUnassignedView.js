@@ -59,15 +59,14 @@ const CheckinUnassignedView = (props) => {
         setIndex(-1);
     }
 
-    const handleAddSave = (registration) => {
-        // Assume a brand new Guest has not been assigned yet
+    const handleAddSave = (newGuest) => {
         console.info("CheckinUnassignedView.handleAddSave("
-            + JSON.stringify(registration, ["id", "registrationDate", "guestId"])
+            + JSON.stringify(newGuest)
             + ")");
         setAdding(false);
-        // TODO - update guestId/guest.firstName/guest.lastName in registration
-        // TODO - update heading with guest name?
-
+        configureAssign(newGuest);
+        setGuest(newGuest);
+        setIndex(-1);
     }
 
     const handlePageNext = () => {
@@ -216,14 +215,14 @@ const CheckinUnassignedView = (props) => {
 
                 {/* Step 1 --------------------------------------------------- */}
 
-                <Col className="col-6 bg-light mb-1 mt-1">
+                <Col className="col-5 bg-light mb-1 mt-1">
                     <>
 
                         <h6>Step 1: Select or Add A Guest To Assign</h6>
                         <hr className="mb-3"/>
 
-                        <Row className="mb-2">
-                            <Col className="col-2">
+                        <Row className="mb-3">
+                            <Col className="col-5">
                                 <Pagination
                                     currentPage={currentPage}
                                     lastPage={(guests.length === 0) ||
@@ -231,15 +230,15 @@ const CheckinUnassignedView = (props) => {
                                     onNext={handlePageNext}
                                     onPrevious={handlePagePrevious}
                                 />
-                            </Col>
-                            <Col className="col-2">
+                                &nbsp;
                                 <Button
+                                    className="ml-3"
                                     onClick={handleAddClick}
                                     size="sm"
                                     variant="secondary"
                                 >Add</Button>
                             </Col>
-                            <Col className="col-8">
+                            <Col className="col-7">
                                 <SearchBar
                                     onChange={handleSearchChange}
                                     placeholder="Enter all or part of either name ..."
@@ -279,7 +278,7 @@ const CheckinUnassignedView = (props) => {
 
                 {/* Step 2 --------------------------------------------------- */}
 
-                <Col className="col-6 mb-1 mt-1">
+                <Col className="col-7 mb-1 mt-1">
                     <>
                         <h6>Step 2: Complete Assignment Details</h6>
                         <hr className="mb-3"/>
@@ -288,7 +287,7 @@ const CheckinUnassignedView = (props) => {
                                 assign={assign}
                                 autoFocus={false}
                                 handleAssign={handleAssign}
-                                saveLabel="Add"
+                                saveLabel="Complete"
                             />
                         ) : (
                             <span>No guest has been selected for assignment yet</span>

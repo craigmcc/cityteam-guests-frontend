@@ -597,7 +597,7 @@ const RegistrationView = () => {
                                 <Pagination
                                     currentPage={currentPage}
                                     lastPage={(guests.length === 0) ||
-                                    (guests.length < pageSize)}
+                                        (guests.length < pageSize)}
                                     onNext={handlePageNext}
                                     onPrevious={handlePagePrevious}
                                 />

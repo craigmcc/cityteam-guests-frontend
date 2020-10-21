@@ -267,9 +267,7 @@ const CheckinAssignedView = (props) => {
                         <hr className="mb-3"/>
                         <Row className="ml-2 mb-3">
                             Remove the current assignment, erasing any
-                            of the details that were specified.  If you
-                            just want to move an assigned Guest to a
-                            different available mat, use Option 2 instead.
+                            of the details that were specified.
                         </Row>
                         <Row className="justify-content-end">
                             <Button
@@ -304,6 +302,10 @@ const CheckinAssignedView = (props) => {
                         Do you really want to remove this assignment
                         and erase the assignment details (including which
                         Guest was assigned to this mat)?
+                    </p>
+                    <p>
+                        If you just want to move an assigned Guest to a
+                        different available mat, use Option 2 instead.
                     </p>
                 </Modal.Body>
                 <Modal.Footer>

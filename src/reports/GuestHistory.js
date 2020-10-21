@@ -169,7 +169,7 @@ const GuestHistoryView = () => {
                                 <Pagination
                                     currentPage={currentPage}
                                     lastPage={(guests.length === 0) ||
-                                    (guests.length < pageSize)}
+                                        (guests.length < pageSize)}
                                     onNext={onPageNext}
                                     onPrevious={onPagePrevious}
                                 />

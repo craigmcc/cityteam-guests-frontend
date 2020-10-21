@@ -5,7 +5,6 @@ import { Button } from "./buttons";
 // WARNING - This component will likely undergo lots of adaptations!!!!!
 // NOTE - This component has no side effects itself, everything is events
 
-// props.className - CSS class for this component [none]
 // props.currentPage - One relative current page number [1]
 // props.lastPage - true if this is the last page, else false [false]
 // props.onNext - Handle () for "Next" control being clicked
@@ -13,13 +12,11 @@ import { Button } from "./buttons";
 const Pagination = (props) => {
 
     return (
-        <div
-            className={props.className ? props.className : ""}
-        >
+        <>
             <Button
                 className="btn btn-outline-secondary btn-sm"
                 disabled={props.currentPage === 1}
-                label="<"
+                label="&lt;"
                 onClick={props.onPrevious}
             />
             <Button
@@ -29,10 +26,10 @@ const Pagination = (props) => {
             <Button
                 className="btn btn-outline-secondary btn-sm"
                 disabled={props.lastPage}
-                label=">"
+                label="&gt;"
                 onClick={props.onNext}
             />
-        </div>
+        </>
     )
 
 }

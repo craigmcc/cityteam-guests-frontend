@@ -136,7 +136,13 @@ const AssignForm = (props) => {
                         </Row>
 
                         <Row className="ml-2">
-                            <SaveButton disabled={!props.assign.guestId}/>
+                            <Col className="col-2"/>
+                            <Col>
+                                <SaveButton
+                                    disabled={!props.assign.guestId}
+                                    label={props.saveLabel ? props.saveLabel : null}
+                                />
+                            </Col>
                         </Row>
 
                     </Form>
