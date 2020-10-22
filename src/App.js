@@ -11,6 +11,7 @@ import './App.css';
 import FacilitySelector from "./components/FacilitySelector";
 import { FacilityContextProvider } from "./contexts/FacilityContext";
 import GuestHistoryView from "./reports/GuestHistory";
+import MonthlySummaryView from "./reports/MonthlySummary";
 import CheckinView from "./views/CheckinView";
 import FacilityView from "./views/FacilityView";
 import GuestView from "./views/GuestView";
@@ -108,6 +109,9 @@ function App() {
 */}
               <Route exact path="/reports-GuestHistory">
                 <GuestHistoryView/>
+              </Route>
+              <Route exact path="/reports-MonthlySummary">
+                <MonthlySummaryView/>
               </Route>
 {/*
               <Route exact path="/sandbox">

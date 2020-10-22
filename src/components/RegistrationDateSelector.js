@@ -8,6 +8,7 @@ import { TextField } from "../components/fields";
 
 // autoFocus                 Should this field receive autoFocus? [false]
 // handleRegistrationDate    Handle (registrationDate) for successful change
+// label                     Field label [Registration Date:]
 // registrationDate          Initial value for registrationDate "field"
 const RegistrationDateSelector = (props) => {
 
@@ -48,7 +49,7 @@ const RegistrationDateSelector = (props) => {
                         <TextField
                             autoFocus={props.autoFocus}
                             fieldClassName="col-5"
-                            label="Registration Date:"
+                            label={(props.label ? props.label : "Registration Date") + ":"}
                             labelClassName="col-7 text-right"
                             name="registrationDate"
                         />

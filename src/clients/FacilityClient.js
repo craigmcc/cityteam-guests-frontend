@@ -74,6 +74,11 @@ const registrationDate = (facilityId, registrationDate, options) => {
         `/${facilityId}/registrations/${registrationDate}${queryParameters(options)}`);
 }
 
+const registrationSummary = (facilityId, registrationDateFrom, registrationDateTo) => {
+    return http.get(FACILITIES_BASE +
+        `/${facilityId}/registrations/summary/${registrationDateFrom}/${registrationDateTo}`);
+}
+
 // ***** Facility-Template Relationships *****
 
 const templateAll = (facilityId, options) => {
@@ -118,6 +123,7 @@ export default {
     registrationAll: registrationAll,
     registrationAvailable: registrationAvailable,
     registrationDate: registrationDate,
+    registrationSummary: registrationSummary,
     templateAll: templateAll,
     templateExact: templateExact,
     templateName: templateName,

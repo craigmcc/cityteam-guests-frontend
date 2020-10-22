@@ -34,7 +34,7 @@ const GuestHistoryView = () => {
             setGuest(null);
             setIndex(-1);
         } else {
-            console.info("GuestHistory.handleSelecvtedItem(" + newIndex + ", " +
+            console.info("GuestHistory.handleSelectedItem(" + newIndex + ", " +
                 JSON.stringify(guests[newIndex], ["id", "firstName", "lastName"]) + ")");
             retrieveRegistrations(guests[newIndex]);
             setHeading("Guest History for " +
@@ -199,7 +199,7 @@ const GuestHistoryView = () => {
 
                     <>
 
-                        <Row className="ml-1 mr-1 mt-3 mb-3justify-content-end">
+                        <Row className="ml-1 mr-1 mt-3 mb-3">
                             <Col className="text-left">
                                 {(new Date()).toLocaleString()}
                             </Col>
