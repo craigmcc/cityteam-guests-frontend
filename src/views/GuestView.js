@@ -164,7 +164,6 @@ const GuestView = () => {
                         <SearchBar
                             label="Filter"
                             onChange={onSearchChange}
-//                            onClick={onSearchClick}
                             placeholder="Enter all or part of either name ..."
                             value={searchText}
                             withClear

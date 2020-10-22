@@ -14,6 +14,7 @@ import GuestHistoryView from "./reports/GuestHistory";
 import CheckinView from "./views/CheckinView";
 import FacilityView from "./views/FacilityView";
 import GuestView from "./views/GuestView";
+import HomeView from "./views/HomeView";
 // import RegistrationView from "./views/RegistrationView";
 // import SandboxView from "./sandbox/SandboxView";
 import TemplateView from "./views/TemplateView";
@@ -53,6 +54,7 @@ function App() {
             >
 
               {/* TODO - active link is not getting highlighted */}
+              <Nav.Link href="/home">Home</Nav.Link>
               <Nav.Link href="/facilities">Facilities</Nav.Link>
               <Nav.Link href="/guests">Guests</Nav.Link>
               {/*<Nav.Link href="/registrations">Registrations</Nav.Link>*/}
@@ -87,11 +89,14 @@ function App() {
           {/*<Container fluid>*/}
 
             <Switch>
-              <Route exact path={["/", "/facilities"]}>
-                <FacilityView/>
+              <Route exact path={["/", "/home"]}>
+                <HomeView/>
               </Route>
               <Route exact path="/checkins">
                 <CheckinView/>
+              </Route>
+              <Route exact path="/facilities">
+                <FacilityView/>
               </Route>
               <Route exact path="/guests">
                 <GuestView/>

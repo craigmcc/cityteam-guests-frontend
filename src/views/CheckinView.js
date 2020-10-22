@@ -52,7 +52,7 @@ const CheckinView = () => {
 
         <>
             <Container fluid>
-                <Row className="mt-3 mb-3">
+                <Row className="mt-3 mb-3 mr-2">
                     <Col className="col-9">
                         <strong>Checkins for {facilityContext.selectedFacility.name}</strong>
                     </Col>
