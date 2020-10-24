@@ -12,6 +12,7 @@ import { ErrorMessage, Field } from "formik";
 // label                    Textual label for this field
 // labelClassName           CSS styles for label column [col-2]
 // name                     Field name in the containing object
+// onChange                 Handle (event) when value is changed [no handler]
 // type                     Field type [text]
 
 export const CheckboxField = (props) => {

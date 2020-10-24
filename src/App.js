@@ -17,7 +17,7 @@ import FacilityView from "./views/FacilityView";
 import GuestView from "./views/GuestView";
 import HomeView from "./views/HomeView";
 // import RegistrationView from "./views/RegistrationView";
-// import SandboxView from "./sandbox/SandboxView";
+import SandboxView from "./sandbox/SandboxView";
 import TemplateView from "./views/TemplateView";
 import NavDropdown from "react-bootstrap/cjs/NavDropdown";
 
@@ -51,7 +51,6 @@ function App() {
 
             <Nav
                 className="mr-auto"
-//                defaultActiveKey="/facilities"
             >
 
               {/* TODO - active link is not getting highlighted */}
@@ -60,8 +59,6 @@ function App() {
               <Nav.Link href="/guests">Guests</Nav.Link>
               {/*<Nav.Link href="/registrations">Registrations</Nav.Link>*/}
               <Nav.Link href="/templates">Templates</Nav.Link>
-              <Nav.Link href="/checkins">Checkins</Nav.Link>
-              {/*<Nav.Link href="/sandbox">Sandbox</Nav.Link>*/}
 
               <NavDropdown title="Reports">
                 <NavDropdown.Item href="/reports-DailySummary">
@@ -75,6 +72,9 @@ function App() {
                     Monthly Summary
                 </NavDropdown.Item>
               </NavDropdown>
+
+              <Nav.Link href="/checkins">Checkins</Nav.Link>
+              <Nav.Link href="/sandbox">Sandbox</Nav.Link>
 
             </Nav>
 
@@ -113,11 +113,9 @@ function App() {
               <Route exact path="/reports-MonthlySummary">
                 <MonthlySummaryView/>
               </Route>
-{/*
               <Route exact path="/sandbox">
                 <SandboxView/>
               </Route>
-*/}
               <Route exact path="/templates">
                 <TemplateView/>
               </Route>
