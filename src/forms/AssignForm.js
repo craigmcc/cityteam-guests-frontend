@@ -6,15 +6,26 @@ import { Form, Formik } from "formik";
 import * as Yup from "yup";
 
 import RegistrationClient from "../clients/RegistrationClient";
-import { SaveButton } from "../components/react.buttons";
-import { SelectField, TextField } from "../components/react.fields";
+import SaveButton from "../components/SaveButton";
+import SelectField from "../components/SelectField";
+import TextField from "../components/TextField";
 import { reportError } from "../util/error.handling";
 import { toEmptyStrings, toNullValues } from "../util/transformations";
 import { validatePaymentTypes, validateTime } from "../util/validations";
 
+// AssignForm ----------------------------------------------------------------
+
+// Formik-based form to accept details for a new or updated assignment,
+// and perform the corresponding database request if validation succeeds.
+
+// Properties ----------------------------------------------------------------
+
 // assign                   Assign object containing initial values to display
-// autoFocus                Should we autofocus on the first field?  (Required field for true)
-// handleAssign             Handle (assign) for successful assignment
+// autoFocus                Should we autoFocus on the first field?
+// handleAssign             Handle (registration) after successful assignment
+
+// Component Details ---------------------------------------------------------
+
 const AssignForm = (props) => {
 
     const handleAssign = (assigned) => {

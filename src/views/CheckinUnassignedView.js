@@ -253,6 +253,7 @@ const CheckinUnassignedView = (props) => {
                             <Row className="ml-1 mr-1 mb-2">
                                 <GuestForm
                                     // No guest triggers add behavior
+                                    autoFocus
                                     handleInsert={handleAddSave}
                                     saveLabel="Add"
                                     // No withRemove or withReset skips those buttons
@@ -285,7 +286,7 @@ const CheckinUnassignedView = (props) => {
                         { (assign) ? (
                             <AssignForm
                                 assign={assign}
-                                autoFocus={false}
+                                autoFocus
                                 handleAssign={handleAssign}
                                 saveLabel="Complete"
                             />

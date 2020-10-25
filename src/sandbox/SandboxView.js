@@ -6,7 +6,9 @@ import Table from "react-bootstrap/Table";
 import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
 
-import { CheckboxElement, SelectElement, TextElement } from "../components/react.elements";
+import CheckboxElement from "../components/CheckboxElement";
+import SelectElement from "../components/SelectElement";
+import TextElement from "../components/TextElement";
 
 const SandboxView = () => {
 

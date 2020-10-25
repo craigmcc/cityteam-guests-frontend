@@ -1,5 +1,4 @@
 import React, { useContext, useState } from "react";
-import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
 import Modal from "react-bootstrap/Modal";
@@ -9,19 +8,34 @@ import * as Yup from "yup";
 
 import FacilityClient from "../clients/FacilityClient";
 import GuestClient from "../clients/GuestClient";
-import { RemoveButton, ResetButton, SaveButton } from "../components/react.buttons";
-import { CheckboxField, TextField } from "../components/react.fields";
+import ActionButton from "../components/ActionButton";
+import CheckboxField from "../components/CheckboxField";
+import RemoveButton from "../components/RemoveButton";
+import ResetButton from "../components/ResetButton";
+import SaveButton from "../components/SaveButton";
+import TextField from "../components/TextField";
 import { FacilityContext } from "../contexts/FacilityContext";
 import { reportError } from "../util/error.handling";
 import { toEmptyStrings, toNullValues } from "../util/transformations";
 
+// GuestForm -----------------------------------------------------------------
+
+// Formik-based form to accept details for a new or existing guest,
+// and perform the corresponding database request if validation succeeds.
+
+// Properties ----------------------------------------------------------------
+
+// autoFocus                Should we autoFocus on the first field?
 // guest                    Guest to be edited, or null for adding a new object
-// handleInsert             Handle (guest) for successful insert
-// handleRemove             Handle (guest) for successful remove
-// handleUpdate             Handle (guest) for successful insert or update
+// handleInsert             Handle (guest) after successful insert
+// handleRemove             Handle (guest) after successful remove
+// handleUpdate             Handle (guest) after successful update
 // saveLabel                Label for Save button [Save]
-// withRemove               Should we render a remove button?
-// withReset                Should we render a reset button?
+// withRemove               Should we render a remove button? [no]
+// withReset                Should we render a reset button? [no]
+
+// Component Details ---------------------------------------------------------
+
 const GuestForm = (props) => {
 
     const facilityContext = useContext(FacilityContext);
@@ -182,7 +196,10 @@ const GuestForm = (props) => {
                     <Form>
 
                         <Row>
-                            <TextField label="First Name:" name="firstName"/>
+                            <TextField
+                                autoFocus={props.autoFocus}
+                                label="First Name:"
+                                name="firstName"/>
                         </Row>
                         <Row>
                             <TextField label="Last Name:" name="lastName"/>
@@ -242,18 +259,16 @@ const GuestForm = (props) => {
                     <p>Consider marking this Guest as inactive instead.</p>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button
+                    <ActionButton
+                        label="Remove"
                         onClick={handleRemoveConfirmPositive}
                         variant="danger"
-                    >
-                        Remove
-                    </Button>
-                    <Button
+                    />
+                    <ActionButton
+                        label="Cancel"
                         onClick={handleRemoveConfirmNegative}
                         variant="primary"
-                    >
-                        Cancel
-                    </Button>
+                    />
                 </Modal.Footer>
             </Modal>
 
