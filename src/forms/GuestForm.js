@@ -8,13 +8,13 @@ import * as Yup from "yup";
 
 import FacilityClient from "../clients/FacilityClient";
 import GuestClient from "../clients/GuestClient";
-import ActionButton from "../components/ActionButton";
-import CheckboxField from "../components/CheckboxField";
-import RemoveButton from "../components/RemoveButton";
-import ResetButton from "../components/ResetButton";
-import SaveButton from "../components/SaveButton";
-import TextField from "../components/TextField";
 import { FacilityContext } from "../contexts/FacilityContext";
+import ActionButton from "../library/ActionButton";
+import CheckboxField from "../library/CheckboxField";
+import RemoveButton from "../library/RemoveButton";
+import ResetButton from "../library/ResetButton";
+import SaveButton from "../library/SaveButton";
+import TextField from "../library/TextField";
 import { reportError } from "../util/error.handling";
 import { toEmptyStrings, toNullValues } from "../util/transformations";
 

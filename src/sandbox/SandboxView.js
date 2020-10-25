@@ -6,9 +6,9 @@ import Table from "react-bootstrap/Table";
 import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
 
-import CheckboxElement from "../components/CheckboxElement";
-import SelectElement from "../components/SelectElement";
-import TextElement from "../components/TextElement";
+import CheckboxElement from "../library/CheckboxElement";
+import SelectElement from "../library/SelectElement";
+import TextElement from "../library/TextElement";
 
 const SandboxView = () => {
 
@@ -359,7 +359,7 @@ const SandboxView = () => {
                                 <SelectElement
                                     action="Select 3"
                                     actionClassName="col-3"
-                                    actionVariant="dark"
+                                    actionVariant="warning"
                                     disabled
                                     fieldClassName="col-6"
                                     fieldName="select3"
@@ -484,7 +484,7 @@ const SandboxView = () => {
                                 <TextElement
                                     action="Action 5"
                                     actionClassName="col-3"
-                                    actionVariant="primary"
+                                    actionVariant="outline-warning"
                                     fieldClassName="col-7"
                                     fieldName="text5"
                                     fieldValue={value5}
@@ -504,7 +504,7 @@ const SandboxView = () => {
                                 <TextElement
                                     action="Action 6"
                                     actionClassName="col-3"
-                                    actionVariant="primary"
+                                    actionVariant="outline-danger"
                                     fieldClassName="col-7"
                                     fieldName="text6"
                                     fieldValue={value6}

@@ -6,9 +6,9 @@ import { Form, Formik } from "formik";
 import * as Yup from "yup";
 
 import RegistrationClient from "../clients/RegistrationClient";
-import SaveButton from "../components/SaveButton";
-import SelectField from "../components/SelectField";
-import TextField from "../components/TextField";
+import SaveButton from "../library/SaveButton";
+import SelectField from "../library/SelectField";
+import TextField from "../library/TextField";
 import { reportError } from "../util/error.handling";
 import { toEmptyStrings, toNullValues } from "../util/transformations";
 import { validatePaymentTypes, validateTime } from "../util/validations";
