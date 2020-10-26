@@ -290,8 +290,8 @@ const SandboxView = () => {
                             <td>CheckboxElement disabled</td>
                             <td>
                                 <CheckboxElement
-                                    disabled
                                     fieldClassName="col-7"
+                                    fieldDisabled
                                     fieldName="checkbox3"
                                     fieldValue={checkbox3}
                                     label="Third Checkbox"
@@ -361,9 +361,10 @@ const SandboxView = () => {
                                 <SelectElement
                                     action="Select 3"
                                     actionClassName="col-3"
+                                    actionDisabled
                                     actionVariant="warning"
-                                    disabled
                                     fieldClassName="col-6"
+                                    fieldDisabled
                                     fieldName="select3"
                                     fieldValue={select3}
                                     label="Third Select"

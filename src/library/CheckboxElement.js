@@ -1,9 +1,9 @@
 import React from "react";
-import Col from "react-bootstrap/Col";
-//import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 
-import ActionButton from "./ActionButton";
+import CheckboxInput from "./CheckboxInput";
+import CheckboxLabel from "./CheckboxLabel";
+import CommonAction from "./CommonAction";
 
 // CheckboxElement -----------------------------------------------------------
 
@@ -24,6 +24,7 @@ import ActionButton from "./ActionButton";
 // autoFocus                Set automatic focus to this element on render [not set]
 // action                   Action button text [no button is rendered]
 // actionClassName          CSS styles for the action button <Col> element [not rendered]
+// actionDisabled           Mark action button as disabled [not rendered]
 // actionSize               Action button size ("lg", "sm") [sm]
 // actionVariant            Action style variant [not rendered]
 // elementClassName         CSS styles for overall <Row> component [not rendered]
@@ -43,46 +44,16 @@ import ActionButton from "./ActionButton";
 
 const CheckboxElement = (props) => {
 
-    let fieldName = (props.fieldName) ? props.fieldName : "checkbox";
-
     return (
-        // <Container fluid>
-        <Row className={props.elementClassName ? props.elementClassName : "mt-1 mb-1 col-12"}>
-            {props.label ? (
-                <Col className={props.labelClassName ? props.labelClassName : null}/>
-            ) : null }
-            <Col className={props.fieldClassName ? props.fieldClassName : null}>
-                <input
-                    autoFocus={props.autoFocus ? props.autoFocus : null}
-                    checked={props.fieldValue}
-                    className={props.withoutInputClassName ? null : "mr-2"}
-                    disabled={props.disabled ? props.disabled : null}
-                    id={fieldName}
-                    name={fieldName}
-                    onBlur={props.onBlur ? props.onBlur : null}
-                    onKeyDown={props.onKeyDown ? props.onKeyDown : null}
-                    onChange={props.onChange ? props.onChange : null}
-                    type="checkbox"
-                />
-                {props.label ? (
-                    <label htmlFor={fieldName}>
-                        {props.label}
-                    </label>
-                ) : null }
-            </Col>
-            {props.action ? (
-                <Col className={props.actionClassName ? props.actionClassName : null}>
-                    <ActionButton
-                        disabled={props.disabled ? props.disabled : null}
-                        label={props.action}
-                        onClick={props.onClick ? props.onClick : null}
-                        size={props.actionSize ? props.actionSize : "sm"}
-                        variant={props.actionVariant ? props.actionVariant : null}
-                    />
-                </Col>
-            ) : null }
+
+        <Row
+            className={props.elementClassName ? props.elementClassName : "mt-1 mb-1 col-12"}
+        >
+            <CheckboxLabel {...props}/>
+            <CheckboxInput {...props}/>
+            <CommonAction {...props}/>
         </Row>
-        // </Container>
+
     )
 
 }

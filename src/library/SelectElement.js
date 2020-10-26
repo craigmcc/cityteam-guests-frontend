@@ -1,9 +1,9 @@
 import React from "react";
-import Col from "react-bootstrap/Col";
-//import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 
-import ActionButton from "./ActionButton";
+import CommonAction from "./CommonAction";
+import CommonLabel from "./CommonLabel";
+import SelectInput from "./SelectInput";
 
 // SelectElement -------------------------------------------------------------
 
@@ -17,6 +17,7 @@ import ActionButton from "./ActionButton";
 // autoFocus                Set automatic focus to this element on render [not set]
 // action                   Action button text [no button is rendered]
 // actionClassName          CSS styles for the action button <Col> element [not rendered]
+// actionDisabled           Mark action button as disabled [not rendered]
 // actionSize               Action button size ("lg", "sm") [sm]
 // elementClassName         CSS styles for overall <Row> component [not rendered]
 // fieldClassName           CSS styles for the field element <Col> element [not rendered]
@@ -35,49 +36,15 @@ import ActionButton from "./ActionButton";
 
 const SelectElement = (props) => {
 
-    let fieldName = (props.fieldName) ? props.fieldName : "select";
-
     return (
-        // <Container fluid>
-        <Row className={props.elementClassName ? props.elementClassName : "mt-1 mb-1 col-12"}>
-            {props.label ? (
-                <Col className={props.labelClassName ? props.labelClassName : null}>
-                    <label htmlFor={fieldName}>
-                        {props.label}
-                    </label>
-                </Col>
-            ) : null }
-            <Col className={props.fieldClassName ? props.fieldClassName : null}>
-                <select
-                    autoFocus={props.autoFocus ? props.autoFocus : null}
-                    className={props.withoutInputClassName ? null : "form-control"}
-                    disabled={props.disabled ? props.disabled : null}
-                    id={fieldName}
-                    name={fieldName}
-                    onBlur={props.onBlur ? props.onBlur : null}
-                    onChange={props.onChange ? props.onChange : null}
-                    value={props.fieldValue ? props.fieldValue : null}
-                >
-                    {props.options.map(option => (
-                        <option key={option.value} value={option.value}>
-                            {option.description}
-                        </option>
-                    ))}
-                </select>
-            </Col>
-            {props.action ? (
-                <Col className={props.actionClassName ? props.actionClassName : null}>
-                    <ActionButton
-                        disabled={props.disabled ? props.disabled : null}
-                        label={props.action}
-                        onClick={props.onClick ? props.onClick : null}
-                        size={props.actionSize ? props.actionSize : "sm"}
-                        variant={props.actionVariant ? props.actionVariant : null}
-                    />
-                </Col>
-            ) : null }
+
+        <Row
+            className={props.elementClassName ? props.elementClassName : "mt-1 mb-1 col-12"}
+        >
+            <CommonLabel {...props}/>
+            <SelectInput {...props}/>
+            <CommonAction {...props}/>
         </Row>
-        // </Container>
     )
 
 }

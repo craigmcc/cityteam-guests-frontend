@@ -8,14 +8,15 @@ import CheckinRegistrationsView from "./CheckinRegistrationsView";
 import CheckinUnassignedView from "./CheckinUnassignedView";
 import RegistrationDateSelector from "../components/RegistrationDateSelector";
 import { FacilityContext } from "../contexts/FacilityContext";
+import * as Dates from "../library/Dates";
 
 const CheckinView = () => {
 
     const facilityContext = useContext(FacilityContext);
 
     const [registration, setRegistration] = useState({});
-    const [registrationDate, setRegistrationDate] =
-        useState((new Date()).toISOString().slice(0, 10)); // TODO - local date
+    const [registrationDate, setRegistrationDate] = useState(Dates.today());
+//        useState((new Date()).toISOString().slice(0, 10)); // TODO - local date
     const [stage, setStage] = useState("List");
 
     // Valid Stages:  "List", "Assigned", "Unassigned"
