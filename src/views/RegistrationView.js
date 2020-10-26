@@ -604,9 +604,10 @@ const RegistrationView = () => {
                             </Col>
                             <Col className="col-6">
                                 <SearchBar
+                                    fieldValue={searchText}
                                     onChange={handleSearchChange}
                                     placeholder="Enter part of either name ..."
-                                    value={searchText}
+                                    // withAction
                                     // withClear
                                 />
                             </Col>

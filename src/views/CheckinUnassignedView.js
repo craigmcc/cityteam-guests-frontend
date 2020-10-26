@@ -47,7 +47,7 @@ const CheckinUnassignedView = (props) => {
     const [adding, setAdding] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
     const [guests, setGuests] = useState([]);
-    const [index, setIndex] = useState()
+    const [index, setIndex] = useState(-1)
     const [pageSize] = useState(10);
     const [searchText, setSearchText] = useState("");
 
@@ -192,7 +192,7 @@ const CheckinUnassignedView = (props) => {
                                         {guest.lastName}
                                     </span>
                                     </span>
-                                ) : (  null )}
+                                ) : null }
                             </Row>
                         </>
                     ) : (
@@ -222,7 +222,7 @@ const CheckinUnassignedView = (props) => {
                         <hr className="mb-3"/>
 
                         <Row className="mb-3">
-                            <Col className="col-5">
+                            <Col className="col-4">
                                 <Pagination
                                     currentPage={currentPage}
                                     lastPage={(guests.length === 0) ||
@@ -238,12 +238,14 @@ const CheckinUnassignedView = (props) => {
                                     variant="secondary"
                                 >Add</Button>
                             </Col>
-                            <Col className="col-7">
+                            <Col className="col-8">
                                 <SearchBar
+                                    fieldClassName="col-12"
+                                    fieldValue={searchText}
                                     onChange={handleSearchChange}
                                     placeholder="Enter all or part of either name ..."
-                                    value={searchText}
-                                    withClear
+                                    // withAction
+                                    // withClear
                                 />
                             </Col>
                         </Row>

@@ -1,55 +1,82 @@
 import React from "react";
 
-import { ClearButton, SearchButton } from "./buttons";
+import TextElement from "../library/TextElement";
 
-// props.label - Optional label for search button [Search]
-// props.onChange - Handle (event) for search text changed -
-//   event.target.value contains the updated value.
-// props.onClick - Handle () for click on search button (or enter key) -
-//   latest value should have been stored in state by onChange handler.
-// props.placeholder - Optional placeholder text [Search for ...]
-// props.value - Initial value (from state)
-// props.withClear - include a clear button?  [no]
-// props.withSearch - include a search button? [no]
+// SearchBar -----------------------------------------------------------------
+
+// Render a search bar with specified placeholder and icon, with optional
+// clear and button controls.  The entire search bar will be encapsulated
+// in a <Row> element, with optionally specified CSS characteristics.
+
+// Incoming Properties -------------------------------------------------------
+
+// action                   If withAction specified, button text [🔍]
+// actionClassName          If withAction specified, CSS styles for action <Col> [col-1]
+// actionVariant            If withAction specified, button variant [light]
+// elementClassName         CSS styles for the entire <Row> [col-12]
+// fieldClassName           CSS styles for the input <Col> [col-11]
+// fieldName                Id and name for this input [search]
+// fieldValue               Initially rendered search text [not rendered]
+// onChange                 Handle (event) when search text changes [no handler]
+// onClick                  Handle (event) when Enter pressed or
+//                          action button clicked [no handler]
+// withAction               Render an action button, and obey actionXxx props [no action button]
+// TODO - should we support optional label?
+// TODO - no way to get a withClear button inside the TextElement's <Row>
+
+// Component Details ---------------------------------------------------------
+
 const SearchBar = (props) => {
 
-    const onClear = () => {
-        console.log("SearchBar.onClear()");
-        props.onChange({target: { value: "" }});
+    const onChange = (event) => {
+        console.info("SearchBar.onChange(" + event.target.value + ")");
+        if (props.onChange) {
+            props.onChange(event);
+        }
     }
 
-    const onKeyDown = (e) => {
-        if (e.key === "Enter") {
+    /*
+        const onClear = () => {
+            console.info("SearchBar.onClear()");
+            if (props.onChange) {
+                props.onChange({target: { value: "" }});
+            }
+        }
+    */
+
+    const onClick = () => {
+        console.info("SearchBar.onClick()");
+        if (props.onClick) {
             props.onClick();
         }
     }
 
+    const onKeyDown = (event) => {
+        if (event.key === "Enter") {
+            console.info("SearchBar.onKeyDown()");
+            if (props.onClick) {
+                props.onClick(event);
+            }
+        }
+    }
+
     return (
-        <div className="input-group">
-            <input
-                className="form-control"
-                onChange={props.onChange}
-                onKeyDown={onKeyDown}
-                placeholder=
-                    {props.placeholder ? props.placeholder : "Search for ..."}
-                type="text"
-                value={props.value}
-            />
-            <div className="input-group-append">
-                {props.withClear ? (
-                    <ClearButton
-                        onClick={onClear}
-                    />
-                ) : ( <span /> ) }
-                {props.withSearch ? (
-                    <SearchButton
-                        label={props.label ? props.label : "Search"}
-                        onClick={props.onClick}
-                    />
-                ) : ( <span /> ) }
-            </div>
-        </div>
-    );
+
+        <TextElement
+            action={props.withAction ? (props.action ? props.action : "🔍") : null}
+            actionClassName={props.actionClassName ? props.actionClassName : "col-1"}
+            actionVariant={props.actionVariant ? props.actionVariant : "light"}
+            elementClassName={props.elementClassName ? props.elementClassName : "col-12"}
+            fieldClassName={props.fieldClassName ? props.fieldClassName : "col-11"}
+            fieldName={props.fieldName ? props.fieldName : "search"}
+            fieldValue={props.fieldValue ? props.fieldValue : null}
+            onChange={onChange}
+            onClick={onClick}
+            onKeyDown={onKeyDown}
+            placeholder={props.placeholder ? props.placeholder : "Search ..."}
+        />
+
+    )
 
 }
 

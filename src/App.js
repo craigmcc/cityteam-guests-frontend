@@ -119,7 +119,6 @@ function App() {
               <Route exact path="/templates">
                 <TemplateView/>
               </Route>
-              {/* TODO - routes for reports */}
             </Switch>
 
           {/*</Container>*/}

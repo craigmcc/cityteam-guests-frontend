@@ -154,12 +154,13 @@ const GuestHistoryView = () => {
                             </Col>
                             <Col className="col-8">
                                 <SearchBar
-                                    label="Filter"
+                                    fieldName="searchByName"
+                                    fieldValue={searchText}
                                     onChange={onSearchChange}
                                     onClick={onSearchClick}
                                     placeholder="Enter all or part of either name ..."
-                                    value={searchText}
-                                    withClear
+                                    withAction
+//                                    withClear
                                 />
                             </Col>
                         </Row>

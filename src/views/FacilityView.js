@@ -140,12 +140,12 @@ const FacilityView = () => {
                     </Col>
                     <Col className="col-8">
                         <SearchBar
+                            fieldName="searchByName"
+                            fieldValue={searchText}
                             onChange={onSearchChange}
                             onClick={onSearchClick}
-                            placeholder="Search by name ..."
-                            value={searchText}
-                            withClear
-                            withSearch
+                            placeholder={"Search by all or part of Facility name ..."}
+                            withAction
                         />
                     </Col>
                 </Row>

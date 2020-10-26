@@ -1,6 +1,5 @@
 import React from "react";
 import Col from "react-bootstrap/Col";
-import Row from "react-bootstrap/Row";
 
 // TextInput -----------------------------------------------------------------
 
@@ -54,7 +53,7 @@ const TextInput = (props) => {
                 placeholder={props.placeholder ? props.placeholder : null}
                 required={props.required ? props.required : null}
                 type={props.type ? props.type : "text"}
-                value={props.fieldValue ? props.fieldValue : null}
+                value={props.fieldValue ? props.fieldValue : ""}
             />
         </Col>
 
