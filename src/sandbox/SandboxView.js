@@ -7,6 +7,8 @@ import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
 
 import CheckboxElement from "../library/CheckboxElement";
+import * as Dates from "../library/Dates";
+import * as Months from "../library/Months";
 import SelectElement from "../library/SelectElement";
 import TextElement from "../library/TextElement";
 
@@ -238,7 +240,7 @@ const SandboxView = () => {
 
             <Tabs id="elements-examples">
 
-                <Tab eventKey="checkbox" title="CheckboxElement Examples">
+                <Tab eventKey="checkbox" title="CheckboxElement">
 
                     <Table
                         className="table-bordered table-hover table-striped"
@@ -305,7 +307,7 @@ const SandboxView = () => {
 
                 </Tab>
 
-                <Tab eventKey="select" title="SelectElement Examples">
+                <Tab eventKey="select" title="SelectElement">
 
                     <Table
                         className="table-bordered table-hover table-striped"
@@ -392,7 +394,7 @@ const SandboxView = () => {
 
                 </Tab>
 
-                <Tab eventKey="text" title="TextElement Examples">
+                <Tab eventKey="text" title="TextElement">
 
                     <Table
                         className="table-bordered table-hover table-striped"
@@ -523,7 +525,7 @@ const SandboxView = () => {
 
                 </Tab>
 
-                <Tab eventKey="combined" title="Combined Example">
+                <Tab eventKey="combined" title="Combined Elements">
 
                     <Table
                         className="table-bordered table-hover table-striped"
@@ -598,7 +600,7 @@ const SandboxView = () => {
 
                 </Tab>
 
-                <Tab eventKey="tableless" title="Tableless Example">
+                <Tab eventKey="tableless" title="Tableless Elements">
 
                     <Container fluid>
                         <Row className="mb-4"/>
@@ -652,6 +654,154 @@ const SandboxView = () => {
                         </Row>
                     </Container>
 
+                </Tab>
+
+                <Tab eventKey="dates" title="Dates">
+                    <Table
+                        className="table-bordered table-hover table-striped"
+                        size="sm"
+                    >
+                        <thead>
+                        <tr>
+                            <th>Use Case</th>
+                            <th>Returned Value</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+{/*
+                        <tr>
+                            <td>new Date().toString()</td>
+                            <td>{new Date().toString()}</td>
+                        </tr>
+*/}
+                        <tr>
+                            <td>Dates.decrement(Dates.now(), 1)</td>
+                            <td>{Dates.decrement(Dates.today(), 1)}</td>
+                        </tr>
+                        <tr>
+                            <td>Dates.decrement(Dates.now(), 3)</td>
+                            <td>{Dates.decrement(Dates.today(), 3)}</td>
+                        </tr>
+                        <tr>
+                            <td>Dates.decrement("2020-10-02", 1)</td>
+                            <td>{Dates.decrement("2020-10-02", 1)}</td>
+                        </tr>
+                        <tr>
+                            <td>Dates.decrement("2020-10-02", 3)</td>
+                            <td>{Dates.decrement("2020-10-02", 3)}</td>
+                        </tr>
+                        <tr>
+                            <td>Dates.increment(Dates.now(), 1)</td>
+                            <td>{Dates.increment(Dates.today(), 1)}</td>
+                        </tr>
+                        <tr>
+                            <td>Dates.increment(Dates.now(), 3)</td>
+                            <td>{Dates.increment(Dates.today(), 3)}</td>
+                        </tr>
+                        <tr>
+                            <td>Dates.increment("2020-10-30", 1)</td>
+                            <td>{Dates.increment("2020-10-30", 1)}</td>
+                        </tr>
+                        <tr>
+                            <td>Dates.increment("2020-10-30", 3)</td>
+                            <td>{Dates.increment("2020-10-30", 3)}</td>
+                        </tr>
+                        <tr>
+                            <td>Dates.fromObject(new Date())</td>
+                            <td>{Dates.fromObject(new Date())}</td>
+                        </tr>
+                        <tr>
+                            <td>Dates.today()</td>
+                            <td>{Dates.today()}</td>
+                        </tr>
+{/*
+                        <tr>
+                            <td>Dates.toObject(Dates.today()).toString()</td>
+                            <td>{Dates.toObject(Dates.today()).toString()}</td>
+                        </tr>
+                        <tr>
+                            <td>Dates.toObject("2020-10-15").toString()</td>
+                            <td>{Dates.toObject("2020-10-15").toString()}</td>
+                        </tr>
+*/}
+                        </tbody>
+                    </Table>
+                </Tab>
+
+                <Tab eventKey="months" title="Months">
+                    <Table
+                        className="table-bordered table-hover table-striped"
+                        size="sm"
+                    >
+                        <thead>
+                        <tr>
+                            <th>Use Case</th>
+                            <th>Returned Value</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>Months.decrement(Months.today(), 1)</td>
+                            <td>{Months.decrement(Months.today(), 1)}</td>
+                        </tr>
+                        <tr>
+                            <td>Months.ecrement(Months.today(), 3)</td>
+                            <td>{Months.decrement(Months.today(), 3)}</td>
+                        </tr>
+                        <tr>
+                            <td>Months.decrement("2020-02", 1)</td>
+                            <td>{Months.decrement("2020-02", 1)}</td>
+                        </tr>
+                        <tr>
+                            <td>Months.decrement("2020-02", 3)</td>
+                            <td>{Months.decrement("2020-02", 3)}</td>
+                        </tr>
+                        <tr>
+                            <td>Months.endDate(Months.today())</td>
+                            <td>{Months.endDate(Months.today())}</td>
+                        </tr>
+                        <tr>
+                            <td>Months.endDate("2020-02")</td>
+                            <td>{Months.endDate("2020-02")}</td>
+                        </tr>
+                        <tr>
+                            <td>Months.fromDate(Dates.today())</td>
+                            <td>{Months.fromDate(Dates.today())}</td>
+                        </tr>
+                        <tr>
+                            <td>Months.fromDate("2020-02-15")</td>
+                            <td>{Months.fromDate("2020-02-15")}</td>
+                        </tr>
+                        <tr>
+                            <td>Months.increment(Months.today(), 1)</td>
+                            <td>{Months.increment(Months.today(), 1)}</td>
+                        </tr>
+                        <tr>
+                            <td>Months.increment(Months.today(), 3)</td>
+                            <td>{Months.increment(Months.today(), 3)}</td>
+                        </tr>
+                        <tr>
+                            <td>Months.increment("2020-11", 1)</td>
+                            <td>{Months.increment("2020-11", 1)}</td>
+                        </tr>
+                        <tr>
+                            <td>Months.increment("2020-11", 3)</td>
+                            <td>{Months.increment("2020-11", 3)}</td>
+                        </tr>
+                        <tr>
+                            <td>Months.today()</td>
+                            <td>{Months.today()}</td>
+                        </tr>
+                        <tr>
+                            <td>Months.startDate(Months.today())</td>
+                            <td>{Months.startDate(Months.today())}</td>
+                        </tr>
+                        <tr>
+                            <td>Months.startDate("2020-02")</td>
+                            <td>{Months.startDate("2020-02")}</td>
+                        </tr>
+                        </tbody>
+                    </Table>
                 </Tab>
 
             </Tabs>
