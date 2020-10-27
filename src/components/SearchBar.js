@@ -15,13 +15,12 @@ import TextElement from "../library/TextElement";
 // actionVariant            If withAction specified, button variant [light]
 // elementClassName         CSS styles for the entire <Row> [col-12]
 // fieldClassName           CSS styles for the input <Col> [col-11]
-// fieldName                Id and name for this input [search]
+// fieldName                ID and name for this input [search]
 // fieldValue               Initially rendered search text [not rendered]
 // onChange                 Handle (event) when search text changes [no handler]
 // onClick                  Handle (event) when Enter pressed or
 //                          action button clicked [no handler]
 // withAction               Render an action button, and obey actionXxx props [no action button]
-// TODO - should we support optional label?
 // TODO - no way to get a withClear button inside the TextElement's <Row>
 
 // Component Details ---------------------------------------------------------
@@ -70,6 +69,8 @@ const SearchBar = (props) => {
             fieldClassName={props.fieldClassName ? props.fieldClassName : "col-11"}
             fieldName={props.fieldName ? props.fieldName : "search"}
             fieldValue={props.fieldValue ? props.fieldValue : null}
+            label={props.label ? props.label : null}
+            labelClassName={props.labelClassName ? props.labelClassName : null}
             onChange={onChange}
             onClick={onClick}
             onKeyDown={onKeyDown}

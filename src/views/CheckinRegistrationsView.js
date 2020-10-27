@@ -100,8 +100,10 @@ const CheckinRegistrationsView = (props) => {
             { (facilityContext.selectedFacility) && (registrations.length === 0) ? (
                 <Row className="mb-3 ml-1">
                     <TemplateSelector
-                        actionLabel="Generate"
-                        handleTemplate={handleGenerate}
+                        action="Generate"
+                        fieldName="selectTemplate"
+                        label="Select Template"
+                        onClick={handleGenerate}
                     />
                 </Row>
             ) : (

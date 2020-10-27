@@ -162,8 +162,12 @@ const GuestView = () => {
                     </Col>
                     <Col className="col-8">
                         <SearchBar
+                            actionClassName="col-1"
+                            fieldClassName="col-9"
                             fieldName="searchByName"
                             fieldValue={searchText}
+                            label="Find Guests:"
+                            labelClassName="col-2"
                             onChange={onSearchChange}
                             placeholder="Enter all or part of either name ..."
                             withAction
