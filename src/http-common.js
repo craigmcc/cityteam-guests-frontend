@@ -18,6 +18,7 @@ function baseURL() {
             return "http://localhost:8082/api";
         case "production":
         default:
-            return "http://wildfly.hopto.org:8082/api";
+//            return "http://wildfly.hopto.org:8082/api";
+            return "http://localhost:8082/api";
     }
 }

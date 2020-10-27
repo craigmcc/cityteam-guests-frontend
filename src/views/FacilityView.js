@@ -145,7 +145,7 @@ const FacilityView = () => {
                             onChange={onSearchChange}
                             onClick={onSearchClick}
                             placeholder={"Search by all or part of Facility name ..."}
-                            withAction
+//                            withAction
                         />
                     </Col>
                 </Row>

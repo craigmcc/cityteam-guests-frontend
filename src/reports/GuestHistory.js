@@ -159,7 +159,7 @@ const GuestHistoryView = () => {
                                     onChange={onSearchChange}
                                     onClick={onSearchClick}
                                     placeholder="Enter all or part of either name ..."
-                                    withAction
+//                                    withAction
 //                                    withClear
                                 />
                             </Col>

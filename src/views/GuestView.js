@@ -170,7 +170,7 @@ const GuestView = () => {
                             labelClassName="col-2"
                             onChange={onSearchChange}
                             placeholder="Enter all or part of either name ..."
-                            withAction
+//                            withAction
                             // withClear
                         />
                     </Col>
